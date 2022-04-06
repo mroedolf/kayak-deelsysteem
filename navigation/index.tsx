@@ -16,6 +16,7 @@ import { ColorSchemeName } from 'react-native';
 import { RootStackParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import ProfileScreen from '../screens/ProfileScreen';
+import SignInScreen from '../screens/SignInScreen';
 
 export default function Navigation({
 	colorScheme,
@@ -50,6 +51,11 @@ function RootNavigator() {
 				name={'Profile'}
 				component={ProfileScreen}
 				options={{ title: 'Profile' }}
+			/>
+			<Stack.Screen
+				name={'SignIn'}
+				component={SignInScreen}
+				options={{ title: 'SignIn' }}
 			/>
 		</Stack.Navigator>
 	);

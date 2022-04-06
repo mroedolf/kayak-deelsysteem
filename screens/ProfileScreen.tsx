@@ -1,17 +1,18 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import { useAuthentication } from '../hooks/useAuthentication';
 
 export default function ProfileScreen({
 	navigation,
 }: RootTabScreenProps<'TabOne'>) {
-	const user = useAuthentication();
-	console.log(user);
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Profile Page</Text>
+			<Button
+				title="SignInScreen"
+				onPress={() => navigation.navigate('SignIn')}
+			/>
 		</View>
 	);
 }
