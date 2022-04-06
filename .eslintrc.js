@@ -1,21 +1,23 @@
-// eslint-disable-next-line no-undef
 module.exports = {
-	root: true,
 	env: {
-		browser: true,
 		es2021: true,
+		node: true,
 	},
 	extends: [
 		'eslint:recommended',
 		'plugin:react/recommended',
 		'plugin:@typescript-eslint/recommended',
-		'prettier',
+		'plugin:react-hooks/recommended',
+		'plugin:@typescript-eslint/eslint-recommended',
+		'plugin:@typescript-eslint/recommended',
+		'plugin:@typescript-eslint/recommended-requiring-type-checking',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		ecmaFeatures: {
 			jsx: true,
 		},
+		project: './tsconfig.json',
 		ecmaVersion: 'latest',
 		sourceType: 'module',
 	},
@@ -25,5 +27,11 @@ module.exports = {
 		'linebreak-style': ['error', 'unix'],
 		quotes: ['error', 'single'],
 		semi: ['error', 'always'],
+		'no-empty-function': 'off',
+		'@typescript-eslint/no-empty-function': 'off',
+		'react/display-name': 'off',
+		'react/prop-types': 'off',
+		'react/react-in-jsx-scope': 'off',
 	},
+	ignorePatterns: ['.eslintrc.js', '*.js', '*.config.js'],
 };

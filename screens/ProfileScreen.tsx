@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Text, View} from '../components/Themed';
-import {RootTabScreenProps} from '../types';
-import {useAuthentication} from '../hooks/useAuthentication';
+import { StyleSheet } from 'react-native';
+import { Text, View } from '../components/Themed';
+import { RootTabScreenProps } from '../types';
+import { useAuthentication } from '../hooks/useAuthentication';
 
 export default function ProfileScreen({
 	navigation,
@@ -12,7 +12,6 @@ export default function ProfileScreen({
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Profile Page</Text>
-
 		</View>
 	);
 }
