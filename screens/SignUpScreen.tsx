@@ -1,22 +1,22 @@
-import { useAuthSignInWithEmailAndPassword } from '@react-query-firebase/auth';
+import { useAuthCreateUserWithEmailAndPassword } from '@react-query-firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { Formik } from 'formik';
-import React, { useState } from 'react';
+import React from 'react';
 import {
-	Button,
 	KeyboardAvoidingView,
 	Platform,
+	TextInput,
+	Button,
 	StyleSheet,
 	Text,
-	TextInput,
 } from 'react-native';
 import { auth } from '../config/firebase';
 import { RootStackScreenProps } from '../types';
 
-const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
-	const [error, setError] = useState('');
+const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
+	const [error, setError] = React.useState('');
 
-	const signInMutation = useAuthSignInWithEmailAndPassword(auth, {
+	const signUpMutation = useAuthCreateUserWithEmailAndPassword(auth, {
 		onError: (error: FirebaseError) => {
 			setError(error.message);
 		},
@@ -27,9 +27,16 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 
 	return (
 		<Formik
-			initialValues={{ email: '', password: '' }}
+			initialValues={{ email: '', password: '', confirmPassword: '' }}
 			onSubmit={(values) => {
-				signInMutation.mutate(values);
+				if (values.password !== values.confirmPassword) {
+					return setError('Passwords do not match');
+				}
+
+				signUpMutation.mutate({
+					email: values.email,
+					password: values.password,
+				});
 			}}
 		>
 			{({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -57,36 +64,37 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 						secureTextEntry
 						autoCompleteType="password"
 					/>
-					{/* TODO: Replace this with a Toast Popup */}
+					<Text>Confirm Password</Text>
+
+					<TextInput
+						value={values.confirmPassword}
+						onChangeText={handleChange('confirmPassword')}
+						onBlur={handleBlur('confirmPassword')}
+						style={styles.input}
+						autoCapitalize="none"
+						secureTextEntry
+						autoCompleteType="password"
+					/>
 					{!!error && <Text>{error}</Text>}
-					{/* @ts-expect-error Seems to be a mistake in the typing of Formik */}
-					<Button title="Sign In" onPress={handleSubmit} />
+					{/** @ts-expect-error Seems to be a mistake in the typing of Formik */}
+					<Button title="Sign Up" onPress={handleSubmit} />
 				</KeyboardAvoidingView>
 			)}
 		</Formik>
 	);
 };
 
-export default SignInScreen;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginHorizontal: 20,
-	},
-	title: {
-		fontSize: 20,
-		fontWeight: 'bold',
+		padding: 20,
 	},
 	input: {
-		borderColor: 'black',
-		borderWidth: 2,
-		width: '100%',
+		borderWidth: 1,
+		borderColor: '#ccc',
 		padding: 10,
-	},
-	button: {
-		marginTop: 20,
+		marginBottom: 10,
 	},
 });

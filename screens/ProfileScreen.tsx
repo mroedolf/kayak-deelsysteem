@@ -13,6 +13,10 @@ export default function ProfileScreen({
 				title="SignInScreen"
 				onPress={() => navigation.navigate('SignIn')}
 			/>
+			<Button
+				title="SignUpScreen"
+				onPress={() => navigation.navigate('SignUp')}
+			/>
 		</View>
 	);
 }
