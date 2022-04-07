@@ -12,12 +12,17 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
+import { log } from '../config/logger';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError } from '../utils';
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 	const signInMutation = useAuthSignInWithEmailAndPassword(auth, {
+		onMutate: (values) => {
+			log.info(`[SignInScreen.onMutate] login attempt | ${values.email}`);
+		},
 		onError: (error: FirebaseError) => {
+			log.error(`[SignInScreen.onError] login error | ${error.message}`);
 			Toast.show({
 				type: 'error',
 				text1: 'Error',

@@ -12,12 +12,19 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
+import { log } from '../config/logger';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError } from '../utils';
 
 const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 	const signUpMutation = useAuthCreateUserWithEmailAndPassword(auth, {
+		onMutate: (values) => {
+			log.info('SignUpScreen.onMutate', values);
+		},
 		onError: (error: FirebaseError) => {
+			log.error(
+				`[SignUpScreen.onError] sign up error | ${error.message}`
+			);
 			Toast.show({
 				type: 'error',
 				text1: 'Error',
@@ -47,7 +54,13 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 				});
 			}}
 		>
-			{({ handleChange, handleBlur, handleSubmit, values }) => (
+			{({
+				handleChange,
+				handleBlur,
+				handleSubmit,
+				values,
+				isSubmitting,
+			}) => (
 				<KeyboardAvoidingView
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					style={styles.container}
@@ -83,8 +96,12 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						secureTextEntry
 						autoCompleteType="password"
 					/>
-					{/** @ts-expect-error Seems to be a mistake in the typing of Formik */}
-					<Button title="Sign Up" onPress={handleSubmit} />
+					<Button
+						title="Sign Up"
+						// @ts-expect-error Seems to be a mistake in the typing of Formik
+						onPress={handleSubmit}
+						disabled={isSubmitting}
+					/>
 				</KeyboardAvoidingView>
 			)}
 		</Formik>

@@ -32,6 +32,7 @@ module.exports = {
 		'react/display-name': 'off',
 		'react/prop-types': 'off',
 		'react/react-in-jsx-scope': 'off',
+		'@typescript-eslint/no-unsafe-call': 'off',
 	},
 	ignorePatterns: ['.eslintrc.js', '*.js', '*.config.js'],
 };
