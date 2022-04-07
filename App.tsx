@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import Toast from 'react-native-toast-message';
 
 export default function App() {
 	const colorScheme = useColorScheme();
@@ -14,6 +15,7 @@ export default function App() {
 			<SafeAreaProvider>
 				<Navigation colorScheme={colorScheme} />
 				<StatusBar />
+				<Toast />
 			</SafeAreaProvider>
 		</QueryClientProvider>
 	);

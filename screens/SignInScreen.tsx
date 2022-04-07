@@ -10,15 +10,21 @@ import {
 	Text,
 	TextInput,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
 import { RootStackScreenProps } from '../types';
+import { handleFirebaseError } from '../utils';
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 	const [error, setError] = useState('');
 
 	const signInMutation = useAuthSignInWithEmailAndPassword(auth, {
 		onError: (error: FirebaseError) => {
-			setError(error.message);
+			Toast.show({
+				type: 'error',
+				text1: 'Error',
+				text2: handleFirebaseError(error),
+			});
 		},
 		onSuccess: () => {
 			navigation.navigate('Profile');

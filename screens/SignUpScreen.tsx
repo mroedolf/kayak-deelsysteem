@@ -10,15 +10,19 @@ import {
 	StyleSheet,
 	Text,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
 import { RootStackScreenProps } from '../types';
+import { handleFirebaseError } from '../utils';
 
 const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
-	const [error, setError] = React.useState('');
-
 	const signUpMutation = useAuthCreateUserWithEmailAndPassword(auth, {
 		onError: (error: FirebaseError) => {
-			setError(error.message);
+			Toast.show({
+				type: 'error',
+				text1: 'Error',
+				text2: handleFirebaseError(error),
+			});
 		},
 		onSuccess: () => {
 			navigation.navigate('Profile');
@@ -30,7 +34,11 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 			initialValues={{ email: '', password: '', confirmPassword: '' }}
 			onSubmit={(values) => {
 				if (values.password !== values.confirmPassword) {
-					return setError('Passwords do not match');
+					return Toast.show({
+						type: 'error',
+						text1: 'Error',
+						text2: 'De wachtwoorden komen niet overeen',
+					});
 				}
 
 				signUpMutation.mutate({
@@ -75,7 +83,6 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						secureTextEntry
 						autoCompleteType="password"
 					/>
-					{!!error && <Text>{error}</Text>}
 					{/** @ts-expect-error Seems to be a mistake in the typing of Formik */}
 					<Button title="Sign Up" onPress={handleSubmit} />
 				</KeyboardAvoidingView>
