@@ -1,7 +1,7 @@
 import { useAuthSignInWithEmailAndPassword } from '@react-query-firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { Formik } from 'formik';
-import React, { useState } from 'react';
+import React from 'react';
 import {
 	Button,
 	KeyboardAvoidingView,
@@ -16,8 +16,6 @@ import { RootStackScreenProps } from '../types';
 import { handleFirebaseError } from '../utils';
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
-	const [error, setError] = useState('');
-
 	const signInMutation = useAuthSignInWithEmailAndPassword(auth, {
 		onError: (error: FirebaseError) => {
 			Toast.show({
@@ -63,8 +61,6 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 						secureTextEntry
 						autoCompleteType="password"
 					/>
-					{/* TODO: Replace this with a Toast Popup */}
-					{!!error && <Text>{error}</Text>}
 					{/* @ts-expect-error Seems to be a mistake in the typing of Formik */}
 					<Button title="Sign In" onPress={handleSubmit} />
 				</KeyboardAvoidingView>
