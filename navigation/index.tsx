@@ -18,6 +18,7 @@ import LinkingConfiguration from './LinkingConfiguration';
 import ProfileScreen from '../screens/ProfileScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
+import Onboarding from '../screens/Onboarding';
 
 export default function Navigation({
 	colorScheme,
@@ -49,9 +50,11 @@ function RootNavigator() {
 				options={{ headerShown: false }}
 			/> */}
 			<Stack.Screen
-				name={'Profile'}
-				component={ProfileScreen}
-				options={{ title: 'Profile' }}
+				name={'Onboarding'}
+				component={Onboarding}
+				options={{
+					headerShown: false,
+				}}
 			/>
 			<Stack.Screen
 				name={'SignIn'}
