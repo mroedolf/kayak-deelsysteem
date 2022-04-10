@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import RoundedButton from './RoundedButton';
 
 type Props = {
@@ -14,6 +15,8 @@ type Props = {
 		rightButtonPress?: () => void;
 		backgroundColor: string;
 	};
+	skipButton?: boolean;
+	skipButtonPress?: () => void;
 };
 
 const Page = ({
@@ -22,6 +25,8 @@ const Page = ({
 	title,
 	picture,
 	footer,
+	skipButton,
+	skipButtonPress,
 }: Props) => {
 	const {
 		leftButtonLabel,
@@ -32,7 +37,24 @@ const Page = ({
 	} = footer || {};
 
 	return (
-		<View style={[styles.container, { backgroundColor }]}>
+		<SafeAreaView style={[styles.container, { backgroundColor }]}>
+			{!!skipButton && (
+				<View
+					style={{
+						width: '100%',
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'flex-end',
+						paddingHorizontal: 20,
+						paddingTop: 20,
+					}}
+				>
+					<RoundedButton
+						label="Skip"
+						onPress={skipButtonPress || (() => {})}
+					/>
+				</View>
+			)}
 			<View
 				style={{
 					flex: 1,
@@ -80,7 +102,7 @@ const Page = ({
 					</View>
 				)}
 			</View>
-		</View>
+		</SafeAreaView>
 	);
 };
 
