@@ -1,73 +1,118 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet } from 'react-native';
-import PagerView from 'react-native-pager-view';
+import React, { useRef, useState } from 'react';
+import { View, StyleSheet, Animated, FlatList, ViewToken } from 'react-native';
 import Page from '../components/Onboarding/Page';
+import Paginator from '../components/Onboarding/Paginator';
 import { onboardingData } from '../data/onboarding';
-import { RootStackScreenProps } from '../types';
+import { OnboardingDataType, RootStackScreenProps } from '../types';
 
 const Onboarding = ({ navigation }: RootStackScreenProps<'Onboarding'>) => {
-	const pagerRef = useRef<PagerView>(null);
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const scrollX = useRef(new Animated.Value(0)).current;
+	const slidesRef = useRef<FlatList>(null);
 
-	const handlePageChange = (pageNumber: number) => {
-		console.log(pageNumber);
-		if (!pagerRef.current) {
-			return;
+	const viewableItemsChanged = useRef(
+		({ viewableItems }: { viewableItems: ViewToken[] }) => {
+			if (viewableItems.length > 0) {
+				setCurrentIndex(viewableItems[0].index as number);
+			}
 		}
+	).current;
 
-		pagerRef.current.setPage(pageNumber);
+	const scrollTo = (action: string) => {
+		if (slidesRef.current) {
+			if (currentIndex < onboardingData.length - 1 || action === 'back') {
+				if (action === 'next') {
+					slidesRef.current.scrollToIndex({
+						index: currentIndex + 1,
+						animated: true,
+					});
+				} else {
+					slidesRef.current.scrollToIndex({
+						index: currentIndex - 1 < 0 ? 0 : currentIndex - 1,
+						animated: true,
+					});
+				}
+			} else if (action !== 'back') {
+				navigation.navigate('SignIn');
+			}
+		}
 	};
 
+	const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+
 	return (
-		<View style={{ flex: 1 }}>
-			<PagerView style={styles.viewPager} initialPage={0} ref={pagerRef}>
-				{onboardingData.map((item, index) => (
-					<View key={index} style={styles.page}>
+		<View style={styles.container}>
+			<View style={{ flex: 3 }}>
+				<FlatList
+					data={onboardingData}
+					renderItem={({ item }: { item: OnboardingDataType }) => (
 						<Page
-							footer={{
-								rightButtonLabel:
-									index === onboardingData.length - 1
-										? 'Get Started'
-										: 'Next',
-								rightButtonPress: () => {
-									if (index === onboardingData.length - 1) {
-										navigation.navigate('SignIn');
-									} else {
-										handlePageChange(index + 1);
-									}
-								},
-								leftButtonLabel:
-									index != 0 ? 'Back' : undefined,
-								leftButtonPress: () => {
-									if (index === 0) {
-										handlePageChange(index - 1);
-									} else {
-										handlePageChange(index - 1);
-									}
-								},
-								backgroundColor: item.backgroundColor,
-							}}
-							picture={item.picture}
-							title={item.title}
-							description={item.description}
-							backgroundColor={item.backgroundColor}
-							skipButton={item.skipButton}
+							item={item}
+							skipButton
 							skipButtonPress={() =>
 								navigation.navigate('SignIn')
 							}
 						/>
-					</View>
-				))}
-			</PagerView>
+					)}
+					horizontal
+					keyExtractor={(item) => String(item.id)}
+					showsHorizontalScrollIndicator={false}
+					pagingEnabled
+					bounces={false}
+					onScroll={Animated.event(
+						[
+							{
+								nativeEvent: {
+									contentOffset: { x: scrollX },
+								},
+							},
+						],
+						{ useNativeDriver: false }
+					)}
+					onViewableItemsChanged={viewableItemsChanged}
+					viewabilityConfig={viewConfig}
+					scrollEventThrottle={16}
+					ref={slidesRef}
+				/>
+			</View>
+			<Paginator
+				onPress={scrollTo}
+				data={onboardingData}
+				scrollX={scrollX}
+				currentIndex={currentIndex}
+			/>
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
 	viewPager: {
 		flex: 1,
 	},
-	page: {
+	contentSlider: {
 		flex: 1,
+		borderTopLeftRadius: 20,
+		borderTopRightRadius: 20,
+	},
+	dots: {
+		flex: 1,
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		bottom: 310,
+		flexDirection: 'row',
+		justifyContent: 'center',
+	},
+	dot: {
+		width: 10,
+		height: 10,
+		borderRadius: 5,
+		margin: 5,
 	},
 });
 
