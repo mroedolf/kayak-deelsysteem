@@ -13,10 +13,12 @@ import {
 import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
 import { log } from '../config/logger';
+import { userStore } from '../stores/userStore';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError } from '../utils';
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
+	const setUser = userStore().setUser;
 	const signInMutation = useAuthSignInWithEmailAndPassword(auth, {
 		onMutate: (values) => {
 			log.info(`[SignInScreen.onMutate] login attempt | ${values.email}`);
@@ -29,7 +31,14 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 				text2: handleFirebaseError(error),
 			});
 		},
-		onSuccess: () => {
+		onSuccess: (result) => {
+			log.info(
+				`[SignInScreen.onSuccess] login success | ${
+					result.user.email as string
+				}`
+			);
+			setUser(result.user);
+
 			navigation.navigate('Profile');
 		},
 	});
