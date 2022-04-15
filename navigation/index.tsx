@@ -19,6 +19,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import Onboarding from '../screens/Onboarding';
+import { userStore } from '../stores/userStore';
 
 export default function Navigation({
 	colorScheme,
@@ -42,6 +43,8 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+	const user = userStore().user;
+	console.log(user);
 	return (
 		<Stack.Navigator>
 			{/* <Stack.Screen
@@ -49,13 +52,23 @@ function RootNavigator() {
 				component={BottomTabNavigator}
 				options={{ headerShown: false }}
 			/> */}
-			<Stack.Screen
-				name={'Onboarding'}
-				component={Onboarding}
-				options={{
-					headerShown: false,
-				}}
-			/>
+			{!user ? (
+				<Stack.Screen
+					name={'Onboarding'}
+					component={Onboarding}
+					options={{
+						headerShown: false,
+					}}
+				/>
+			) : (
+				<Stack.Screen
+					name={'Profile'}
+					component={ProfileScreen}
+					options={{
+						headerShown: false,
+					}}
+				/>
+			)}
 			<Stack.Screen
 				name={'SignIn'}
 				component={SignInScreen}
