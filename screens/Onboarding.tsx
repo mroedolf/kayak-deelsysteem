@@ -33,7 +33,7 @@ const Onboarding = ({ navigation }: RootStackScreenProps<'Onboarding'>) => {
 					});
 				}
 			} else if (action !== 'back') {
-				navigation.navigate('SignIn');
+				navigation.navigate('SignUp');
 			}
 		}
 	};
