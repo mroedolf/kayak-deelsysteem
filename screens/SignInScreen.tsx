@@ -19,6 +19,7 @@ import { handleFirebaseError } from '../utils';
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 	const setUser = userStore().setUser;
+
 	const signInMutation = useAuthSignInWithEmailAndPassword(auth, {
 		onMutate: (values) => {
 			log.info(`[SignInScreen.onMutate] login attempt | ${values.email}`);
@@ -47,6 +48,7 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 		<Formik
 			initialValues={{ email: '', password: '' }}
 			onSubmit={(values) => {
+				// Pass resetForm to signInMutation to reset the form after a failed login attempt
 				signInMutation.mutate(values);
 			}}
 		>
@@ -75,8 +77,12 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 						secureTextEntry
 						autoCompleteType="password"
 					/>
-					{/* @ts-expect-error Seems to be a mistake in the typing of Formik */}
-					<Button title="Sign In" onPress={handleSubmit} />
+					<Button
+						title="Sign In"
+						disabled={signInMutation.isLoading}
+						/* @ts-expect-error Seems to be a mistake in the typing of Formik */
+						onPress={handleSubmit}
+					/>
 				</KeyboardAvoidingView>
 			)}
 		</Formik>
