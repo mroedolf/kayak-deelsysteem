@@ -67,13 +67,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 				});
 			}}
 		>
-			{({
-				handleChange,
-				handleBlur,
-				handleSubmit,
-				values,
-				isSubmitting,
-			}) => (
+			{({ handleChange, handleBlur, handleSubmit, values }) => (
 				<KeyboardAvoidingView
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					style={styles.container}
@@ -123,7 +117,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						title="Sign Up"
 						// @ts-expect-error Seems to be a mistake in the typing of Formik
 						onPress={handleSubmit}
-						disabled={isSubmitting}
+						disabled={signUpMutation.isLoading}
 					/>
 				</KeyboardAvoidingView>
 			)}
