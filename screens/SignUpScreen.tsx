@@ -14,7 +14,7 @@ import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
 import { log } from '../config/logger';
 import { RootStackScreenProps } from '../types';
-import { handleFirebaseError } from '../utils';
+import { handleFirebaseError, isAllowedStreetName } from '../utils';
 
 const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 	const signUpMutation = useAuthCreateUserWithEmailAndPassword(auth, {
@@ -38,13 +38,26 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 
 	return (
 		<Formik
-			initialValues={{ email: '', password: '', confirmPassword: '' }}
+			initialValues={{
+				email: '',
+				password: '',
+				confirmPassword: '',
+				streetName: '',
+			}}
 			onSubmit={(values) => {
 				if (values.password !== values.confirmPassword) {
 					return Toast.show({
 						type: 'error',
 						text1: 'Error',
 						text2: 'De wachtwoorden komen niet overeen',
+					});
+				}
+
+				if (!isAllowedStreetName(values.streetName)) {
+					return Toast.show({
+						type: 'error',
+						text1: 'Error',
+						text2: 'Deze straat behoort niet tot de lijst van toegelaten straten.',
 					});
 				}
 
@@ -95,6 +108,16 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						autoCapitalize="none"
 						secureTextEntry
 						autoCompleteType="password"
+					/>
+
+					<Text>Straatnaam</Text>
+
+					<TextInput
+						value={values.streetName}
+						onChangeText={handleChange('streetName')}
+						onBlur={handleBlur('streetName')}
+						style={styles.input}
+						autoCapitalize="none"
 					/>
 					<Button
 						title="Sign Up"

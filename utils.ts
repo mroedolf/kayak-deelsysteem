@@ -1,4 +1,5 @@
 import { FirebaseError } from 'firebase/app';
+import allowedStreets from './data/streetnames';
 
 /**
  *
@@ -53,4 +54,13 @@ const handleFirebaseError = (error: FirebaseError) => {
 	}
 };
 
-export { handleFirebaseError };
+/**
+ * Checks if the given streetname is in the list of allowed streets
+ * @param streetName string street name
+ * @returns boolean true if street name is allowed
+ */
+const isAllowedStreetName = (streetName: string): boolean => {
+	return allowedStreets.includes(streetName);
+};
+
+export { handleFirebaseError, isAllowedStreetName };
