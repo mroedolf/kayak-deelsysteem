@@ -15,6 +15,14 @@ import { auth } from '../config/firebase';
 import { log } from '../config/logger';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError, isAllowedStreetName } from '../utils';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+	email: Yup.string().email('Incorrect email').required('Required'),
+	password: Yup.string()
+		.min(6, 'Wachtwoord moet minstens 6 karakters lang zijn')
+		.required('Required'),
+});
 
 const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 	const signUpMutation = useAuthCreateUserWithEmailAndPassword(auth, {
@@ -66,8 +74,16 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 					password: values.password,
 				});
 			}}
+			validationSchema={validationSchema}
 		>
-			{({ handleChange, handleBlur, handleSubmit, values }) => (
+			{({
+				handleChange,
+				handleBlur,
+				handleSubmit,
+				values,
+				errors,
+				touched,
+			}) => (
 				<KeyboardAvoidingView
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					style={styles.container}
@@ -81,8 +97,11 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						autoCapitalize="none"
 						autoCompleteType="email"
 					/>
-					<Text>Password</Text>
+					{errors.email && touched.email && (
+						<Text style={styles.errorText}>{errors.email}</Text>
+					)}
 
+					<Text>Password</Text>
 					<TextInput
 						value={values.password}
 						onChangeText={handleChange('password')}
@@ -92,8 +111,11 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						secureTextEntry
 						autoCompleteType="password"
 					/>
-					<Text>Confirm Password</Text>
+					{errors.password && touched.password && (
+						<Text style={styles.errorText}>{errors.password}</Text>
+					)}
 
+					<Text>Confirm Password</Text>
 					<TextInput
 						value={values.confirmPassword}
 						onChangeText={handleChange('confirmPassword')}
@@ -105,7 +127,6 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 					/>
 
 					<Text>Straatnaam</Text>
-
 					<TextInput
 						value={values.streetName}
 						onChangeText={handleChange('streetName')}
@@ -113,10 +134,15 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						style={styles.input}
 						autoCapitalize="none"
 					/>
+					{errors.streetName && touched.streetName && (
+						<Text style={styles.errorText}>
+							{errors.streetName}
+						</Text>
+					)}
+
 					<Button
 						title="Sign Up"
-						// @ts-expect-error Seems to be a mistake in the typing of Formik
-						onPress={handleSubmit}
+						onPress={handleSubmit as () => void}
 						disabled={signUpMutation.isLoading}
 					/>
 				</KeyboardAvoidingView>
@@ -137,5 +163,10 @@ const styles = StyleSheet.create({
 		borderColor: '#ccc',
 		padding: 10,
 		marginBottom: 10,
+	},
+	errorText: {
+		color: 'red',
+		fontWeight: 'bold',
+		marginVertical: 10,
 	},
 });
