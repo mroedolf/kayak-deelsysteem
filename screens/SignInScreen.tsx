@@ -16,6 +16,12 @@ import { log } from '../config/logger';
 import { userStore } from '../stores/userStore';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError } from '../utils';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+	email: Yup.string().email('Invalid email').required('Required'),
+	password: Yup.string().required('Required'),
+});
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 	const setUser = userStore().setUser;
@@ -38,6 +44,7 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 					result.user.email as string
 				}`
 			);
+
 			setUser(result.user);
 
 			navigation.navigate('Profile');
@@ -48,11 +55,19 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 		<Formik
 			initialValues={{ email: '', password: '' }}
 			onSubmit={(values) => {
-				// Pass resetForm to signInMutation to reset the form after a failed login attempt
 				signInMutation.mutate(values);
 			}}
+			validationSchema={validationSchema}
 		>
-			{({ handleChange, handleBlur, handleSubmit, values }) => (
+			{({
+				handleChange,
+				handleBlur,
+				isValid,
+				handleSubmit,
+				values,
+				touched,
+				errors,
+			}) => (
 				<KeyboardAvoidingView
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					style={styles.container}
@@ -66,8 +81,11 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 						autoCapitalize="none"
 						autoCompleteType="email"
 					/>
-					<Text>Password</Text>
+					{errors.email && touched.email && (
+						<Text style={styles.errorText}>{errors.email}</Text>
+					)}
 
+					<Text>Password</Text>
 					<TextInput
 						value={values.password}
 						onChangeText={handleChange('password')}
@@ -77,11 +95,13 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 						secureTextEntry
 						autoCompleteType="password"
 					/>
+					{errors.password && touched.password && (
+						<Text style={styles.errorText}>{errors.password}</Text>
+					)}
 					<Button
 						title="Sign In"
-						disabled={signInMutation.isLoading}
-						/* @ts-expect-error Seems to be a mistake in the typing of Formik */
-						onPress={handleSubmit}
+						disabled={signInMutation.isLoading || !isValid}
+						onPress={handleSubmit as () => void}
 					/>
 				</KeyboardAvoidingView>
 			)}
@@ -110,5 +130,10 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		marginTop: 20,
+	},
+	errorText: {
+		color: 'red',
+		fontWeight: 'bold',
+		marginVertical: 10,
 	},
 });
