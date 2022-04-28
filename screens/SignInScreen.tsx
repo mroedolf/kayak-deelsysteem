@@ -1,15 +1,8 @@
 import { useAuthSignInWithEmailAndPassword } from '@react-query-firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { Formik } from 'formik';
-import React from 'react';
-import {
-	Button,
-	KeyboardAvoidingView,
-	Platform,
-	StyleSheet,
-	Text,
-	TextInput,
-} from 'react-native';
+import React, { useState } from 'react';
+import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
 import { log } from '../config/logger';
@@ -17,14 +10,24 @@ import { userStore } from '../stores/userStore';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError } from '../utils';
 import * as Yup from 'yup';
+import { Input } from '../components/styles/elements/Input';
+import { KeyboardAvoidingView } from '../components/styles/elements/KeyboardAvoidingView';
+import { Heading } from '../components/styles/elements/Heading';
+import { Button } from '../components/styles/elements/Button';
+import { Text } from '../components/styles/elements/Text';
+import { Section } from '../components/styles/elements/Section';
+import { ErrorText } from '../components/styles/elements/ErrorText';
 
 const validationSchema = Yup.object().shape({
-	email: Yup.string().email('Invalid email').required('Required'),
-	password: Yup.string().required('Required'),
+	email: Yup.string().email('Ongeldig e-mail').required('Required'),
+	password: Yup.string().required('Vereist'),
 });
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 	const setUser = userStore().setUser;
+	const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+	const toggleSecureTextEntry = () => setSecureTextEntry(!secureTextEntry);
 
 	const signInMutation = useAuthSignInWithEmailAndPassword(auth, {
 		onMutate: (values) => {
@@ -70,39 +73,57 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 			}) => (
 				<KeyboardAvoidingView
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-					style={styles.container}
+					justifyContent={'center'}
+					minHeight={'100%'}
 				>
-					<Text>Email</Text>
-					<TextInput
-						value={values.email}
-						onChangeText={handleChange('email')}
-						onBlur={handleBlur('email')}
-						style={styles.input}
-						autoCapitalize="none"
-						autoCompleteType="email"
-					/>
-					{errors.email && touched.email && (
-						<Text style={styles.errorText}>{errors.email}</Text>
-					)}
-
-					<Text>Password</Text>
-					<TextInput
-						value={values.password}
-						onChangeText={handleChange('password')}
-						onBlur={handleBlur('password')}
-						style={styles.input}
-						autoCapitalize="none"
-						secureTextEntry
-						autoCompleteType="password"
-					/>
-					{errors.password && touched.password && (
-						<Text style={styles.errorText}>{errors.password}</Text>
-					)}
-					<Button
-						title="Sign In"
-						disabled={signInMutation.isLoading || !isValid}
-						onPress={handleSubmit as () => void}
-					/>
+					<Section flex="1 1 auto" justifyContent={'center'}>
+						<Heading
+							fontSize={6}
+							marginBottom={30}
+							fontWeight={500}
+						>
+							Meld je aan
+						</Heading>
+						<Input
+							value={values.email}
+							onChangeText={handleChange('email')}
+							onBlur={handleBlur('email')}
+							autoCapitalize="none"
+							autoCompleteType="email"
+							placeholder="Email"
+							hasError={!!(errors.email && touched.email)}
+						/>
+						{errors.email && touched.email && (
+							<ErrorText mb={'20px'} mt={'5px'}>
+								{errors.email}
+							</ErrorText>
+						)}
+						<Input
+							value={values.password}
+							onChangeText={handleChange('password')}
+							onBlur={handleBlur('password')}
+							autoCapitalize="none"
+							secureTextEntry={secureTextEntry}
+							autoCompleteType="password"
+							placeholder="Password"
+							hasError={!!(errors.password && touched.password)}
+						/>
+						{errors.password && touched.password && (
+							<ErrorText mb={'20px'} mt={'5px'}>
+								{errors.password}
+							</ErrorText>
+						)}
+					</Section>
+					<Section flex="0 0 auto" height="80px">
+						<Button
+							disabled={signInMutation.isLoading || !isValid}
+							onPress={handleSubmit as () => void}
+						>
+							<Text color="white" fontSize={15} fontWeight="bold">
+								Log in
+							</Text>
+						</Button>
+					</Section>
 				</KeyboardAvoidingView>
 			)}
 		</Formik>
@@ -110,30 +131,3 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 };
 
 export default SignInScreen;
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		marginHorizontal: 20,
-	},
-	title: {
-		fontSize: 20,
-		fontWeight: 'bold',
-	},
-	input: {
-		borderColor: 'black',
-		borderWidth: 2,
-		width: '100%',
-		padding: 10,
-	},
-	button: {
-		marginTop: 20,
-	},
-	errorText: {
-		color: 'red',
-		fontWeight: 'bold',
-		marginVertical: 10,
-	},
-});
