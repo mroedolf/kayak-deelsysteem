@@ -8,11 +8,7 @@ type Props = {
 	leftButtonLabel: boolean;
 };
 
-const Footer = ({
-	backgroundColor,
-	rightButtonLabel = false,
-	leftButtonLabel = false,
-}: Props) => {
+const Footer = ({ backgroundColor }: Props) => {
 	const windowWidth = useWindowDimensions().width;
 	const HEIGHT = windowWidth * 0.21;
 	const FOOTER_PADDING = windowWidth * 0.1;
