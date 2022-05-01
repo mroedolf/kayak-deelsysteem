@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -14,6 +15,8 @@ import {
 	Poppins_800ExtraBold,
 } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
+import { ThemeProvider } from 'styled-components/native';
+import theme from './components/styles/theme';
 
 export default function App() {
 	const colorScheme = useColorScheme();
@@ -29,12 +32,14 @@ export default function App() {
 	if (!fontsLoaded) return <AppLoading />;
 
 	return (
-		<QueryClientProvider client={client}>
-			<SafeAreaProvider>
-				<Navigation colorScheme={colorScheme} />
-				<StatusBar />
-				<Toast />
-			</SafeAreaProvider>
-		</QueryClientProvider>
+		<ThemeProvider theme={theme}>
+			<QueryClientProvider client={client}>
+				<SafeAreaProvider>
+					<Navigation colorScheme={colorScheme} />
+					<StatusBar />
+					<Toast />
+				</SafeAreaProvider>
+			</QueryClientProvider>
+		</ThemeProvider>
 	);
 }

@@ -49,8 +49,6 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 			);
 
 			setUser(result.user);
-
-			navigation.navigate('Profile');
 		},
 	});
 
