@@ -66,7 +66,7 @@ function RootNavigator() {
 			<Stack.Screen
 				name={'SignUp'}
 				component={SignUpScreen}
-				options={{ title: 'SignUp' }}
+				options={{ headerShown: false }}
 			/>
 		</Stack.Navigator>
 	);

@@ -2,25 +2,34 @@ import { useAuthCreateUserWithEmailAndPassword } from '@react-query-firebase/aut
 import { FirebaseError } from 'firebase/app';
 import { Formik } from 'formik';
 import React from 'react';
-import {
-	KeyboardAvoidingView,
-	Platform,
-	TextInput,
-	Button,
-	StyleSheet,
-	Text,
-} from 'react-native';
+import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
 import { log } from '../config/logger';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError, isAllowedStreetName } from '../utils';
 import * as Yup from 'yup';
+import { KeyboardAvoidingView } from '../components/styles/elements/KeyboardAvoidingView';
+import { Heading } from '../components/styles/elements/Heading';
+import { Input } from '../components/styles/elements/Input';
+import { ErrorText } from '../components/styles/elements/ErrorText';
+import { Section } from '../components/styles/elements/Section';
+import { Button } from '../components/styles/elements/Button';
+import { Text } from '../components/styles/elements/Text';
+import RoundedButton from '../components/Onboarding/RoundedButton';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),
 	password: Yup.string()
 		.min(6, 'Wachtwoord moet minstens 6 karakters lang zijn')
+		.required('Required'),
+	confirmPassword: Yup.string()
+		.oneOf([Yup.ref('password'), null], 'Wachtwoorden komen niet overeen')
+		.required('Required'),
+
+	streetName: Yup.string()
+		.min(3, 'Straatnaam moet minstens 3 karakters lang zijn')
+		.max(50, 'Straatnaam mag maximaal 50 karakters lang zijn')
 		.required('Required'),
 });
 
@@ -86,65 +95,103 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 			}) => (
 				<KeyboardAvoidingView
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-					style={styles.container}
+					minHeight={'100%'}
 				>
-					<Text>Email</Text>
-					<TextInput
-						value={values.email}
-						onChangeText={handleChange('email')}
-						onBlur={handleBlur('email')}
-						style={styles.input}
-						autoCapitalize="none"
-						autoCompleteType="email"
-					/>
-					{errors.email && touched.email && (
-						<Text style={styles.errorText}>{errors.email}</Text>
-					)}
+					<Section flex="0 0 auto" mt="30px">
+						<RoundedButton
+							onPress={() => navigation.goBack()}
+							label="Terug"
+						/>
+					</Section>
+					<Section flex="1 1 auto" justifyContent={'center'}>
+						<Heading
+							fontSize={6}
+							marginBottom={30}
+							fontWeight={500}
+						>
+							Registreer een account
+						</Heading>
+						<Input
+							value={values.email}
+							onChangeText={handleChange('email')}
+							onBlur={handleBlur('email')}
+							autoCapitalize="none"
+							autoCompleteType="email"
+							placeholder="E-mailadres"
+							hasError={!!(errors.email && touched.email)}
+						/>
+						{errors.email && touched.email && (
+							<ErrorText mb={'20px'} mt={'5px'}>
+								{errors.email}
+							</ErrorText>
+						)}
+						<Input
+							value={values.password}
+							onChangeText={handleChange('password')}
+							onBlur={handleBlur('password')}
+							autoCapitalize="none"
+							secureTextEntry
+							autoCompleteType="password"
+							placeholder="Wachtwoord"
+							hasError={!!(errors.password && touched.password)}
+						/>
+						{errors.password && touched.password && (
+							<ErrorText mb={'20px'} mt={'5px'}>
+								{errors.password}
+							</ErrorText>
+						)}
+						<Input
+							value={values.confirmPassword}
+							onChangeText={handleChange('confirmPassword')}
+							onBlur={handleBlur('confirmPassword')}
+							autoCapitalize="none"
+							secureTextEntry
+							autoCompleteType="password"
+							placeholder="Bevestig wachtwoord"
+							hasError={
+								!!(
+									errors.confirmPassword &&
+									touched.confirmPassword
+								)
+							}
+						/>
+						{errors.confirmPassword && touched.confirmPassword && (
+							<ErrorText mb={'20px'} mt={'5px'}>
+								{errors.confirmPassword}
+							</ErrorText>
+						)}
+						<Input
+							value={values.streetName}
+							onChangeText={handleChange('streetName')}
+							onBlur={handleBlur('streetName')}
+							autoCapitalize="none"
+							autoCompleteType="street-address"
+							placeholder="Straatnaam"
+							hasError={
+								!!(errors.streetName && touched.streetName)
+							}
+						/>
+						{errors.streetName && touched.streetName && (
+							<ErrorText mb={'20px'} mt={'5px'}>
+								{errors.streetName}
+							</ErrorText>
+						)}
+					</Section>
 
-					<Text>Password</Text>
-					<TextInput
-						value={values.password}
-						onChangeText={handleChange('password')}
-						onBlur={handleBlur('password')}
-						style={styles.input}
-						autoCapitalize="none"
-						secureTextEntry
-						autoCompleteType="password"
-					/>
-					{errors.password && touched.password && (
-						<Text style={styles.errorText}>{errors.password}</Text>
-					)}
-
-					<Text>Confirm Password</Text>
-					<TextInput
-						value={values.confirmPassword}
-						onChangeText={handleChange('confirmPassword')}
-						onBlur={handleBlur('confirmPassword')}
-						style={styles.input}
-						autoCapitalize="none"
-						secureTextEntry
-						autoCompleteType="password"
-					/>
-
-					<Text>Straatnaam</Text>
-					<TextInput
-						value={values.streetName}
-						onChangeText={handleChange('streetName')}
-						onBlur={handleBlur('streetName')}
-						style={styles.input}
-						autoCapitalize="none"
-					/>
-					{errors.streetName && touched.streetName && (
-						<Text style={styles.errorText}>
-							{errors.streetName}
-						</Text>
-					)}
-
-					<Button
-						title="Sign Up"
-						onPress={handleSubmit as () => void}
-						disabled={signUpMutation.isLoading}
-					/>
+					<Section flex="0 0 auto" height="80px">
+						<Button
+							onPress={handleSubmit as () => void}
+							disabled={signUpMutation.isLoading}
+						>
+							<Text
+								color="white"
+								fontSize={15}
+								fontWeight={'bold'}
+							>
+								Registreer
+							</Text>
+						</Button>
+					</Section>
 				</KeyboardAvoidingView>
 			)}
 		</Formik>
@@ -152,21 +199,3 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 };
 
 export default SignUpScreen;
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 20,
-	},
-	input: {
-		borderWidth: 1,
-		borderColor: '#ccc',
-		padding: 10,
-		marginBottom: 10,
-	},
-	errorText: {
-		color: 'red',
-		fontWeight: 'bold',
-		marginVertical: 10,
-	},
-});

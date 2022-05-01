@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 type UserStore = {
 	user: User | undefined;
 	setUser: (user: User | undefined) => void;
+	removeUser: () => void;
 };
 
 export const userStore = create(
@@ -14,6 +15,7 @@ export const userStore = create(
 			(set) => ({
 				user: undefined,
 				setUser: (user) => set({ user }),
+				removeUser: () => set({ user: undefined }),
 			}),
 			{
 				name: 'userStore',

@@ -8,6 +8,7 @@ export default function ProfileScreen({
 	navigation,
 }: RootTabScreenProps<'TabOne'>) {
 	const user = userStore().user;
+	const removeUser = userStore().removeUser();
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Profile Page</Text>
@@ -26,6 +27,7 @@ export default function ProfileScreen({
 				title="SignUpScreen"
 				onPress={() => navigation.navigate('SignUp')}
 			/>
+			<Button title="Logout" onPress={() => removeUser} />
 		</View>
 	);
 }
