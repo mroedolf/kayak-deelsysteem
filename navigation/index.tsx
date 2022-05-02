@@ -14,7 +14,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import Onboarding from '../screens/Onboarding';
-import { userStore } from '../stores/userStore';
+import { useStore } from '../stores/useStore';
 import Homescreen from '../screens/Homescreen';
 
 export default function Navigation({
@@ -39,7 +39,7 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-	const user = userStore().user;
+	const user = useStore().user;
 
 	return (
 		<Stack.Navigator>
@@ -91,6 +91,13 @@ const DrawerNavigator = () => {
 			<Drawer.Screen
 				name={'Home'}
 				component={RootNavigator}
+				options={{
+					headerShown: false,
+				}}
+			/>
+			<Drawer.Screen
+				name={'Profile'}
+				component={ProfileScreen}
 				options={{
 					headerShown: false,
 				}}

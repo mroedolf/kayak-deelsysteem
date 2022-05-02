@@ -36,6 +36,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 export type RootDrawerParamList = {
 	Home: undefined;
 	Settings: undefined;
+	Profile: undefined;
 };
 
 export type RootDrawerScreenProps<Screen extends keyof RootDrawerParamList> =
@@ -62,3 +63,12 @@ export type OnboardingDataType = {
 	picture: string;
 	backgroundColor: string;
 };
+
+export enum FilterOptions {
+	Alles = 'Alles',
+	Eenpersoons = 'Eenpersoons',
+	Tweepersoons = 'Tweepersoons',
+	Driepersoons = 'Driepersoons',
+	Vierpersoons = 'Vierpersoons',
+	Vijfpersoons = 'Vijfpersoons',
+}

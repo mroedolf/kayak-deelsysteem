@@ -32,7 +32,7 @@ const theme = {
 		large: '24px',
 	},
 	sizes: {
-		small: '16px',
+		small: '10px',
 		medium: '24px',
 		large: '32px',
 	},

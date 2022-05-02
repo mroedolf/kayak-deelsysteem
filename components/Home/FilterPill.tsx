@@ -8,9 +8,8 @@ type Props = {
 };
 
 const FilterPill = ({ isSelected, label, onPress }: Props) => {
-	console.log(isSelected);
 	return (
-		<Pill.Wrapper isSelected={isSelected}>
+		<Pill.Wrapper isSelected={isSelected} onPress={onPress}>
 			<Pill.Text isSelected={isSelected}>{label}</Pill.Text>
 		</Pill.Wrapper>
 	);

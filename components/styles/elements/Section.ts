@@ -29,4 +29,5 @@ export const Section = styled.View<SectionProps>`
     ${grid}
     ${flexbox}
 	${border}
+	overflow: scroll;
 `;

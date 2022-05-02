@@ -3,7 +3,7 @@
 
 import styled from '../../../styled-components';
 
-export const Wrapper = styled.View<{ isSelected?: boolean }>`
+export const Wrapper = styled.TouchableOpacity<{ isSelected?: boolean }>`
 	align-self: flex-start;
 	border-radius: 10px;
 	border: 1px solid
@@ -12,6 +12,7 @@ export const Wrapper = styled.View<{ isSelected?: boolean }>`
 	padding: ${({ theme }) => theme.space.small};
 	background-color: ${({ theme, isSelected }) =>
 		isSelected ? theme.colors.primary : 'transparent'};
+	margin-right: ${({ theme }) => theme.space.small};
 `;
 
 export const Text = styled.Text<{ isSelected?: boolean }>`

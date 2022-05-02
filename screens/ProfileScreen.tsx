@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
-import { userStore } from '../stores/userStore';
+import { useStore } from '../stores/useStore';
 import { RootTabScreenProps } from '../types';
 
 export default function ProfileScreen({
 	navigation,
 }: RootTabScreenProps<'TabOne'>) {
-	const user = userStore().user;
+	const user = useStore().user;
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Profile Page</Text>
