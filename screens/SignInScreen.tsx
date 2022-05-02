@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { auth } from '../config/firebase';
 import { log } from '../config/logger';
-import { userStore } from '../stores/userStore';
+import { useStore } from '../stores/useStore';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError } from '../utils';
 import * as Yup from 'yup';
@@ -24,7 +24,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
-	const setUser = userStore().setUser;
+	const setUser = useStore().setUser;
 	const [secureTextEntry, setSecureTextEntry] = useState(true);
 
 	const toggleSecureTextEntry = () => setSecureTextEntry(!secureTextEntry);
@@ -49,8 +49,6 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 			);
 
 			setUser(result.user);
-
-			navigation.navigate('Profile');
 		},
 	});
 

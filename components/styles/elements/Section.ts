@@ -1,5 +1,7 @@
 import styled from 'styled-components/native';
 import {
+	border,
+	BorderProps,
 	flexbox,
 	FlexboxProps,
 	grid,
@@ -17,7 +19,8 @@ type SectionProps =
 	| GridProps
 	| SpaceProps
 	| LayoutProps
-	| PositionProps;
+	| PositionProps
+	| BorderProps;
 
 export const Section = styled.View<SectionProps>`
 	${space}
@@ -25,4 +28,6 @@ export const Section = styled.View<SectionProps>`
     ${position}
     ${grid}
     ${flexbox}
+	${border}
+	overflow: scroll;
 `;

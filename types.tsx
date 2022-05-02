@@ -5,6 +5,7 @@
  */
 
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { DrawerScreenProps } from '@react-navigation/drawer';
 import {
 	CompositeScreenProps,
 	NavigatorScreenParams,
@@ -26,10 +27,23 @@ export type RootStackParamList = {
 	SignIn: undefined;
 	SignUp: undefined;
 	Onboarding: undefined;
+	Homescreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 	NativeStackScreenProps<RootStackParamList, Screen>;
+
+export type RootDrawerParamList = {
+	Home: undefined;
+	Settings: undefined;
+	Profile: undefined;
+};
+
+export type RootDrawerScreenProps<Screen extends keyof RootDrawerParamList> =
+	CompositeScreenProps<
+		DrawerScreenProps<RootDrawerParamList, Screen>,
+		NativeStackScreenProps<RootStackParamList>
+	>;
 
 export type RootTabParamList = {
 	TabOne: undefined;
@@ -49,3 +63,12 @@ export type OnboardingDataType = {
 	picture: string;
 	backgroundColor: string;
 };
+
+export enum FilterOptions {
+	Alles = 'Alles',
+	Eenpersoons = 'Eenpersoons',
+	Tweepersoons = 'Tweepersoons',
+	Driepersoons = 'Driepersoons',
+	Vierpersoons = 'Vierpersoons',
+	Vijfpersoons = 'Vijfpersoons',
+}
