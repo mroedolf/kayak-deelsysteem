@@ -110,7 +110,6 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 								hasError={
 									!!(errors.password && touched.password)
 								}
-								flex={1}
 							/>
 							<PasswordButton
 								onPress={toggleSecureTextEntry}
