@@ -17,6 +17,8 @@ import { Button } from '../components/styles/elements/Button';
 import { Text } from '../components/styles/elements/Text';
 import { Section } from '../components/styles/elements/Section';
 import { ErrorText } from '../components/styles/elements/ErrorText';
+import PasswordButton from '../components/PasswordButton';
+import theme from '../components/styles/theme';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Ongeldig e-mail').required('Required'),
@@ -96,16 +98,27 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 								{errors.email}
 							</ErrorText>
 						)}
-						<Input
-							value={values.password}
-							onChangeText={handleChange('password')}
-							onBlur={handleBlur('password')}
-							autoCapitalize="none"
-							secureTextEntry={secureTextEntry}
-							autoCompleteType="password"
-							placeholder="Password"
-							hasError={!!(errors.password && touched.password)}
-						/>
+						<Section flexDirection={'row'}>
+							<Input
+								value={values.password}
+								onChangeText={handleChange('password')}
+								onBlur={handleBlur('password')}
+								autoCapitalize="none"
+								secureTextEntry={secureTextEntry}
+								autoCompleteType="password"
+								placeholder="Password"
+								hasError={
+									!!(errors.password && touched.password)
+								}
+								flex={1}
+							/>
+							<PasswordButton
+								onPress={toggleSecureTextEntry}
+								isVisible={!secureTextEntry}
+								backgroundColor={'red'}
+								marginBottom={'20px'}
+							/>
+						</Section>
 						{errors.password && touched.password && (
 							<ErrorText mb={'20px'} mt={'5px'}>
 								{errors.password}
