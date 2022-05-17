@@ -33,5 +33,3 @@ const PasswordButton = ({ onPress, isVisible, ...props }: Props) => {
 };
 
 export default PasswordButton;
-
-const styles = StyleSheet.create({});
