@@ -1,6 +1,6 @@
 import { User } from 'firebase/auth';
 import create, { GetState, SetState } from 'zustand';
-import { devtools, persist, StateStorage } from 'zustand/middleware';
+import { persist, StateStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FilterOptions } from '../types';
 import mockKayakData from '../data/mockKayakData';
@@ -26,7 +26,7 @@ type StoreSlice<T> = (
 	get: GetState<StoreState>
 ) => T;
 
-const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
+const createUserSlice: StoreSlice<UserSlice> = (set) => ({
 	user: undefined,
 	setUser: (user) => set({ user }),
 	removeUser: () => set({ user: undefined }),

@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // @ts-nocheck
 import React from 'react';
-import { FilterOptions, RootStackScreenProps } from '../types';
+import { FilterOptions } from '../types';
 import { SafeAreaView } from '../components/styles/elements/SafeAreaView';
 import { Heading } from '../components/styles/elements/Heading';
 import FilterPill from '../components/Home/FilterPill';
@@ -16,10 +16,7 @@ import mockKayakData from '../data/mockKayakData';
 import KayakCard from '../components/Home/KayakCard';
 import { Flatlist } from '../components/styles/elements/Flatlist';
 
-const Homescreen = ({
-	navigation,
-	route,
-}: RootStackScreenProps<'Homescreen'>) => {
+const Homescreen = () => {
 	const selectedFilter = useStore().selectedFilter;
 	const setSelectedFilter = useStore().setSelectedFilter;
 	const filteredKayaks = useStore().filterKayaks(mockKayakData);
