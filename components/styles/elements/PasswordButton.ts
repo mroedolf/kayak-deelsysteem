@@ -12,6 +12,8 @@ import {
 	flexbox,
 	FlexboxProps,
 	FlexProps,
+	fontSize,
+	FontSizeProps,
 	space,
 	SpaceProps,
 } from 'styled-system';
@@ -23,7 +25,8 @@ export type TouchableOpacityProps =
 	| BorderProps
 	| BorderRadiusProps
 	| ColorProps
-	| BackgroundProps;
+	| BackgroundProps
+	| FontSizeProps;
 
 export const TouchableOpacity = styled.TouchableOpacity<TouchableOpacityProps>`
 	${space}
@@ -33,4 +36,5 @@ export const TouchableOpacity = styled.TouchableOpacity<TouchableOpacityProps>`
     ${borderRadius}
     ${color}
     ${background}
+	${fontSize}
 `;

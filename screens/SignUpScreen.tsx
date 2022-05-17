@@ -17,6 +17,7 @@ import { Section } from '../components/styles/elements/Section';
 import { Button } from '../components/styles/elements/Button';
 import { Text } from '../components/styles/elements/Text';
 import RoundedButton from '../components/Onboarding/RoundedButton';
+import theme from '../components/styles/theme';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),
@@ -105,7 +106,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 					</Section>
 					<Section flex="1 1 auto" justifyContent={'center'}>
 						<Heading
-							fontSize={6}
+							fontSize={theme.fontSizes['5xl']}
 							marginBottom={30}
 							fontWeight={500}
 						>

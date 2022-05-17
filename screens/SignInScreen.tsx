@@ -19,6 +19,7 @@ import { Section } from '../components/styles/elements/Section';
 import { ErrorText } from '../components/styles/elements/ErrorText';
 import PasswordButton from '../components/PasswordButton';
 import theme from '../components/styles/theme';
+import TextLink from '../components/TextLink';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Ongeldig e-mail').required('Required'),
@@ -78,9 +79,9 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 				>
 					<Section flex="1 1 auto" justifyContent={'center'}>
 						<Heading
-							fontSize={6}
-							marginBottom={30}
-							fontWeight={500}
+							fontSize={theme.fontSizes['5xl']}
+							marginBottom={theme.space.large}
+							fontWeight={theme.fontWeights.bold}
 						>
 							Meld je aan
 						</Heading>
@@ -94,9 +95,7 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 							hasError={!!(errors.email && touched.email)}
 						/>
 						{errors.email && touched.email && (
-							<ErrorText mb={'20px'} mt={'5px'}>
-								{errors.email}
-							</ErrorText>
+							<ErrorText>{errors.email}</ErrorText>
 						)}
 						<Section flexDirection={'row'}>
 							<Input
@@ -110,26 +109,42 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 								hasError={
 									!!(errors.password && touched.password)
 								}
+								flex={'1'}
+								hasButton
 							/>
 							<PasswordButton
 								onPress={toggleSecureTextEntry}
 								isVisible={!secureTextEntry}
-								backgroundColor={'red'}
-								marginBottom={'20px'}
+								backgroundColor={theme.colors.input}
+								flex={'0 0 auto'}
+								alignItems={'center'}
+								justifyContent={'center'}
+								paddingX={theme.space.small}
+								borderTopRightRadius={theme.space.small}
+								borderBottomRightRadius={theme.space.small}
+								marginTop={theme.space.medium}
 							/>
 						</Section>
 						{errors.password && touched.password && (
-							<ErrorText mb={'20px'} mt={'5px'}>
-								{errors.password}
-							</ErrorText>
+							<ErrorText>{errors.password}</ErrorText>
 						)}
+						<TextLink
+							alignSelf={'flex-end'}
+							onPress={() => navigation.navigate('SignUp')}
+							label="Nog geen account?"
+						/>
 					</Section>
+					<Section></Section>
 					<Section flex="0 0 auto" height="80px">
 						<Button
 							disabled={signInMutation.isLoading || !isValid}
 							onPress={handleSubmit as () => void}
 						>
-							<Text color="white" fontSize={15} fontWeight="bold">
+							<Text
+								color="white"
+								fontSize={theme.fontSizes.base}
+								fontWeight="bold"
+							>
 								Log in
 							</Text>
 						</Button>

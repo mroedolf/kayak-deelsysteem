@@ -1,9 +1,17 @@
 import styled from 'styled-components/native';
-import { color, ColorProps, typography, TypographyProps } from 'styled-system';
+import {
+	color,
+	ColorProps,
+	margin,
+	MarginProps,
+	typography,
+	TypographyProps,
+} from 'styled-system';
 
-type TextProps = TypographyProps & ColorProps;
+type TextProps = TypographyProps | ColorProps | MarginProps;
 
 export const Text = styled.Text<TextProps>`
 	${typography}
 	${color}
+	${margin}
 `;
