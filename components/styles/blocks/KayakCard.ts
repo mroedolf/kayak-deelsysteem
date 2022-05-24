@@ -9,8 +9,8 @@ export const Wrapper = styled.TouchableOpacity`
 `;
 
 export const Title = styled.Text`
-	font-size: ${({ theme }) => theme.fontSizes.base};
-	font-weight: ${({ theme }) => theme.fontWeights.bold};
+	font-size: ${({ theme }) => theme.font.sizes.base};
+	font-weight: ${({ theme }) => theme.font.weights.bold};
 	color: ${({ theme }) => theme.colors.primary};
 `;
 

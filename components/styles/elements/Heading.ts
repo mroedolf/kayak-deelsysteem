@@ -14,5 +14,5 @@ export const Heading = styled.Text<HeadingProps>`
 	${fontWeight}
 	${margin}
 	font-family: 'Poppins_700Bold';
-	color: #30343e;
+	color: ${({ theme }) => theme.colors.primary};
 `;

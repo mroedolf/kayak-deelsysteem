@@ -79,9 +79,9 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 				>
 					<Section flex="1 1 auto" justifyContent={'center'}>
 						<Heading
-							fontSize={theme.fontSizes['5xl']}
+							fontSize={theme.font.sizes['5xl']}
 							marginBottom={theme.space.large}
-							fontWeight={theme.fontWeights.bold}
+							fontWeight={theme.font.weights.bold}
 						>
 							Meld je aan
 						</Heading>
@@ -142,7 +142,7 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 						>
 							<Text
 								color="white"
-								fontSize={theme.fontSizes.base}
+								fontSize={theme.font.sizes.base}
 								fontWeight="bold"
 							>
 								Log in
