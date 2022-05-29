@@ -33,7 +33,7 @@ const Onboarding = ({ navigation }: RootStackScreenProps<'Onboarding'>) => {
 					});
 				}
 			} else if (action !== 'back') {
-				navigation.navigate('SignUp');
+				navigation.navigate('CTAScreen');
 			}
 		}
 	};
@@ -50,7 +50,7 @@ const Onboarding = ({ navigation }: RootStackScreenProps<'Onboarding'>) => {
 							item={item}
 							skipButton
 							skipButtonPress={() =>
-								navigation.navigate('SignIn')
+								navigation.navigate('CTAScreen')
 							}
 						/>
 					)}

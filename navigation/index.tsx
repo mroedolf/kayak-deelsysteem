@@ -16,6 +16,8 @@ import SignUpScreen from '../screens/SignUpScreen';
 import Onboarding from '../screens/Onboarding';
 import { useStore } from '../stores/useStore';
 import Homescreen from '../screens/Homescreen';
+import CTAScreen from '../screens/CTAScreen';
+import theme from '../components/styles/theme';
 
 export default function Navigation({
 	colorScheme,
@@ -42,7 +44,11 @@ function RootNavigator() {
 	const user = useStore().user;
 
 	return (
-		<Stack.Navigator>
+		<Stack.Navigator
+			screenOptions={{
+				contentStyle: { backgroundColor: theme.colors.light },
+			}}
+		>
 			{user ? (
 				<>
 					<Stack.Screen
@@ -75,6 +81,11 @@ function RootNavigator() {
 					<Stack.Screen
 						name={'SignUp'}
 						component={SignUpScreen}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name={'CTAScreen'}
+						component={CTAScreen}
 						options={{ headerShown: false }}
 					/>
 				</>
