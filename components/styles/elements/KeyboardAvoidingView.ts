@@ -21,6 +21,6 @@ export const KeyboardAvoidingView = styled.KeyboardAvoidingView<KeyboardAvoiding
 	${flex}
     ${space}
     ${layout}
-	background-color: #fdfdfd;
+	background-color: ${({ theme }) => theme.colors.light};
 	padding: 20px;
 `;

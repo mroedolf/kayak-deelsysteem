@@ -16,9 +16,9 @@ const TextLink = ({ onPress, label, ...props }: Props) => {
 		<TouchableOpacity onPress={onPress} {...props}>
 			<Text
 				color={theme.colors.primary}
-				fontWeight={theme.fontWeights.bold}
+				fontWeight={theme.font.weights.bold}
 				mt={theme.space.small}
-				fontSize={theme.fontSizes.base}
+				fontSize={theme.font.sizes.base}
 			>
 				{label}
 			</Text>

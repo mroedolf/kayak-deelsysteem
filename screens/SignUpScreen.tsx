@@ -106,7 +106,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 					</Section>
 					<Section flex="1 1 auto" justifyContent={'center'}>
 						<Heading
-							fontSize={theme.fontSizes['5xl']}
+							fontSize={theme.font.sizes['5xl']}
 							marginBottom={30}
 							fontWeight={500}
 						>

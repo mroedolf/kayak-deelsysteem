@@ -52,6 +52,8 @@ const handleFirebaseError = (error: FirebaseError) => {
 	if (error.code === 'auth/operation-not-allowed') {
 		return 'Operatie niet toegestaan';
 	}
+
+	return error.message;
 };
 
 /**

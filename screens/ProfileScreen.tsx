@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, StyleSheet } from 'react-native';
-import { Text, View } from '../components/Themed';
 import { useStore } from '../stores/useStore';
 import { RootTabScreenProps } from '../types';
+import { Text, View } from 'react-native';
 
 export default function ProfileScreen({
 	navigation,
