@@ -28,6 +28,7 @@ export type RootStackParamList = {
 	SignUp: undefined;
 	Onboarding: undefined;
 	Homescreen: undefined;
+	CTAScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
