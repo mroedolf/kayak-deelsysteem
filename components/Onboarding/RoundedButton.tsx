@@ -1,4 +1,4 @@
-import React, { ComponentType, createElement } from 'react';
+import React, { ComponentType } from 'react';
 import { TouchableOpacity } from '../styles/elements/TouchableOpacity';
 import { Text } from '../styles/elements/Text';
 import theme from '../styles/theme';
@@ -31,6 +31,7 @@ const RoundedButton = ({
 			flexDirection={'row'}
 			alignItems={'center'}
 		>
+			{/* FIXME: Horrible typing here */}
 			{Icon && (
 				<Icon
 					name={Icon.propTypes?.name as unknown as string}
@@ -38,7 +39,6 @@ const RoundedButton = ({
 					color={Icon.propTypes?.color as unknown as string}
 				/>
 			)}
-
 			<Text
 				fontSize={labelSize}
 				color={labelColor}
