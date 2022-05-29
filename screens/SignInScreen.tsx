@@ -20,6 +20,8 @@ import { ErrorText } from '../components/styles/elements/ErrorText';
 import PasswordButton from '../components/PasswordButton';
 import theme from '../components/styles/theme';
 import TextLink from '../components/TextLink';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import { Ionicons } from '@expo/vector-icons';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Ongeldig e-mail').required('Required'),
@@ -77,6 +79,21 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 					justifyContent={'center'}
 					minHeight={'100%'}
 				>
+					<Section flex="0 0 5%" mt="30px">
+						<RoundedButton
+							onPress={() => navigation.goBack()}
+							label="Terug"
+							labelSize={theme.font.sizes.lg}
+							labelColor={theme.colors.primary}
+							Icon={() => (
+								<Ionicons
+									name="chevron-back-outline"
+									color={theme.colors.primary}
+									size={24}
+								/>
+							)}
+						/>
+					</Section>
 					<Section flex="1 1 auto" justifyContent={'center'}>
 						<Heading
 							fontSize={theme.font.sizes['5xl']}

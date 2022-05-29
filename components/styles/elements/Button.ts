@@ -19,17 +19,20 @@ type ButtonProps =
 	| LayoutProps
 	| PositionProps;
 
-export const Button = styled.TouchableOpacity<ButtonProps>`
+export const Button = styled.TouchableOpacity<
+	ButtonProps | { disabled?: boolean }
+>`
 	${flex}
 	${flexbox}
     ${layout}
     ${margin}
     ${position}
+	${margin}
 	justify-content: center;
 	align-items: center;
-	background: #005ca9;
+	background: ${({ theme, disabled }) =>
+		disabled ? theme.colors.disabled : theme.colors.primary};
 	color: white;
 	border-radius: 10px;
 	padding: 20px;
-	${margin}
 `;
