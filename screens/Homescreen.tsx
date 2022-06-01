@@ -49,6 +49,7 @@ const Homescreen = () => {
 					<KayakCard
 						image={item.image}
 						title={item.name}
+						type={item.type}
 						onPress={() => console.log(`Pressed ${item.name}`)}
 					/>
 				)}

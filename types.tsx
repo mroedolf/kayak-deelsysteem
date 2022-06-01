@@ -69,7 +69,4 @@ export enum FilterOptions {
 	Alles = 'Alles',
 	Eenpersoons = 'Eenpersoons',
 	Tweepersoons = 'Tweepersoons',
-	Driepersoons = 'Driepersoons',
-	Vierpersoons = 'Vierpersoons',
-	Vijfpersoons = 'Vijfpersoons',
 }
