@@ -18,6 +18,7 @@ import { useStore } from '../stores/useStore';
 import Homescreen from '../screens/Homescreen';
 import CTAScreen from '../screens/CTAScreen';
 import theme from '../components/styles/theme';
+import BookingScreen from '../screens/BookingScreen';
 
 export default function Navigation({
 	colorScheme,
@@ -62,6 +63,11 @@ function RootNavigator() {
 						options={{
 							headerShown: false,
 						}}
+					/>
+					<Stack.Screen
+						name={'BookingScreen'}
+						component={BookingScreen}
+						options={{ headerShown: false }}
 					/>
 				</>
 			) : (

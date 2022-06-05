@@ -1,8 +1,8 @@
 import { User } from 'firebase/auth';
 import create, { GetState, SetState } from 'zustand';
-import { persist, StateStorage } from 'zustand/middleware';
+import { devtools, persist, StateStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FilterOptions } from '../types';
+import { CheckoutTimeOptions, FilterOptions } from '../types';
 import mockKayakData from '../data/mockKayakData';
 
 type UserSlice = {
@@ -15,11 +15,18 @@ type HomeSlice = {
 	selectedFilter: FilterOptions;
 	setSelectedFilter: (filter: string) => void;
 	filterKayaks: (kayaks: typeof mockKayakData) => typeof mockKayakData;
-	selectedDate: Date;
-	setSelectedDate: (date: Date) => void;
 };
 
-type StoreState = UserSlice & HomeSlice;
+type CheckoutSlice = {
+	selectedDate: Date;
+	setSelectedDate: (event: Event, date: Date) => void;
+	selectedKayak: string;
+	setSelectedKayak: (kayak: string) => void;
+	selectedTime: CheckoutTimeOptions;
+	setSelectedTime: (time: CheckoutTimeOptions) => void; // 0 -> before 12, 1 -> after 12
+};
+
+type StoreState = UserSlice & HomeSlice & CheckoutSlice;
 
 type StoreSlice<T> = (
 	set: SetState<StoreState>,
@@ -44,19 +51,31 @@ const createHomeSlice: StoreSlice<HomeSlice> = (set, get) => ({
 			? kayaks
 			: kayaks.filter((kayak) => kayak.type === selectedFilter);
 	},
+});
+
+const createCheckoutSlice: StoreSlice<CheckoutSlice> = (set, get) => ({
 	selectedDate: new Date(),
-	setSelectedDate: (date) => set({ selectedDate: date }),
+	setSelectedDate: (event, date) => set({ selectedDate: date }),
+	selectedKayak: '',
+	setSelectedKayak: (kayak) => set({ selectedKayak: kayak }),
+	selectedTime: CheckoutTimeOptions.Voormiddag,
+	setSelectedTime: (time) => set({ selectedTime: time }),
 });
 
 export const useStore = create<StoreState>(
-	persist<StoreState>(
-		(set, get) => ({
-			...createUserSlice(set, get),
-			...createHomeSlice(set, get),
-		}),
-		{
-			name: 'store',
-			getStorage: () => AsyncStorage as StateStorage,
-		}
+	devtools(
+		persist<StoreState>(
+			(set, get) => ({
+				...createUserSlice(set, get),
+				...createHomeSlice(set, get),
+				...createCheckoutSlice(set, get),
+			}),
+			{
+				name: 'store',
+				getStorage: () => AsyncStorage as StateStorage,
+			}
+		)
 	)
 );
+
+// Create useStore with
