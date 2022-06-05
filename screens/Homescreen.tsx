@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // @ts-nocheck
 import React from 'react';
-import { FilterOptions } from '../types';
+import { FilterOptions, RootStackScreenProps } from '../types';
 import { SafeAreaView } from '../components/styles/elements/SafeAreaView';
 import { Heading } from '../components/styles/elements/Heading';
 import FilterPill from '../components/Home/FilterPill';
@@ -16,7 +16,7 @@ import mockKayakData from '../data/mockKayakData';
 import KayakCard from '../components/Home/KayakCard';
 import { Flatlist } from '../components/styles/elements/Flatlist';
 
-const Homescreen = () => {
+const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 	const selectedFilter = useStore().selectedFilter;
 	const setSelectedFilter = useStore().setSelectedFilter;
 	const filteredKayaks = useStore().filterKayaks(mockKayakData);
@@ -50,7 +50,7 @@ const Homescreen = () => {
 						image={item.image}
 						title={item.name}
 						type={item.type}
-						onPress={() => console.log(`Pressed ${item.name}`)}
+						onPress={() => navigation.navigate('BookingScreen')}
 					/>
 				)}
 				keyExtractor={(item) => item.name}

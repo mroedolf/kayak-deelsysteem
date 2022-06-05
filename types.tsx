@@ -29,6 +29,7 @@ export type RootStackParamList = {
 	Onboarding: undefined;
 	Homescreen: undefined;
 	CTAScreen: undefined;
+	BookingScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -69,4 +70,9 @@ export enum FilterOptions {
 	Alles = 'Alles',
 	Eenpersoons = 'Eenpersoons',
 	Tweepersoons = 'Tweepersoons',
+}
+
+export enum CheckoutTimeOptions {
+	Voormiddag = 0,
+	Namiddag = 1,
 }

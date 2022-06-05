@@ -20,7 +20,12 @@ type ButtonProps =
 	| PositionProps;
 
 export const Button = styled.TouchableOpacity<
-	{ disabled?: boolean; secondary?: boolean } & ButtonProps
+	{
+		disabled?: boolean;
+		secondary?: boolean;
+		tertiary?: boolean;
+		fullWidth?: boolean;
+	} & ButtonProps
 >`
 	${flex}
 	${flexbox}
@@ -34,9 +39,17 @@ export const Button = styled.TouchableOpacity<
 		disabled ? theme.colors.disabled : theme.colors.primary};
 	color: white;
 	border-radius: 10px;
-	background-color: ${({ theme, secondary }) =>
-		secondary ? 'transparent' : theme.colors.primary};
+	background-color: ${({ theme, secondary, tertiary }) => {
+		if (secondary) {
+			return 'transparent';
+		}
+		if (tertiary) {
+			return theme.colors.light;
+		}
+		return theme.colors.primary;
+	}};
 	border: 3px solid ${({ theme }) => theme.colors.primary};
 	border-radius: ${({ theme }) => theme.sizes.small};
 	padding: 20px;
+	width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
 `;
