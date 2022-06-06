@@ -4,7 +4,7 @@ export const Wrapper = styled.View`
 	padding: ${({ theme }) => theme.space.medium}px 0
 		${({ theme }) => theme.space.medium}px 0;
 	background-color: ${({ theme }) => theme.colors.primary};
-	border-radius: ${({ theme }) => theme.sizes.small};
+	border-radius: ${({ theme }) => theme.sizes.small}px;
 	display: flex;
 	justify-content: center;
 	align-items: center;

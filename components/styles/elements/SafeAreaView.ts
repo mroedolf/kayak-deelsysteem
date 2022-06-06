@@ -17,4 +17,8 @@ export const SafeAreaView = styled.SafeAreaView<SafeAreaViewProps>`
 	${layout}
     ${flexbox}
     ${flex}
+	background-color: ${({ theme }) => theme.colors.light};
+	height: 100%;
+	width: 100%;
+	padding: ${({ theme }) => theme.space.medium}px;
 `;

@@ -18,6 +18,7 @@ import { Button } from '../components/styles/elements/Button';
 import { Text } from '../components/styles/elements/Text';
 import RoundedButton from '../components/Onboarding/RoundedButton';
 import theme from '../components/styles/theme';
+import { Ionicons } from '@expo/vector-icons';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),
@@ -98,10 +99,19 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					minHeight={'100%'}
 				>
-					<Section flex="0 0 auto" mt="30px">
+					<Section flex="0 0 5%" mt="30px">
 						<RoundedButton
 							onPress={() => navigation.goBack()}
 							label="Terug"
+							labelSize={theme.font.sizes.lg}
+							labelColor={theme.colors.primary}
+							Icon={() => (
+								<Ionicons
+									name="chevron-back-outline"
+									color={theme.colors.primary}
+									size={24}
+								/>
+							)}
 						/>
 					</Section>
 					<Section flex="1 1 auto" justifyContent={'center'}>
