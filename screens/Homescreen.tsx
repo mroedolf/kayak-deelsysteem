@@ -50,7 +50,11 @@ const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 						image={item.image}
 						title={item.name}
 						type={item.type}
-						onPress={() => navigation.navigate('BookingScreen')}
+						onPress={() =>
+							navigation.navigate('BookingScreen', {
+								kayakId: item.id,
+							})
+						}
 					/>
 				)}
 				keyExtractor={(item) => item.name}

@@ -1,15 +1,17 @@
 import { View } from 'react-native';
 import React from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Section } from '../styles/elements/Section';
 import theme from '../styles/theme';
+import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import { timestampToDate } from '../../utils';
 
 type Props = {
-	date: Date;
-	onChange: (event: Event, date: Date) => void;
+	timestamp: number;
+	onChange: (timestamp: number) => void;
+	disabledDates?: string[];
 };
 
-const DatePickerComponent = ({ date, onChange }: Props) => {
+const DatePickerComponent = ({ timestamp, onChange, disabledDates }: Props) => {
 	return (
 		<View>
 			<Section
@@ -17,13 +19,34 @@ const DatePickerComponent = ({ date, onChange }: Props) => {
 				padding={theme.space.small}
 				borderRadius={theme.sizes.small}
 			>
-				<DateTimePicker
-					value={date}
-					mode={'date'}
-					is24Hour={true}
-					//@ts-expect-error seems to be an issue with the library
-					onChange={onChange}
-					display="inline"
+				<Calendar
+					onDayPress={(day) => {
+						onChange(day.timestamp);
+					}}
+					theme={{
+						calendarBackground: theme.colors.light,
+						textSectionTitleColor: theme.colors.dark,
+						selectedDayBackgroundColor: theme.colors.primary,
+						selectedDayTextColor: theme.colors.light,
+						todayTextColor: theme.colors.primary,
+						arrowColor: theme.colors.primary,
+					}}
+					disableAllTouchEventsForInactiveDays
+					markedDates={{
+						[timestampToDate(timestamp)]: {
+							selected: true,
+							selectedColor: theme.colors.primary,
+						},
+						...(disabledDates || []).reduce(
+							(acc, date) => ({
+								...acc,
+								[date]: {
+									inactive: true,
+								},
+							}),
+							{}
+						),
+					}}
 				/>
 			</Section>
 		</View>
