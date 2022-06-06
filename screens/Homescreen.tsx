@@ -6,7 +6,6 @@
 // @ts-nocheck
 import React from 'react';
 import { FilterOptions, RootStackScreenProps } from '../types';
-import { SafeAreaView } from '../components/styles/elements/SafeAreaView';
 import { Heading } from '../components/styles/elements/Heading';
 import FilterPill from '../components/Home/FilterPill';
 import { useStore } from '../stores/useStore';
@@ -15,6 +14,7 @@ import theme from '../components/styles/theme';
 import mockKayakData from '../data/mockKayakData';
 import KayakCard from '../components/Home/KayakCard';
 import { Flatlist } from '../components/styles/elements/Flatlist';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 	const selectedFilter = useStore().selectedFilter;
@@ -22,7 +22,13 @@ const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 	const filteredKayaks = useStore().filterKayaks(mockKayakData);
 
 	return (
-		<SafeAreaView marginX={'20px'}>
+		<SafeAreaView
+			style={{
+				height: '100%',
+				backgroundColor: theme.colors.light,
+				paddingHorizontal: theme.space.medium,
+			}}
+		>
 			<Heading
 				fontSize={35}
 				fontWeight={'bold'}

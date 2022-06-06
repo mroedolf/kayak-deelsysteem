@@ -30,6 +30,7 @@ export type RootStackParamList = {
 	Homescreen: undefined;
 	CTAScreen: undefined;
 	BookingScreen: { kayakId: string };
+	Reservations: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -39,6 +40,7 @@ export type RootDrawerParamList = {
 	Home: undefined;
 	Settings: undefined;
 	Profile: undefined;
+	Reservations: undefined;
 };
 
 export type RootDrawerScreenProps<Screen extends keyof RootDrawerParamList> =
@@ -81,5 +83,6 @@ export type Reservation = {
 	date: number;
 	kayakId: number;
 	time: CheckoutTimeOptions;
-	userUid: string;
+	userId: string;
+	id: string;
 };

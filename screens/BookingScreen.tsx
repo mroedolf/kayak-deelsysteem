@@ -22,7 +22,11 @@ import {
 } from '@react-query-firebase/firestore';
 import ModalComponent from '../components/Modal';
 import Toast from 'react-native-toast-message';
-import { extractDatesFromReservations, handleFirebaseError } from '../utils';
+import {
+	extractDatesFromReservations,
+	generateUUID,
+	handleFirebaseError,
+} from '../utils';
 import { FirebaseError } from 'firebase/app';
 import { log } from '../config/logger';
 
@@ -147,6 +151,7 @@ const BookingScreen = ({
 									flexGrow={1}
 									onPress={() => {
 										mutation.mutate({
+											id: generateUUID(),
 											kayakId,
 											date: selectedDate,
 											time: selectedTime,
@@ -179,6 +184,7 @@ const BookingScreen = ({
 					<Button
 						onPress={() => {
 							setModalVisible(false);
+							navigation.navigate('Reservations');
 						}}
 					>
 						<Text
