@@ -10,7 +10,7 @@ interface IconTypeProps {
 }
 
 type Props = {
-	label: string;
+	label?: string;
 	labelSize?: number;
 	labelColor?: string;
 	onPress: () => void;
@@ -27,7 +27,7 @@ const RoundedButton = ({
 	return (
 		<TouchableOpacity
 			onPress={onPress}
-			flex={'1 1 auto'}
+			display="flex"
 			flexDirection={'row'}
 			alignItems={'center'}
 		>
@@ -39,13 +39,15 @@ const RoundedButton = ({
 					color={Icon.propTypes?.color as unknown as string}
 				/>
 			)}
-			<Text
-				fontSize={labelSize}
-				color={labelColor}
-				fontWeight={theme.font.weights.bold}
-			>
-				{label}
-			</Text>
+			{label && (
+				<Text
+					fontSize={labelSize}
+					color={labelColor}
+					fontWeight={theme.font.weights.bold}
+				>
+					{label}
+				</Text>
+			)}
 		</TouchableOpacity>
 	);
 };

@@ -86,3 +86,11 @@ export type Reservation = {
 	userId: string;
 	id: string;
 };
+
+export type Kayak = {
+	id: number;
+	name: string;
+	description: string;
+	type: string;
+	image: string;
+};

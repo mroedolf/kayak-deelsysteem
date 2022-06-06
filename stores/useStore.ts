@@ -2,8 +2,7 @@ import { User } from 'firebase/auth';
 import create, { GetState, SetState } from 'zustand';
 import { devtools, persist, StateStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CheckoutTimeOptions, FilterOptions } from '../types';
-import mockKayakData from '../data/mockKayakData';
+import { CheckoutTimeOptions, FilterOptions, Kayak } from '../types';
 
 type UserSlice = {
 	user: User | undefined;
@@ -12,9 +11,11 @@ type UserSlice = {
 };
 
 type HomeSlice = {
+	kayaks: Kayak[];
+	setKayaks: (kayaks: Kayak[]) => void;
 	selectedFilter: FilterOptions;
 	setSelectedFilter: (filter: string) => void;
-	filterKayaks: (kayaks: typeof mockKayakData) => typeof mockKayakData;
+	filterKayaks: (kayaks: Kayak[]) => Kayak[];
 };
 
 type CheckoutSlice = {
@@ -38,7 +39,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set) => ({
 });
 
 const createHomeSlice: StoreSlice<HomeSlice> = (set, get) => ({
-	kayaks: mockKayakData,
+	kayaks: [],
+	setKayaks: (kayaks) => set({ kayaks }),
 	selectedFilter: 'Alles' as FilterOptions,
 	setSelectedFilter: (filter) =>
 		set({ selectedFilter: filter as FilterOptions }),
