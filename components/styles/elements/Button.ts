@@ -38,7 +38,6 @@ export const Button = styled.TouchableOpacity<
 	background: ${({ theme, disabled }) =>
 		disabled ? theme.colors.disabled : theme.colors.primary};
 	color: white;
-	border-radius: 10px;
 	background-color: ${({ theme, secondary, tertiary }) => {
 		if (secondary) {
 			return 'transparent';
@@ -49,7 +48,7 @@ export const Button = styled.TouchableOpacity<
 		return theme.colors.primary;
 	}};
 	border: 3px solid ${({ theme }) => theme.colors.primary};
-	border-radius: ${({ theme }) => theme.sizes.small};
+	border-radius: ${({ theme }) => theme.sizes.small}px;
 	padding: 20px;
 	width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
 `;

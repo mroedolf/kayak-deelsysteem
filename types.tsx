@@ -29,7 +29,7 @@ export type RootStackParamList = {
 	Onboarding: undefined;
 	Homescreen: undefined;
 	CTAScreen: undefined;
-	BookingScreen: undefined;
+	BookingScreen: { kayakId: string };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -76,3 +76,9 @@ export enum CheckoutTimeOptions {
 	Voormiddag = 0,
 	Namiddag = 1,
 }
+
+export type Reservation = {
+	date: number;
+	kayakId: number;
+	time: CheckoutTimeOptions;
+};

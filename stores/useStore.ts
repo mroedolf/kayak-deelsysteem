@@ -18,10 +18,8 @@ type HomeSlice = {
 };
 
 type CheckoutSlice = {
-	selectedDate: Date;
-	setSelectedDate: (event: Event, date: Date) => void;
-	selectedKayak: string;
-	setSelectedKayak: (kayak: string) => void;
+	selectedDate: number;
+	setSelectedDate: (timestamp: number) => void;
 	selectedTime: CheckoutTimeOptions;
 	setSelectedTime: (time: CheckoutTimeOptions) => void; // 0 -> before 12, 1 -> after 12
 };
@@ -54,10 +52,8 @@ const createHomeSlice: StoreSlice<HomeSlice> = (set, get) => ({
 });
 
 const createCheckoutSlice: StoreSlice<CheckoutSlice> = (set, get) => ({
-	selectedDate: new Date(),
-	setSelectedDate: (event, date) => set({ selectedDate: date }),
-	selectedKayak: '',
-	setSelectedKayak: (kayak) => set({ selectedKayak: kayak }),
+	selectedDate: +new Date(),
+	setSelectedDate: (timestamp) => set({ selectedDate: timestamp }),
 	selectedTime: CheckoutTimeOptions.Voormiddag,
 	setSelectedTime: (time) => set({ selectedTime: time }),
 });
@@ -77,5 +73,3 @@ export const useStore = create<StoreState>(
 		)
 	)
 );
-
-// Create useStore with
