@@ -35,13 +35,22 @@ const BookingScreen = ({
 }: RootStackScreenProps<'BookingScreen'>) => {
 	const { kayakId } = route.params;
 	const [modalVisible, setModalVisible] = useState(false);
-	const { selectedDate, setSelectedDate, setSelectedTime, selectedTime } =
-		useStore();
+	const {
+		selectedDate,
+		setSelectedDate,
+		setSelectedTime,
+		selectedTime,
+		user,
+	} = useStore();
 
 	const mutationRef = collection(firestore, 'reservations');
 	const mutation = useFirestoreCollectionMutation(mutationRef, {
 		onSuccess: () => {
-			log.info(`[BookingScreen.Success] Kayak ${kayakId} reserved`);
+			log.info(
+				`[BookingScreen.Success] Kayak ${kayakId} reserved for ${
+					user?.email as string
+				}`
+			);
 			setModalVisible(true);
 		},
 		onError: (error: FirebaseError) => {
@@ -141,6 +150,7 @@ const BookingScreen = ({
 											kayakId,
 											date: selectedDate,
 											time: selectedTime,
+											userId: user?.uid,
 										});
 									}}
 								>

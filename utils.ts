@@ -116,6 +116,8 @@ const timestampToDate = (timestamp: number): string => {
 const extractDatesFromReservations = (
 	reservations: Reservation[]
 ): string[] => {
+	if (!reservations) return [];
+
 	const dates: string[] = [];
 
 	reservations.forEach((reservation) => {

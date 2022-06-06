@@ -81,4 +81,5 @@ export type Reservation = {
 	date: number;
 	kayakId: number;
 	time: CheckoutTimeOptions;
+	userUid: string;
 };
