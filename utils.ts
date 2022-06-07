@@ -92,6 +92,60 @@ const isAllowedStreetName = (streetName: string): boolean => {
 	return allowedStreets.includes(streetName);
 };
 
+async function request<T>(url: string, config: RequestInit): Promise<T> {
+	try {
+		const response = await fetch(url, config);
+		return (await response.json()) as T;
+	} catch (error) {
+		console.log(error);
+		throw new Error('Kon geen data ophalen');
+	}
+}
+
+const fetchUitpasToken = async (): Promise<{ access_token: string }> => {
+	try {
+		// const req = await fetch(
+		// 	'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/authenticate',
+		// 	{
+		// 		method: 'POST',
+		// 		headers: {
+		// 			'Content-Type': 'application/json',
+		// 		},
+		// 		body: JSON.stringify({
+		// 			data: {
+		// 				test: 'test',
+		// 			},
+		// 		}),
+		// 	}
+		// );
+
+		// const res = await req.json();
+
+		// return res.result.access_token;
+
+		const response = await request<{ access_token: string }>(
+			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/authenticate',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					data: {
+						test: 'test',
+					},
+				}),
+			}
+		);
+
+		return response;
+	} catch (error) {
+		console.log(error);
+		throw new Error('Kon uitpas token niet ophalen');
+		return { access_token: '' };
+	}
+};
+
 /**
  * Convert a timestamp to a date object using YYYY-MM-DD format
  * @param timestamp number timestamp
@@ -141,4 +195,5 @@ export {
 	timestampToDate,
 	extractDatesFromReservations,
 	generateUUID,
+	fetchUitpasToken,
 };
