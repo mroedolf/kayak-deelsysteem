@@ -18,6 +18,8 @@ import { useStore } from '../stores/useStore';
 import Homescreen from '../screens/Homescreen';
 import CTAScreen from '../screens/CTAScreen';
 import theme from '../components/styles/theme';
+import BookingScreen from '../screens/BookingScreen';
+import ReservationsScreen from '../screens/ReservationsScreen';
 
 export default function Navigation({
 	colorScheme,
@@ -59,6 +61,18 @@ function RootNavigator() {
 					<Stack.Screen
 						name={'Profile'}
 						component={ProfileScreen}
+						options={{
+							headerShown: false,
+						}}
+					/>
+					<Stack.Screen
+						name={'BookingScreen'}
+						component={BookingScreen}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name={'Reservations'}
+						component={ReservationsScreen}
 						options={{
 							headerShown: false,
 						}}
@@ -109,6 +123,13 @@ const DrawerNavigator = () => {
 			<Drawer.Screen
 				name={'Profile'}
 				component={ProfileScreen}
+				options={{
+					headerShown: false,
+				}}
+			/>
+			<Drawer.Screen
+				name={'Reservations'}
+				component={ReservationsScreen}
 				options={{
 					headerShown: false,
 				}}

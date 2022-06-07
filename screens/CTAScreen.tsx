@@ -2,15 +2,21 @@
 import { Image } from 'react-native';
 import React from 'react';
 import { RootStackScreenProps } from '../types';
-import { SafeAreaView } from '../components/styles/elements/SafeAreaView';
 import { Section } from '../components/styles/elements/Section';
 import { Button } from '../components/styles/elements/Button';
 import theme from '../components/styles/theme';
 import { Text } from '../components/styles/elements/Text';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CTAScreen = ({ navigation }: RootStackScreenProps<'CTAScreen'>) => {
 	return (
-		<SafeAreaView marginX="20px">
+		<SafeAreaView
+			style={{
+				height: '100%',
+				backgroundColor: theme.colors.light,
+				marginHorizontal: theme.space.medium,
+			}}
+		>
 			<Section
 				justifyContent={'center'}
 				alignItems={'center'}

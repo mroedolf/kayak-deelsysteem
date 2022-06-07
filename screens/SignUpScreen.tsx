@@ -22,9 +22,9 @@ import { Text } from '../components/styles/elements/Text';
 import RoundedButton from '../components/Onboarding/RoundedButton';
 import theme from '../components/styles/theme';
 import Checkbox from 'expo-checkbox';
-import { Ionicons } from '@expo/vector-icons';
 import { collection } from 'firebase/firestore';
 import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
+import { Ionicons } from '@expo/vector-icons';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),

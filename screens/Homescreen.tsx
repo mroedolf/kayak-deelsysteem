@@ -1,36 +1,67 @@
-// These are only here because of the use of mock data.
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// @ts-nocheck
 import React from 'react';
-import { FilterOptions } from '../types';
-import { SafeAreaView } from '../components/styles/elements/SafeAreaView';
+import { FilterOptions, Kayak, RootStackScreenProps } from '../types';
 import { Heading } from '../components/styles/elements/Heading';
 import FilterPill from '../components/Home/FilterPill';
 import { useStore } from '../stores/useStore';
 import { ScrollView } from 'react-native-gesture-handler';
 import theme from '../components/styles/theme';
-import mockKayakData from '../data/mockKayakData';
 import KayakCard from '../components/Home/KayakCard';
-import { Flatlist } from '../components/styles/elements/Flatlist';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Section } from '../components/styles/elements/Section';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import { Ionicons } from '@expo/vector-icons';
+import { collection, query as q } from 'firebase/firestore';
+import { firestore } from '../config/firebase';
+import { useFirestoreQuery } from '@react-query-firebase/firestore';
+import { FlatList } from 'react-native-gesture-handler';
 
-const Homescreen = () => {
+const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 	const selectedFilter = useStore().selectedFilter;
 	const setSelectedFilter = useStore().setSelectedFilter;
-	const filteredKayaks = useStore().filterKayaks(mockKayakData);
+	const ref = q(collection(firestore, 'kajaks'));
+	const query = useFirestoreQuery(['kajaks'], ref);
+	const filteredKayaks = useStore().filterKayaks(
+		(query.data?.docs.map((doc) => doc.data()) as Kayak[]) ?? []
+	);
+
+	console.log(filteredKayaks);
 
 	return (
-		<SafeAreaView marginX={'20px'}>
-			<Heading
-				fontSize={35}
-				fontWeight={'bold'}
+		<SafeAreaView
+			style={{
+				backgroundColor: theme.colors.light,
+				paddingHorizontal: theme.space.medium,
+			}}
+		>
+			<Section
+				display={'flex'}
+				flexDirection={'row'}
+				justifyContent={'space-between'}
+				alignItems={'center'}
+				width={'100%'}
 				marginBottom={theme.space.medium}
 			>
-				Vind je kajak
-			</Heading>
-			<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+				<Heading fontSize={35} fontWeight={'bold'}>
+					Vind je kajak
+				</Heading>
+				<RoundedButton
+					onPress={() => navigation.navigate('Profile')}
+					Icon={() => (
+						<Ionicons
+							name="person-outline"
+							color={theme.colors.primary}
+							size={32}
+						/>
+					)}
+				/>
+			</Section>
+			<ScrollView
+				horizontal
+				showsHorizontalScrollIndicator={false}
+				style={{
+					marginBottom: theme.space.medium,
+				}}
+			>
 				{Object.keys(FilterOptions).map((filterOption) => (
 					<FilterPill
 						key={filterOption}
@@ -42,17 +73,21 @@ const Homescreen = () => {
 					/>
 				))}
 			</ScrollView>
-			<Flatlist
-				mt={theme.space.medium}
+			<FlatList
 				data={filteredKayaks}
-				renderItem={({ item }) => (
+				renderItem={({ item }: { item: Kayak }) => (
 					<KayakCard
 						image={item.image}
 						title={item.name}
-						onPress={() => console.log(`Pressed ${item.name}`)}
+						type={item.type}
+						onPress={() =>
+							navigation.navigate('BookingScreen', {
+								kayakId: String(item.id),
+							})
+						}
 					/>
 				)}
-				keyExtractor={(item) => item.name}
+				keyExtractor={(item) => String(item.id)}
 				showsVerticalScrollIndicator={false}
 			/>
 		</SafeAreaView>

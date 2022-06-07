@@ -11,6 +11,9 @@ const theme = {
 		black: '#000',
 		disabled: '#6c757d',
 		input: '#DAE1DD',
+		lightGrey: '#F5F5F5',
+		grey: '#D8D8D8',
+		darkGrey: '#6C757D',
 	},
 	font: {
 		sizes: {

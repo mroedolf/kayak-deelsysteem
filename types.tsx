@@ -29,6 +29,8 @@ export type RootStackParamList = {
 	Onboarding: undefined;
 	Homescreen: undefined;
 	CTAScreen: undefined;
+	BookingScreen: { kayakId: string };
+	Reservations: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -38,6 +40,7 @@ export type RootDrawerParamList = {
 	Home: undefined;
 	Settings: undefined;
 	Profile: undefined;
+	Reservations: undefined;
 };
 
 export type RootDrawerScreenProps<Screen extends keyof RootDrawerParamList> =
@@ -69,7 +72,25 @@ export enum FilterOptions {
 	Alles = 'Alles',
 	Eenpersoons = 'Eenpersoons',
 	Tweepersoons = 'Tweepersoons',
-	Driepersoons = 'Driepersoons',
-	Vierpersoons = 'Vierpersoons',
-	Vijfpersoons = 'Vijfpersoons',
 }
+
+export enum CheckoutTimeOptions {
+	Voormiddag = 0,
+	Namiddag = 1,
+}
+
+export type Reservation = {
+	date: number;
+	kayakId: number;
+	time: CheckoutTimeOptions;
+	userId: string;
+	id: string;
+};
+
+export type Kayak = {
+	id: number;
+	name: string;
+	description: string;
+	type: string;
+	image: string;
+};
