@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useAuthCreateUserWithEmailAndPassword } from '@react-query-firebase/auth';
 import { FirebaseError } from 'firebase/app';
-import { Formik } from 'formik';
+import { Field, Formik } from 'formik';
 import React from 'react';
 import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { auth } from '../config/firebase';
+import { auth, firestore } from '../config/firebase';
 import { log } from '../config/logger';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError, isAllowedStreetName } from '../utils';
@@ -18,6 +21,10 @@ import { Button } from '../components/styles/elements/Button';
 import { Text } from '../components/styles/elements/Text';
 import RoundedButton from '../components/Onboarding/RoundedButton';
 import theme from '../components/styles/theme';
+import Checkbox from 'expo-checkbox';
+import { Ionicons } from '@expo/vector-icons';
+import { collection } from 'firebase/firestore';
+import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),
@@ -27,7 +34,6 @@ const validationSchema = Yup.object().shape({
 	confirmPassword: Yup.string()
 		.oneOf([Yup.ref('password'), null], 'Wachtwoorden komen niet overeen')
 		.required('Required'),
-
 	streetName: Yup.string()
 		.min(3, 'Straatnaam moet minstens 3 karakters lang zijn')
 		.max(50, 'Straatnaam mag maximaal 50 karakters lang zijn')
@@ -49,6 +55,23 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 				text2: handleFirebaseError(error),
 			});
 		},
+	});
+
+	const usersRef = collection(firestore, 'users');
+	const usersMutation = useFirestoreCollectionMutation(usersRef, {
+		onMutate: (values) => {
+			log.info('[SignUpScreen.onMutate]', values);
+		},
+		onError: (error: FirebaseError) => {
+			log.error(
+				`[SignUpScreen.onError] sign up error | ${error.message}`
+			);
+			Toast.show({
+				type: 'error',
+				text1: 'Error',
+				text2: handleFirebaseError(error),
+			});
+		},
 		onSuccess: () => {
 			navigation.navigate('Profile');
 		},
@@ -57,10 +80,12 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 	return (
 		<Formik
 			initialValues={{
-				email: '',
-				password: '',
-				confirmPassword: '',
-				streetName: '',
+				email: 'test@test.com',
+				password: 'testing123',
+				confirmPassword: 'testing123',
+				streetName: 'Kreeftstraat',
+				uitpas: true,
+				uitpasNumber: '123',
 			}}
 			onSubmit={(values) => {
 				if (values.password !== values.confirmPassword) {
@@ -83,6 +108,14 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 					email: values.email,
 					password: values.password,
 				});
+
+				usersMutation.mutate({
+					email: values.email,
+					streetName: values.streetName,
+					...(values.uitpas && {
+						uitpasNumber: values.uitpasNumber,
+					}),
+				});
 			}}
 			validationSchema={validationSchema}
 		>
@@ -93,15 +126,25 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 				values,
 				errors,
 				touched,
+				setFieldValue,
 			}) => (
 				<KeyboardAvoidingView
 					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 					minHeight={'100%'}
 				>
-					<Section flex="0 0 auto" mt="30px">
+					<Section flex="0 0 5%" mt="30px">
 						<RoundedButton
 							onPress={() => navigation.goBack()}
 							label="Terug"
+							labelSize={theme.font.sizes.lg}
+							labelColor={theme.colors.primary}
+							Icon={() => (
+								<Ionicons
+									name="chevron-back-outline"
+									color={theme.colors.primary}
+									size={24}
+								/>
+							)}
 						/>
 					</Section>
 					<Section flex="1 1 auto" justifyContent={'center'}>
@@ -177,8 +220,54 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 								{errors.streetName}
 							</ErrorText>
 						)}
+						<Field name="uitpas">
+							{/* @ts-ignore - issue in Formik - https://github.com/jaredpalmer/formik/issues/2086 */}
+							{({ field }) => (
+								<Section
+									flexDirection={'row'}
+									alignItems={'center'}
+									mt={theme.space.medium}
+								>
+									<Checkbox
+										value={field.value}
+										onValueChange={() => {
+											setFieldValue(
+												'uitpas',
+												!field.value
+											);
+										}}
+										style={{
+											borderRadius: theme.space.small,
+										}}
+										color={theme.colors.primary}
+									/>
+									<Text
+										fontSize={theme.font.sizes.lg}
+										fontWeight={theme.font.weights.bold}
+										color={theme.colors.primary}
+										marginLeft={theme.space.small}
+									>
+										UIT-Pas
+									</Text>
+								</Section>
+							)}
+						</Field>
+						{values.uitpas && (
+							<Input
+								value={values.uitpasNumber}
+								onChangeText={handleChange('uitpasNumber')}
+								onBlur={handleBlur('uitpasNumber')}
+								autoCapitalize="none"
+								placeholder="Uitpasnummer"
+								hasError={
+									!!(
+										errors.uitpasNumber &&
+										touched.uitpasNumber
+									)
+								}
+							/>
+						)}
 					</Section>
-
 					<Section flex="0 0 auto" height="80px">
 						<Button
 							onPress={handleSubmit as () => void}

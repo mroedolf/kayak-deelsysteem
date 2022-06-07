@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Wrapper = styled.TouchableOpacity`
 	background-color: #fff;
-	padding: ${({ theme }) => theme.space.medium};
+	padding: ${({ theme }) => theme.space.medium}px;
 	border-radius: ${({ theme }) => theme.sizes.small};
 	margin-bottom: ${({ theme }) => theme.space.large};
 	box-shadow: 8px 4px 4px rgba(200, 217, 250, 0.4);

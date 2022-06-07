@@ -9,7 +9,7 @@ export const Wrapper = styled.TouchableOpacity<{ isSelected?: boolean }>`
 	border: 1px solid
 		${({ theme, isSelected }) =>
 			isSelected ? theme.colors.primary : theme.colors.disabled};
-	padding: ${({ theme }) => theme.space.small};
+	padding: ${({ theme }) => theme.space.small}px;
 	background-color: ${({ theme, isSelected }) =>
 		isSelected ? theme.colors.primary : 'transparent'};
 	margin-right: ${({ theme }) => theme.space.small};
