@@ -47,7 +47,13 @@ export const Button = styled.TouchableOpacity<
 		}
 		return theme.colors.primary;
 	}};
-	border: 3px solid ${({ theme }) => theme.colors.primary};
+	border: 3px solid
+		${({ theme, secondary }) => {
+			if (secondary) {
+				return theme.colors.light;
+			}
+			return theme.colors.primary;
+		}};
 	border-radius: ${({ theme }) => theme.sizes.small}px;
 	padding: 20px;
 	width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};

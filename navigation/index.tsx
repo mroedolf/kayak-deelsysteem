@@ -20,6 +20,8 @@ import CTAScreen from '../screens/CTAScreen';
 import theme from '../components/styles/theme';
 import BookingScreen from '../screens/BookingScreen';
 import ReservationsScreen from '../screens/ReservationsScreen';
+import SubscriptionWarningScreen from '../screens/SubscriptionWarningScreen';
+import PurchaseSubscriptionScreen from '../screens/PurchaseSubscriptionScreen';
 
 export default function Navigation({
 	colorScheme,
@@ -73,6 +75,20 @@ function RootNavigator() {
 					<Stack.Screen
 						name={'Reservations'}
 						component={ReservationsScreen}
+						options={{
+							headerShown: false,
+						}}
+					/>
+					<Stack.Screen
+						name={'SubscriptionWarning'}
+						component={SubscriptionWarningScreen}
+						options={{
+							headerShown: false,
+						}}
+					/>
+					<Stack.Screen
+						name={'PurchaseSubscriptionScreen'}
+						component={PurchaseSubscriptionScreen}
 						options={{
 							headerShown: false,
 						}}

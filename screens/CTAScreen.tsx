@@ -45,7 +45,7 @@ const CTAScreen = ({ navigation }: RootStackScreenProps<'CTAScreen'>) => {
 				<Button
 					marginTop={'10px'}
 					onPress={() => navigation.navigate('SignUp')}
-					secondary
+					tertiary
 				>
 					<Text
 						color={theme.colors.primary}
@@ -58,7 +58,7 @@ const CTAScreen = ({ navigation }: RootStackScreenProps<'CTAScreen'>) => {
 				<Button
 					marginTop={'10px'}
 					onPress={() => navigation.navigate('SignUp')}
-					secondary
+					tertiary
 				>
 					<Text
 						color={theme.colors.primary}

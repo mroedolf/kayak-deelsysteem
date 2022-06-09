@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useColorScheme from './hooks/useColorScheme';
@@ -17,6 +17,11 @@ import {
 import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components/native';
 import theme from './components/styles/theme';
+import { StripeProvider as _StripeProvider } from '@stripe/stripe-react-native';
+import type { Props as StripeProviderProps } from '@stripe/stripe-react-native/lib/typescript/src/components/StripeProvider';
+import StoreSync from './stores/StoreSync';
+
+const StripeProvider = _StripeProvider as React.FC<StripeProviderProps>;
 
 export default function App() {
 	const colorScheme = useColorScheme();
@@ -32,14 +37,17 @@ export default function App() {
 	if (!fontsLoaded) return <AppLoading />;
 
 	return (
-		<ThemeProvider theme={theme}>
-			<QueryClientProvider client={client}>
-				<SafeAreaProvider>
-					<Navigation colorScheme={colorScheme} />
-					<StatusBar />
-					<Toast />
-				</SafeAreaProvider>
-			</QueryClientProvider>
-		</ThemeProvider>
+		<StripeProvider publishableKey="pk_test_51L8Op1Iyuahh3Vm7dfs6bvEyLHt72mn0KF3dRcru62xwYX1jKPipbGHPinersy8uENwkKtp3rgGzqwuTX8ZrYau600sbIx8I9K">
+			<ThemeProvider theme={theme}>
+				<QueryClientProvider client={client}>
+					<SafeAreaProvider>
+						<Navigation colorScheme={colorScheme} />
+						<StatusBar />
+						<Toast />
+						{/* <StoreSync /> */}
+					</SafeAreaProvider>
+				</QueryClientProvider>
+			</ThemeProvider>
+		</StripeProvider>
 	);
 }

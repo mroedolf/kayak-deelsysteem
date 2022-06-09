@@ -10,10 +10,10 @@ export const Wrapper = styled.View`
 	align-items: center;
 `;
 
-export const ButtonWrapper = styled.View`
+export const ButtonWrapper = styled.View<{ horizontal?: boolean }>`
 	width: 100%;
 	display: flex;
-	flex-direction: row;
+	flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
 	justify-content: space-between;
 	align-items: center;
 	margin-top: ${({ theme }) => theme.space.medium}px;

@@ -9,8 +9,12 @@ import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { auth, firestore } from '../config/firebase';
 import { log } from '../config/logger';
-import { RootStackScreenProps } from '../types';
-import { handleFirebaseError, isAllowedStreetName } from '../utils';
+import { RootStackScreenProps, Subscription } from '../types';
+import {
+	generateRandomEmail,
+	handleFirebaseError,
+	isAllowedStreetName,
+} from '../utils';
 import * as Yup from 'yup';
 import { KeyboardAvoidingView } from '../components/styles/elements/KeyboardAvoidingView';
 import { Heading } from '../components/styles/elements/Heading';
@@ -25,6 +29,7 @@ import Checkbox from 'expo-checkbox';
 import { collection } from 'firebase/firestore';
 import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
+import { useStore } from '../stores/useStore';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),
@@ -41,6 +46,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
+	const { setProfile } = useStore();
 	const signUpMutation = useAuthCreateUserWithEmailAndPassword(auth, {
 		onMutate: (values) => {
 			log.info('SignUpScreen.onMutate', values);
@@ -80,7 +86,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 	return (
 		<Formik
 			initialValues={{
-				email: 'test@test.com',
+				email: generateRandomEmail(),
 				password: 'testing123',
 				confirmPassword: 'testing123',
 				streetName: 'Kreeftstraat',
@@ -110,11 +116,27 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 				});
 
 				usersMutation.mutate({
+					userId: auth.currentUser?.uid,
 					email: values.email,
 					streetName: values.streetName,
 					...(values.uitpas && {
 						uitpasNumber: values.uitpasNumber,
 					}),
+					subscription: {
+						active: false,
+					},
+				});
+
+				setProfile({
+					userId: auth.currentUser?.uid as string,
+					email: values.email,
+					streetName: values.streetName,
+					...(values.uitpas && {
+						uitpasNumber: values.uitpasNumber,
+					}),
+					subscription: {
+						active: false,
+					},
 				});
 			}}
 			validationSchema={validationSchema}

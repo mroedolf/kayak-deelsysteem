@@ -74,7 +74,8 @@
     "styled-components": "^5.3.5",
     "styled-system": "^5.1.5",
     "yup": "^0.32.11",
-    "zustand": "^3.7.2"
+    "zustand": "^3.7.2",
+    "@stripe/stripe-react-native": "0.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

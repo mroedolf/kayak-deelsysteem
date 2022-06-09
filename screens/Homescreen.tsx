@@ -24,8 +24,6 @@ const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 		(query.data?.docs.map((doc) => doc.data()) as Kayak[]) ?? []
 	);
 
-	console.log(filteredKayaks);
-
 	return (
 		<SafeAreaView
 			style={{

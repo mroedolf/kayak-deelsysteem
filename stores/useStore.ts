@@ -2,12 +2,14 @@ import { User } from 'firebase/auth';
 import create, { GetState, SetState } from 'zustand';
 import { devtools, persist, StateStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CheckoutTimeOptions, FilterOptions, Kayak } from '../types';
+import { CheckoutTimeOptions, FilterOptions, Kayak, Profile } from '../types';
 
 type UserSlice = {
 	user: User | undefined;
 	setUser: (user: User | undefined) => void;
 	removeUser: () => void;
+	profile: Profile | undefined;
+	setProfile: (profile: Profile | undefined) => void;
 };
 
 type HomeSlice = {
@@ -36,6 +38,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set) => ({
 	user: undefined,
 	setUser: (user) => set({ user }),
 	removeUser: () => set({ user: undefined }),
+	profile: undefined,
+	setProfile: (profile) => set({ profile }),
 });
 
 const createHomeSlice: StoreSlice<HomeSlice> = (set, get) => ({

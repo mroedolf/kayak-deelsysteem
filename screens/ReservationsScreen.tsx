@@ -1,4 +1,3 @@
-import { View, Text } from 'react-native';
 import React from 'react';
 import { RootDrawerScreenProps } from '../types';
 import { Heading } from '../components/styles/elements/Heading';

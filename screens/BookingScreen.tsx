@@ -45,6 +45,7 @@ const BookingScreen = ({
 		setSelectedTime,
 		selectedTime,
 		user,
+		profile,
 	} = useStore();
 
 	const mutationRef = collection(firestore, 'reservations');
@@ -109,7 +110,7 @@ const BookingScreen = ({
 									reservations as Reservation[]
 								)}
 							/>
-							<Card.ButtonWrapper>
+							<Card.ButtonWrapper horizontal>
 								<Button
 									tertiary
 									flexGrow={1}
@@ -145,11 +146,16 @@ const BookingScreen = ({
 									</Text>
 								</Button>
 							</Card.ButtonWrapper>
-							<Card.ButtonWrapper>
+							<Card.ButtonWrapper horizontal>
 								<Button
 									tertiary
 									flexGrow={1}
 									onPress={() => {
+										if (!profile?.subscription.active)
+											return navigation.navigate(
+												'SubscriptionWarning'
+											);
+
 										mutation.mutate({
 											id: generateUUID(),
 											kayakId,

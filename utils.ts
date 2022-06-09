@@ -1,6 +1,12 @@
 import { FirebaseError } from 'firebase/app';
 import allowedStreets from './data/streetnames';
-import { Reservation } from './types';
+import {
+	Reservation,
+	StripeResponse,
+	StripeResult,
+	Tariff,
+	TarrifResponse,
+} from './types';
 
 /**
  * Handle the translation of the given Firebase error
@@ -102,28 +108,9 @@ async function request<T>(url: string, config: RequestInit): Promise<T> {
 	}
 }
 
-const fetchUitpasToken = async (): Promise<{ access_token: string }> => {
+const fetchUitpasToken = async (): Promise<string> => {
 	try {
-		// const req = await fetch(
-		// 	'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/authenticate',
-		// 	{
-		// 		method: 'POST',
-		// 		headers: {
-		// 			'Content-Type': 'application/json',
-		// 		},
-		// 		body: JSON.stringify({
-		// 			data: {
-		// 				test: 'test',
-		// 			},
-		// 		}),
-		// 	}
-		// );
-
-		// const res = await req.json();
-
-		// return res.result.access_token;
-
-		const response = await request<{ access_token: string }>(
+		const response = await request<{ result: { access_token: string } }>(
 			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/authenticate',
 			{
 				method: 'POST',
@@ -138,11 +125,49 @@ const fetchUitpasToken = async (): Promise<{ access_token: string }> => {
 			}
 		);
 
-		return response;
+		return response.result.access_token;
 	} catch (error) {
 		console.log(error);
-		throw new Error('Kon uitpas token niet ophalen');
-		return { access_token: '' };
+		return '';
+	}
+};
+
+const fetchUitpasTarrifs = async (
+	accessToken: string,
+	regularPrice: number,
+	uitpasNumber: string
+): Promise<Tariff | undefined> => {
+	try {
+		const response = await request<TarrifResponse>(
+			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/fetchUitpasTarrifs',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					data: {
+						accessToken,
+						regularPrice,
+						uitpasNumber,
+					},
+				}),
+			}
+		);
+
+		if (
+			response.result?.available?.length &&
+			response.result.status !== 400
+		) {
+			return response.result.available.filter((tariff) => {
+				return tariff.type === 'SOCIALTARIFF';
+			})[0];
+		}
+
+		return undefined;
+	} catch (error) {
+		console.log(error);
+		return undefined;
 	}
 };
 
@@ -189,6 +214,36 @@ const generateUUID = (): string => {
 	});
 };
 
+const generateRandomEmail = (): string => {
+	return `${generateUUID()}@test.com`;
+};
+
+const fetchPaymentSheetParams = async (
+	price: string
+): Promise<StripeResult> => {
+	try {
+		const response = await request<StripeResponse>(
+			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/fetchPaymentSheet',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					data: {
+						price,
+					},
+				}),
+			}
+		);
+
+		return response.result;
+	} catch (error) {
+		console.log(error);
+		throw new Error('Kon betalingsschema niet ophalen');
+	}
+};
+
 export {
 	handleFirebaseError,
 	isAllowedStreetName,
@@ -196,4 +251,7 @@ export {
 	extractDatesFromReservations,
 	generateUUID,
 	fetchUitpasToken,
+	generateRandomEmail,
+	fetchPaymentSheetParams,
+	fetchUitpasTarrifs,
 };

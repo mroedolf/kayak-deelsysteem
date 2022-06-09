@@ -11,6 +11,7 @@ import {
 	NavigatorScreenParams,
 } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Timestamp } from 'firebase/firestore';
 
 declare global {
 	namespace ReactNavigation {
@@ -31,6 +32,8 @@ export type RootStackParamList = {
 	CTAScreen: undefined;
 	BookingScreen: { kayakId: string };
 	Reservations: undefined;
+	SubscriptionWarning: undefined;
+	PurchaseSubscriptionScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -94,3 +97,51 @@ export type Kayak = {
 	type: string;
 	image: string;
 };
+
+export type Subscription = {
+	active: boolean;
+	startDate?: Timestamp;
+	stripe_customer_id?: string;
+	stripe_subscription_id?: string;
+};
+
+export type Profile = {
+	userId: string;
+	email: string;
+	streetName: string;
+	subscription: Subscription;
+	uitpasNumber?: string;
+};
+
+export type StripeResult = {
+	paymentIntent: string;
+	ephemeralKey: string;
+};
+export type StripeResponse = {
+	result: StripeResult;
+};
+
+export type Tariff = {
+	id: string;
+	name: string;
+	price: number;
+	type: string;
+	remaining: number;
+};
+
+export type TarrifResponse = {
+	result: {
+		available: Tariff[];
+		status: number;
+	};
+};
+
+export type Price = {
+	id: string;
+	type: string;
+};
+
+export enum PriceType {
+	socialTariff = 'socialTariff',
+	regularPrice = 'regularPrice',
+}
