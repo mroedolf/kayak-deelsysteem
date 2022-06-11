@@ -189,7 +189,7 @@ const BookingScreen = ({
 									tertiary
 									flexGrow={1}
 									onPress={() => {
-										if (profile?.subscription.active)
+										if (!profile?.subscription.active)
 											return navigation.navigate(
 												'SubscriptionWarning'
 											);
