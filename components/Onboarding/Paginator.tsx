@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import { OnboardingDataType } from '../../types';
+import theme from '../styles/theme';
 
 type Props = {
 	data: OnboardingDataType[];
@@ -25,6 +26,7 @@ const Paginator = ({ data, scrollX, onPress, currentIndex }: Props) => {
 					flexGrow: 1,
 					fontSize: 16,
 					fontWeight: 'bold',
+					color: theme.colors.primary,
 				}}
 				onPress={() => onPress('back')}
 			>
@@ -69,6 +71,7 @@ const Paginator = ({ data, scrollX, onPress, currentIndex }: Props) => {
 					textAlign: 'right',
 					fontSize: 17,
 					fontWeight: 'bold',
+					color: theme.colors.primary,
 				}}
 				onPress={() => onPress('next')}
 			>
@@ -94,6 +97,6 @@ const styles = StyleSheet.create({
 		height: 10,
 		borderRadius: 5,
 		marginHorizontal: 4,
-		backgroundColor: 'black',
+		backgroundColor: theme.colors.primary,
 	},
 });

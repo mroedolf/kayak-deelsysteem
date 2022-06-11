@@ -1,7 +1,15 @@
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	useWindowDimensions,
+	View,
+	Image,
+	ImageSourcePropType,
+} from 'react-native';
 import React from 'react';
 import { OnboardingDataType } from '../../types';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import theme from '../styles/theme';
 
 type Props = {
 	item: OnboardingDataType;
@@ -27,7 +35,7 @@ const Page = ({ item, skipButton, skipButtonPress }: Props) => {
 					<Text
 						style={{
 							fontSize: 16,
-							color: 'black',
+							color: theme.colors.primary,
 							fontWeight: 'bold',
 						}}
 						onPress={skipButtonPress || (() => {})}
@@ -36,11 +44,10 @@ const Page = ({ item, skipButton, skipButtonPress }: Props) => {
 					</Text>
 				</View>
 			)}
-			{/* <Image
-				// eslint-disable-next-line @typescript-eslint/no-var-requires
-				source={require('../../assets/images/undraw_1.png')}
-				style={[styles.image, { width, resizeMode: 'contain' }]}
-			/> */}
+			<Image
+				source={item.picture}
+				style={[styles.image, { width, resizeMode: 'cover' }]}
+			/>
 
 			<View style={styles.content}>
 				<Text style={styles.title}>{item.title}</Text>
@@ -69,11 +76,15 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 	},
 	title: {
-		fontSize: 20,
+		fontSize: theme.font.sizes['4xl'],
 		fontWeight: 'bold',
+		color: theme.colors.primary,
 		marginBottom: 20,
 	},
 	description: {
 		fontSize: 16,
+		color: theme.colors.secondary,
+		fontWeight: 'bold',
+		textAlign: 'center',
 	},
 });

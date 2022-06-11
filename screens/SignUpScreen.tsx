@@ -175,7 +175,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 							marginBottom={30}
 							fontWeight={500}
 						>
-							Registreer een account
+							Maak een account
 						</Heading>
 						<Input
 							value={values.email}

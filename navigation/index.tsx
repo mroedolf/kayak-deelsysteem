@@ -22,6 +22,7 @@ import BookingScreen from '../screens/BookingScreen';
 import ReservationsScreen from '../screens/ReservationsScreen';
 import SubscriptionWarningScreen from '../screens/SubscriptionWarningScreen';
 import PurchaseSubscriptionScreen from '../screens/PurchaseSubscriptionScreen';
+import MoreInfoScreen from '../screens/MoreInfoScreen';
 
 export default function Navigation({
 	colorScheme,
@@ -46,14 +47,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
 	const user = useStore().user;
-
 	return (
 		<Stack.Navigator
 			screenOptions={{
 				contentStyle: { backgroundColor: theme.colors.light },
 			}}
 		>
-			{user ? (
+			{user && Object.keys(user).length ? (
 				<>
 					<Stack.Screen
 						name={'Homescreen'}
@@ -116,6 +116,11 @@ function RootNavigator() {
 					<Stack.Screen
 						name={'CTAScreen'}
 						component={CTAScreen}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name={'MoreInfo'}
+						component={MoreInfoScreen}
 						options={{ headerShown: false }}
 					/>
 				</>

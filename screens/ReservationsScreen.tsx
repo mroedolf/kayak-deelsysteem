@@ -9,6 +9,10 @@ import { useFirestoreQuery } from '@react-query-firebase/firestore';
 import { Reservation } from '../types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ReservationCard from '../components/Reservations/ReservationCard';
+import { Ionicons } from '@expo/vector-icons';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import { Section } from '../components/styles/elements/Section';
+import { ActivityIndicator } from 'react-native';
 
 const ReservationsScreen = ({
 	navigation,
@@ -33,9 +37,29 @@ const ReservationsScreen = ({
 				height: '100%',
 			}}
 		>
-			<Heading fontSize={theme.font.sizes['4xl']}>
-				Mijn Reservaties
-			</Heading>
+			<Section
+				display={'flex'}
+				flexDirection={'row'}
+				justifyContent={'space-between'}
+				alignItems={'center'}
+				width={'100%'}
+				marginBottom={theme.space.medium}
+			>
+				<Heading fontSize={35} fontWeight={'bold'}>
+					Mijn Reservaties
+				</Heading>
+				<RoundedButton
+					onPress={() => navigation.navigate('Profile')}
+					Icon={() => (
+						<Ionicons
+							name="person-outline"
+							color={theme.colors.primary}
+							size={32}
+						/>
+					)}
+				/>
+			</Section>
+			{query.isLoading && <ActivityIndicator />}
 			{(reservations as Reservation[])?.map((reservation) => {
 				return (
 					<ReservationCard

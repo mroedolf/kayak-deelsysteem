@@ -57,7 +57,7 @@ const CTAScreen = ({ navigation }: RootStackScreenProps<'CTAScreen'>) => {
 				</Button>
 				<Button
 					marginTop={'10px'}
-					onPress={() => navigation.navigate('SignUp')}
+					onPress={() => navigation.navigate('MoreInfo')}
 					tertiary
 				>
 					<Text

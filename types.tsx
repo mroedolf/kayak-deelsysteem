@@ -12,6 +12,7 @@ import {
 } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Timestamp } from 'firebase/firestore';
+import { ImageSourcePropType } from 'react-native';
 
 declare global {
 	namespace ReactNavigation {
@@ -34,6 +35,7 @@ export type RootStackParamList = {
 	Reservations: undefined;
 	SubscriptionWarning: undefined;
 	PurchaseSubscriptionScreen: undefined;
+	MoreInfo: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -67,7 +69,7 @@ export type OnboardingDataType = {
 	id: number;
 	title: string;
 	description: string;
-	picture: string;
+	picture: ImageSourcePropType;
 	backgroundColor: string;
 };
 

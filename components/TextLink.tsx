@@ -17,8 +17,8 @@ const TextLink = ({ onPress, label, ...props }: Props) => {
 			<Text
 				color={theme.colors.primary}
 				fontWeight={theme.font.weights.bold}
-				mt={theme.space.small}
-				fontSize={theme.font.sizes.base}
+				mt={theme.space.medium}
+				fontSize={theme.font.sizes['2xl']}
 			>
 				{label}
 			</Text>
