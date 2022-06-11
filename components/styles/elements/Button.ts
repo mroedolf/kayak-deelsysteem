@@ -35,10 +35,10 @@ export const Button = styled.TouchableOpacity<
 	${margin}
 	justify-content: center;
 	align-items: center;
-	background: ${({ theme, disabled }) =>
-		disabled ? theme.colors.disabled : theme.colors.primary};
-	color: white;
-	background-color: ${({ theme, secondary, tertiary }) => {
+	background-color: ${({ theme, secondary, tertiary, disabled }) => {
+		if (disabled) {
+			return theme.colors.disabled;
+		}
 		if (secondary) {
 			return 'transparent';
 		}

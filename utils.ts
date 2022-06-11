@@ -258,23 +258,43 @@ const timestampToDate = (timestamp: number): string => {
 	}`;
 };
 
+export type GroupedReservations = Record<
+	string,
+	{
+		timestamp: number;
+		time: [
+			{
+				[key: number]: boolean;
+			}
+		];
+	}
+>;
+
 /**
  * Convert an array of reservations and extracts all timestamps and converts them to dates
  * @param reservations array of reservations
- * @returns array of dates
+ * @returns GroupedReservations grouped reservations
  */
-const extractDatesFromReservations = (
-	reservations: Reservation[]
-): string[] => {
-	if (!reservations) return [];
+const extractDatesFromReservations = (reservations: Reservation[]) => {
+	if (!reservations) return {};
 
-	const dates: string[] = [];
+	const groupedReservations = reservations.reduce<GroupedReservations>(
+		(acc, reservation) => {
+			const timestamp = timestampToDate(reservation.date);
+			if (!acc[timestamp]) {
+				acc[timestamp] = {
+					timestamp: reservation.date,
+					time: [{ [reservation.time]: true }],
+				};
+			} else {
+				acc[timestamp].time.push({ [reservation.time]: true });
+			}
+			return acc;
+		},
+		{}
+	);
 
-	reservations.forEach((reservation) => {
-		dates.push(timestampToDate(reservation.date));
-	});
-
-	return dates;
+	return groupedReservations;
 };
 
 const generateUUID = (): string => {

@@ -1,5 +1,5 @@
 import { ImageSourcePropType, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Section } from '../components/styles/elements/Section';
 import * as Card from '../components/styles/blocks/BookingCard';
 import DatePickerComponent from '../components/Home/DatePicker';
@@ -26,6 +26,7 @@ import {
 	extractDatesFromReservations,
 	generateUUID,
 	handleFirebaseError,
+	timestampToDate,
 } from '../utils';
 import { FirebaseError } from 'firebase/app';
 import { log } from '../config/logger';
@@ -49,6 +50,12 @@ const BookingScreen = ({
 		user,
 		profile,
 	} = useStore();
+
+	useEffect(() => {
+		return () => {
+			setSelectedDate(+new Date());
+		};
+	}, []);
 
 	const mutationRef = collection(firestore, 'reservations');
 	const mutation = useFirestoreCollectionMutation(mutationRef, {
@@ -79,6 +86,12 @@ const BookingScreen = ({
 
 	const reservationsQuery = useFirestoreQuery(['reservations'], queryRef);
 	const reservations = reservationsQuery.data?.docs?.map((doc) => doc.data());
+	const groupedReservations = extractDatesFromReservations(
+		reservations as Reservation[]
+	);
+
+	const selectedDateReservedTimes =
+		groupedReservations[timestampToDate(selectedDate)];
 
 	return (
 		<>
@@ -127,9 +140,7 @@ const BookingScreen = ({
 							<DatePickerComponent
 								timestamp={selectedDate}
 								onChange={setSelectedDate}
-								disabledDates={extractDatesFromReservations(
-									reservations as Reservation[]
-								)}
+								groupedReservations={groupedReservations}
 							/>
 							<Card.ButtonWrapper horizontal>
 								<Button
@@ -150,6 +161,12 @@ const BookingScreen = ({
 									</Text>
 								</Button>
 								<Button
+									disabled={selectedDateReservedTimes?.time.some(
+										(time) =>
+											time[
+												CheckoutTimeOptions.Namiddag
+											] === true
+									)}
 									tertiary
 									flexGrow={1}
 									onPress={() =>
@@ -159,9 +176,9 @@ const BookingScreen = ({
 									}
 								>
 									<Text
-										color={theme.colors.primary}
 										fontSize={theme.font.sizes.base}
 										fontWeight={'bold'}
+										color={theme.colors.primary}
 									>
 										Namiddag
 									</Text>
@@ -172,7 +189,7 @@ const BookingScreen = ({
 									tertiary
 									flexGrow={1}
 									onPress={() => {
-										if (!profile?.subscription.active)
+										if (profile?.subscription.active)
 											return navigation.navigate(
 												'SubscriptionWarning'
 											);

@@ -3,17 +3,33 @@ import React from 'react';
 import { Section } from '../styles/elements/Section';
 import theme from '../styles/theme';
 import { Calendar } from 'react-native-calendars';
-import { timestampToDate } from '../../utils';
+import { GroupedReservations, timestampToDate } from '../../utils';
 
 type Props = {
 	timestamp: number;
 	onChange: (timestamp: number) => void;
-	disabledDates?: string[];
+	groupedReservations: GroupedReservations;
 };
 
-const DatePickerComponent = ({ timestamp, onChange, disabledDates }: Props) => {
+type InactiveDates = Record<
+	string,
+	{
+		inactive: boolean;
+		dots: {
+			key: string;
+			color: string;
+		}[];
+	}
+>;
+
+const DatePickerComponent = ({
+	timestamp,
+	onChange,
+	groupedReservations,
+}: Props) => {
 	// Date which is 4 weeks in the future from the current date
 	const maxDate = timestampToDate(timestamp + 4 * 7 * 24 * 60 * 60 * 1000);
+
 	return (
 		<View>
 			<Section
@@ -38,33 +54,29 @@ const DatePickerComponent = ({ timestamp, onChange, disabledDates }: Props) => {
 					markingType="multi-dot"
 					maxDate={maxDate}
 					markedDates={{
-						// Currently selected date by user
+						...Object.keys(groupedReservations).reduce(
+							(acc, date) => {
+								acc[date] = {
+									inactive:
+										groupedReservations[date].time.length >=
+										2,
+									dots: groupedReservations[date].time.map(
+										(_, i) => {
+											return {
+												key: String(i),
+												color: theme.colors.secondary,
+											};
+										}
+									),
+								};
+								return acc;
+							},
+							{} as InactiveDates
+						),
 						[timestampToDate(timestamp)]: {
 							selected: true,
 							selectedColor: theme.colors.primary,
 						},
-						// Inactive dates, in this case dates which already have a reservation
-						// FIXME: Right now this disables the date even if there's a reservation for 1 half of the day while it should only disable the half which is reserved
-						// Could possibly fix this by marking the reserved date with a dot (indicating 1 half of the day is reserved) and then disabling the specific voormiddag/namiddag button
-						...(disabledDates || []).reduce(
-							(acc, date) => ({
-								...acc,
-								[date]: {
-									inactive: true,
-									// dots: [
-									// 	{
-									// 		key: 'voor',
-									// 		color: theme.colors.primary,
-									// 	},
-									// 	{
-									// 		key: 'na',
-									// 		color: theme.colors.primary,
-									// 	},
-									// ],
-								},
-							}),
-							{}
-						),
 					}}
 				/>
 			</Section>
