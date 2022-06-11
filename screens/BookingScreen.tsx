@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { ImageSourcePropType, View } from 'react-native';
 import React, { useState } from 'react';
 import { Section } from '../components/styles/elements/Section';
 import * as Card from '../components/styles/blocks/BookingCard';
@@ -29,6 +29,8 @@ import {
 } from '../utils';
 import { FirebaseError } from 'firebase/app';
 import { log } from '../config/logger';
+import kajakImage from '../assets/images/app/kajak-2p.png';
+import kajakVertImage from '../assets/images/app/kajak-vert.png';
 
 // TODO:; Add an option to show the selected voormiddag/namiddag button using selectedTime
 //  	  Add image assets once received
@@ -82,6 +84,22 @@ const BookingScreen = ({
 		<>
 			<View>
 				<Section
+					position={'absolute'}
+					top={80}
+					left={0}
+					right={0}
+					bottom={0}
+					alignItems={'center'}
+				>
+					<Card.Image
+						source={kajakVertImage as ImageSourcePropType}
+						style={{
+							width: '50%',
+							height: '50%',
+						}}
+					/>
+				</Section>
+				<Section
 					display={'flex'}
 					justifyContent={'space-between'}
 					height={'100%'}
@@ -102,7 +120,10 @@ const BookingScreen = ({
 						/>
 					</Section>
 					<Card.Wrapper>
-						<Card.Content>
+						<Card.Image
+							source={kajakImage as ImageSourcePropType}
+						/>
+						<Card.BookingContent>
 							<DatePickerComponent
 								timestamp={selectedDate}
 								onChange={setSelectedDate}
@@ -174,7 +195,7 @@ const BookingScreen = ({
 									</Text>
 								</Button>
 							</Card.ButtonWrapper>
-						</Card.Content>
+						</Card.BookingContent>
 					</Card.Wrapper>
 				</Section>
 			</View>

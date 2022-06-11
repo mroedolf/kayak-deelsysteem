@@ -75,7 +75,6 @@ const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 				data={filteredKayaks}
 				renderItem={({ item }: { item: Kayak }) => (
 					<KayakCard
-						image={item.image}
 						title={item.name}
 						type={item.type}
 						onPress={() =>

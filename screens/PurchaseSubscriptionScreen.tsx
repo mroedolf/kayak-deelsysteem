@@ -17,6 +17,8 @@ import { collection } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
 import { useFirestoreQueryData } from '@react-query-firebase/firestore';
 import { useStore } from '../stores/useStore';
+import { Ionicons } from '@expo/vector-icons';
+import RoundedButton from '../components/Onboarding/RoundedButton';
 
 const PurchaseSubscriptionScreen = ({
 	navigation,
@@ -88,22 +90,28 @@ const PurchaseSubscriptionScreen = ({
 				console.log(error);
 			}
 		};
-		fetchData().catch((error) => console.log(error));
-	}, [toggledTarif]);
+
+		if (socialTariff || regularPrice)
+			fetchData().catch((error) => console.log(error));
+	}, [toggledTarif, socialTariff, regularPrice]);
 
 	useEffect(() => {
+		if (!profile?.uitpasNumber) return;
+
 		const fetchTarrifs = async () => {
 			const accessToken = await fetchUitpasToken();
 			if (!accessToken) {
 				return console.log('No accessToken');
 			}
 
+			if (!profile?.uitpasNumber) return;
+
 			setLoadingUitpasTariffs(true);
 			try {
 				const response = await fetchUitpasTarrifs(
 					accessToken,
 					15,
-					profile?.uitpasNumber ?? ''
+					'0900000067513'
 				);
 
 				if (!response) {
@@ -144,10 +152,25 @@ const PurchaseSubscriptionScreen = ({
 			<Section
 				display={'flex'}
 				height={'100%'}
-				justifyContent={'flex-end'}
+				justifyContent={'space-between'}
 			>
+				<Section mt="40px" ml="10px">
+					<RoundedButton
+						onPress={() => navigation.goBack()}
+						label="Terug"
+						labelSize={theme.font.sizes.lg}
+						labelColor={theme.colors.primary}
+						Icon={() => (
+							<Ionicons
+								name="chevron-back-outline"
+								color={theme.colors.primary}
+								size={24}
+							/>
+						)}
+					/>
+				</Section>
 				<Card.Wrapper>
-					<Card.Content>
+					<Card.SubscriptionContent>
 						<Text
 							color={theme.colors.light}
 							fontWeight={'bold'}
@@ -162,16 +185,6 @@ const PurchaseSubscriptionScreen = ({
 							fontSize={theme.font.sizes.xl}
 						>
 							UiTPAS-tarieven
-						</Text>
-						<Text
-							color={theme.colors.light}
-							fontWeight={'bold'}
-							fontSize={theme.font.sizes.base}
-							marginY={theme.space.medium}
-						>
-							Als je recht hebt op een kansentarief zal die hier
-							staan. Als je hem selecteert zal je korting krijgen
-							op je abonnement.
 						</Text>
 						{loadingUitpasTariffs && <ActivityIndicator />}
 						{uitpasTariff && (
@@ -220,7 +233,7 @@ const PurchaseSubscriptionScreen = ({
 								</Text>
 							</Button>
 						)}
-					</Card.Content>
+					</Card.SubscriptionContent>
 				</Card.Wrapper>
 			</Section>
 		</View>

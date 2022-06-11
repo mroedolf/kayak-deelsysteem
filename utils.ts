@@ -6,6 +6,8 @@ import {
 	StripeResult,
 	Tariff,
 	TarrifResponse,
+	TicketResponse,
+	TicketResult,
 } from './types';
 
 /**
@@ -171,6 +173,75 @@ const fetchUitpasTarrifs = async (
 	}
 };
 
+const registerUitpasTicketSale = async (
+	accessToken: string,
+	uitpasNumber: string,
+	tariffId: string,
+	regularPrice: number
+): Promise<TicketResult[] | undefined> => {
+	try {
+		console.log(
+			'registerUitpasTicketSale',
+			accessToken,
+			uitpasNumber,
+			tariffId,
+			regularPrice
+		);
+		const response = await request<TicketResponse>(
+			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/registerTicketSale',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					data: {
+						accessToken,
+						uitpasNumber,
+						tariffId,
+						regularPrice,
+					},
+				}),
+			}
+		);
+
+		console.log('registerUitpasTicketSale', response);
+
+		return response.result;
+	} catch (error) {
+		console.log(error);
+		return undefined;
+	}
+};
+
+const cancelUitpasTicketSale = async (
+	accessToken: string,
+	ticketSaleId: string
+): Promise<boolean> => {
+	try {
+		const response = await request<TicketResponse>(
+			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/cancelTicketSale',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					data: {
+						accessToken,
+						ticketSaleId,
+					},
+				}),
+			}
+		);
+		//FIXME: once the backend of this function is fixed, this should be changed to return the result of the response
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+};
+
 /**
  * Convert a timestamp to a date object using YYYY-MM-DD format
  * @param timestamp number timestamp
@@ -254,4 +325,6 @@ export {
 	generateRandomEmail,
 	fetchPaymentSheetParams,
 	fetchUitpasTarrifs,
+	registerUitpasTicketSale,
+	cancelUitpasTicketSale,
 };

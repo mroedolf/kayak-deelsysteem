@@ -1,18 +1,23 @@
 import React from 'react';
 import { FilterOptions } from '../../types';
 import * as Card from '../styles/blocks/KayakCard';
+import kajakOnePerson from '../../assets/images/app/kajak-1p.png';
+import kajakTwoPersons from '../../assets/images/app/kajak-2p.png';
 
 type Props = {
-	image: string;
 	title: string;
 	onPress: () => void;
 	type: string;
 };
 
-const KayakCard = ({ image, title, onPress, type }: Props) => {
+const KayakCard = ({ title, onPress, type }: Props) => {
 	return (
 		<Card.Wrapper onPress={onPress}>
-			<Card.Image source={{ uri: image }} />
+			{type === FilterOptions.Eenpersoons ? (
+				<Card.Image source={kajakOnePerson} />
+			) : (
+				<Card.Image source={kajakTwoPersons} />
+			)}
 			<Card.TextWrapper>
 				<Card.Title>{title}</Card.Title>
 				<Card.Subtitle>

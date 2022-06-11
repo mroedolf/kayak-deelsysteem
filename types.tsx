@@ -139,9 +139,21 @@ export type TarrifResponse = {
 export type Price = {
 	id: string;
 	type: string;
+	value: number;
 };
 
 export enum PriceType {
 	socialTariff = 'socialTariff',
 	regularPrice = 'regularPrice',
+}
+
+export interface TicketResponse {
+	result: TicketResult[];
+}
+
+export interface TicketResult {
+	id: string;
+	tariff: Tariff;
+	eventId: string;
+	uitpasNumber: string;
 }

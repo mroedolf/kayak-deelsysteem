@@ -12,6 +12,8 @@ type Props = {
 };
 
 const DatePickerComponent = ({ timestamp, onChange, disabledDates }: Props) => {
+	// Date which is 4 weeks in the future from the current date
+	const maxDate = timestampToDate(timestamp + 4 * 7 * 24 * 60 * 60 * 1000);
 	return (
 		<View>
 			<Section
@@ -34,6 +36,7 @@ const DatePickerComponent = ({ timestamp, onChange, disabledDates }: Props) => {
 					}}
 					disableAllTouchEventsForInactiveDays
 					markingType="multi-dot"
+					maxDate={maxDate}
 					markedDates={{
 						// Currently selected date by user
 						[timestampToDate(timestamp)]: {

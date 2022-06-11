@@ -2,7 +2,7 @@ import styled from '../../../styled-components';
 
 export const Wrapper = styled.TouchableOpacity<{ isSelected?: boolean }>`
 	align-self: flex-start;
-	border-radius: 10px;
+	border-radius: ${({ theme }) => theme.sizes.medium}px;
 	border: 1px solid
 		${({ theme, isSelected }) =>
 			isSelected ? theme.colors.primary : theme.colors.disabled};
