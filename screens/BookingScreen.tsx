@@ -455,13 +455,13 @@ const BookingScreen = ({
 												'SubscriptionWarning'
 											);
 
-										if (userHasReservation)
-											return Toast.show({
-												text1: 'Je hebt al een reservering',
-												text2: 'Je kan maar 1 kajak gereserveerd tegelijkertijd hebben',
-												type: 'error',
-												position: 'top',
-											});
+										// if (userHasReservation)
+										// 	return Toast.show({
+										// 		text1: 'Je hebt al een reservering',
+										// 		text2: 'Je kan maar 1 kajak gereserveerd tegelijkertijd hebben',
+										// 		type: 'error',
+										// 		position: 'top',
+										// 	});
 
 										setModal({
 											visible: true,
