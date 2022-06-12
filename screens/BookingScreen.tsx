@@ -79,7 +79,7 @@ const BookingScreen = ({
 				visible: false,
 			});
 		};
-	}, []);
+	}, [setSelectedDate, setModal]);
 
 	const mutationRef = collection(firestore, 'reservations');
 	const mutation = useFirestoreCollectionMutation(mutationRef, {
@@ -246,7 +246,7 @@ const BookingScreen = ({
 			}
 		};
 		fetchTarrifs().catch((error) => console.log(error));
-	}, []);
+	}, [profile?.uitpasNumber]);
 
 	const registerTicketSale = async () => {
 		if (

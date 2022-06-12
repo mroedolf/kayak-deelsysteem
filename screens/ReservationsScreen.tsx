@@ -205,7 +205,8 @@ const ReservationsScreen = ({
 						fontWeight={'bold'}
 						my={theme.space.small}
 					>
-						{modal.data && (modal.data as Reservation).code}
+						{(modal.data as Reservation) &&
+							(modal.data as Reservation).code}
 					</Text>
 				</>
 				<Card.ButtonWrapper horizontal>
