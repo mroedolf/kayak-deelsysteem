@@ -48,9 +48,12 @@ export const Button = styled.TouchableOpacity<
 		return theme.colors.primary;
 	}};
 	border: 3px solid
-		${({ theme, secondary }) => {
+		${({ theme, secondary, disabled }) => {
+			if (disabled) {
+				return theme.colors.darkGrey;
+			}
 			if (secondary) {
-				return theme.colors.light;
+				return theme.colors.primary;
 			}
 			return theme.colors.primary;
 		}};

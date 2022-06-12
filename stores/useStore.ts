@@ -27,7 +27,17 @@ type CheckoutSlice = {
 	setSelectedTime: (time: CheckoutTimeOptions) => void; // 0 -> before 12, 1 -> after 12
 };
 
-type StoreState = UserSlice & HomeSlice & CheckoutSlice;
+type ModalSlice = {
+	modal: {
+		visible: boolean;
+		type?: string;
+		data?: any;
+	};
+	setModal: (modal: { visible: boolean; type?: string; data?: any }) => void;
+	children: React.ReactNode;
+};
+
+type StoreState = UserSlice & HomeSlice & CheckoutSlice & ModalSlice;
 
 type StoreSlice<T> = (
 	set: SetState<StoreState>,
@@ -64,6 +74,15 @@ const createCheckoutSlice: StoreSlice<CheckoutSlice> = (set, get) => ({
 	setSelectedTime: (time) => set({ selectedTime: time }),
 });
 
+const createModalSlice: StoreSlice<ModalSlice> = (set, get) => ({
+	modal: {
+		visible: false,
+		type: 'default',
+	},
+	setModal: (modal) => set({ modal }),
+	children: null,
+});
+
 export const useStore = create<StoreState>(
 	devtools(
 		persist<StoreState>(
@@ -71,6 +90,7 @@ export const useStore = create<StoreState>(
 				...createUserSlice(set, get),
 				...createHomeSlice(set, get),
 				...createCheckoutSlice(set, get),
+				...createModalSlice(set, get),
 			}),
 			{
 				name: 'store',

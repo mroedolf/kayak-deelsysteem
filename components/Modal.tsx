@@ -1,14 +1,26 @@
 import { Modal, Text, View, StyleSheet } from 'react-native';
 import React from 'react';
 import theme from './styles/theme';
+import { useStore } from '../stores/useStore';
+
+export enum ModalType {
+	PURCHASE_MODAL = 'PURCHASE_MODAL',
+	SUBSCRIPTION_MODAL = 'SUBSCRIPTION_MODAL',
+	RESERVATION_MODAL = 'RESERVATION_MODAL',
+}
 
 type Props = {
 	visible: boolean;
 	onClose?: () => void;
 	children?: React.ReactNode;
+	type?: ModalType;
 };
 
-const ModalComponent = ({ visible, onClose, children }: Props) => {
+const ModalComponent = ({ visible, onClose, children, type }: Props) => {
+	const { modal } = useStore();
+
+	if (modal.type !== type) return null;
+
 	return (
 		<View style={styles.centeredView}>
 			<Modal

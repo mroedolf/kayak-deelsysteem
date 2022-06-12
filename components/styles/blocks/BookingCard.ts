@@ -1,4 +1,12 @@
 import styled from 'styled-components/native';
+import {
+	background,
+	BackgroundProps,
+	margin,
+	MarginProps,
+	padding,
+	PaddingProps,
+} from 'styled-system';
 
 export const Wrapper = styled.View`
 	padding: ${({ theme }) => theme.space.medium}px 0;
@@ -9,13 +17,21 @@ export const Wrapper = styled.View`
 	align-items: center;
 `;
 
-export const ButtonWrapper = styled.View<{ horizontal?: boolean }>`
+type ButtonWrapperProps = BackgroundProps & MarginProps & PaddingProps;
+
+export const ButtonWrapper = styled.View<
+	{ horizontal?: boolean } & ButtonWrapperProps
+>`
 	width: 100%;
 	display: flex;
 	flex-direction: ${({ horizontal }) => (horizontal ? 'row' : 'column')};
 	justify-content: space-between;
 	align-items: center;
 	margin-top: ${({ theme }) => theme.space.medium}px;
+	${background}
+	${margin}
+	${padding}
+	border-radius: ${({ theme }) => theme.sizes.small}px;
 `;
 
 export const SubscriptionContent = styled.View`

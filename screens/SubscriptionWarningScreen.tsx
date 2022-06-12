@@ -23,16 +23,18 @@ import { Ionicons } from '@expo/vector-icons';
 import RoundedButton from '../components/Onboarding/RoundedButton';
 import kajakVertImage from '../assets/images/app/kajak-vert.png';
 
-const TariffComponent = ({
+export const TariffComponent = ({
 	uitpasTariff,
 	loadingUitpasTariffs,
-	setToggledTarif,
-	toggledTarif,
+	setToggledTariff,
+	toggledTariff,
+	secondary,
 }: {
 	uitpasTariff: Tariff | undefined;
 	loadingUitpasTariffs: boolean;
-	setToggledTarif: (tariff: Tariff | undefined) => void;
-	toggledTarif: Tariff | undefined;
+	setToggledTariff: (tariff: Tariff | undefined) => void;
+	toggledTariff: Tariff | undefined;
+	secondary?: boolean;
 }) => {
 	return (
 		<>
@@ -42,13 +44,14 @@ const TariffComponent = ({
 					tariff={uitpasTariff}
 					onPress={() => {
 						// Toggle the selected tariff
-						setToggledTarif(
-							toggledTarif === uitpasTariff
+						setToggledTariff(
+							toggledTariff === uitpasTariff
 								? undefined
 								: uitpasTariff
 						);
 					}}
-					toggled={toggledTarif === uitpasTariff}
+					toggled={toggledTariff === uitpasTariff}
+					secondary={secondary}
 				/>
 			)}
 			{!loadingUitpasTariffs && !uitpasTariff && (
@@ -161,7 +164,7 @@ const SubscriptionWarningScreen = ({
 				const response = await fetchUitpasTarrifs(
 					accessToken,
 					15,
-					'0900000067513'
+					profile.uitpasNumber
 				);
 
 				if (!response) {
@@ -190,7 +193,7 @@ const SubscriptionWarningScreen = ({
 
 		const result = await registerUitpasTicketSale(
 			accessToken,
-			'0900000067513',
+			profile.uitpasNumber,
 			toggledTariff?.id,
 			regularPrice?.value
 		);
@@ -232,6 +235,7 @@ const SubscriptionWarningScreen = ({
 			console.log(error);
 		}
 	};
+
 	return (
 		<View>
 			<Section
@@ -302,8 +306,8 @@ const SubscriptionWarningScreen = ({
 								<TariffComponent
 									uitpasTariff={uitpasTariff}
 									loadingUitpasTariffs={loadingUitpasTariffs}
-									setToggledTarif={setToggledTariff}
-									toggledTarif={toggledTariff}
+									setToggledTariff={setToggledTariff}
+									toggledTariff={toggledTariff}
 								/>
 							)}
 							{loading ? (

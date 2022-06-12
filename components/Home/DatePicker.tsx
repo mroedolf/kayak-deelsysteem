@@ -53,6 +53,7 @@ const DatePickerComponent = ({
 					disableAllTouchEventsForInactiveDays
 					markingType="multi-dot"
 					maxDate={maxDate}
+					minDate={timestampToDate(+new Date())}
 					markedDates={{
 						...Object.keys(groupedReservations).reduce(
 							(acc, date) => {

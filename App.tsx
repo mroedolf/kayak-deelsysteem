@@ -15,6 +15,10 @@ import {
 	Poppins_700Bold,
 	Poppins_800ExtraBold,
 } from '@expo-google-fonts/poppins';
+import {
+	SourceCodePro_700Bold,
+	useFonts as c,
+} from '@expo-google-fonts/source-code-pro';
 import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components/native';
 import theme from './components/styles/theme';

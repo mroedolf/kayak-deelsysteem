@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { FilterOptions, Kayak, RootStackScreenProps } from '../types';
 import { Heading } from '../components/styles/elements/Heading';
 import FilterPill from '../components/Home/FilterPill';
@@ -14,6 +14,7 @@ import { collection, query as q } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
 import { useFirestoreQuery } from '@react-query-firebase/firestore';
 import { FlatList } from 'react-native-gesture-handler';
+import { ActivityIndicator } from 'react-native';
 
 const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 	const selectedFilter = useStore().selectedFilter;
@@ -71,22 +72,26 @@ const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 					/>
 				))}
 			</ScrollView>
-			<FlatList
-				data={filteredKayaks}
-				renderItem={({ item }: { item: Kayak }) => (
-					<KayakCard
-						title={item.name}
-						type={item.type}
-						onPress={() =>
-							navigation.navigate('BookingScreen', {
-								kayakId: String(item.id),
-							})
-						}
-					/>
-				)}
-				keyExtractor={(item) => String(item.id)}
-				showsVerticalScrollIndicator={false}
-			/>
+			{query.isLoading && <ActivityIndicator />}
+			{query.data && (
+				<FlatList
+					data={filteredKayaks}
+					renderItem={({ item }: { item: Kayak }) => (
+						<KayakCard
+							title={item.name}
+							type={item.type}
+							onPress={() =>
+								navigation.navigate('BookingScreen', {
+									kayakId: String(item.id),
+									type: item.type,
+								})
+							}
+						/>
+					)}
+					keyExtractor={(item) => String(item.id)}
+					showsVerticalScrollIndicator={false}
+				/>
+			)}
 		</SafeAreaView>
 	);
 };

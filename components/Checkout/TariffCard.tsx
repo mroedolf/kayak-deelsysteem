@@ -6,12 +6,15 @@ type Props = {
 	onPress: () => void;
 	tariff: Tariff;
 	toggled: boolean;
+	secondary?: boolean;
 };
 
-const TariffCard = ({ onPress, tariff, toggled }: Props) => {
+const TariffCard = ({ onPress, tariff, toggled, secondary }: Props) => {
 	return (
-		<Card.Wrapper toggled={toggled} onPress={onPress}>
-			<Card.Title toggled={toggled}>{tariff.name}</Card.Title>
+		<Card.Wrapper toggled={toggled} onPress={onPress} secondary={secondary}>
+			<Card.Title secondary={secondary} toggled={toggled}>
+				{tariff.name}
+			</Card.Title>
 		</Card.Wrapper>
 	);
 };

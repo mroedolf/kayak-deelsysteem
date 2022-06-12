@@ -1,5 +1,5 @@
-import { ImageSourcePropType, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ImageSourcePropType, View } from 'react-native';
+import React, { useEffect } from 'react';
 import { Section } from '../components/styles/elements/Section';
 import * as Card from '../components/styles/blocks/BookingCard';
 import DatePickerComponent from '../components/Home/DatePicker';
@@ -9,39 +9,50 @@ import theme from '../components/styles/theme';
 import { useStore } from '../stores/useStore';
 import {
 	CheckoutTimeOptions,
+	FilterOptions,
+	Price,
+	PriceType,
 	Reservation,
 	RootStackScreenProps,
+	Tariff,
 } from '../types';
 import { Ionicons } from '@expo/vector-icons';
 import RoundedButton from '../components/Onboarding/RoundedButton';
-import { collection, query, where } from 'firebase/firestore';
+import { collection, doc, query, where } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
 import {
 	useFirestoreCollectionMutation,
+	useFirestoreDocumentData,
 	useFirestoreQuery,
+	useFirestoreQueryData,
 } from '@react-query-firebase/firestore';
-import ModalComponent from '../components/Modal';
+import ModalComponent, { ModalType } from '../components/Modal';
 import Toast from 'react-native-toast-message';
 import {
+	calculateIndexByDate,
+	cancelUitpasTicketSale,
 	extractDatesFromReservations,
+	fetchProductPaymentSheetParams,
+	fetchUitpasTarrifs,
+	fetchUitpasToken,
 	generateUUID,
 	handleFirebaseError,
+	registerUitpasTicketSale,
 	timestampToDate,
 } from '../utils';
 import { FirebaseError } from 'firebase/app';
 import { log } from '../config/logger';
-import kajakImage from '../assets/images/app/kajak-2p.png';
+import kajak1pImage from '../assets/images/app/kajak-1p.png';
+import kajak2pImage from '../assets/images/app/kajak-2p.png';
 import kajakVertImage from '../assets/images/app/kajak-vert.png';
-
-// TODO:; Add an option to show the selected voormiddag/namiddag button using selectedTime
-//  	  Add image assets once received
+import { useStripe } from '@stripe/stripe-react-native';
+import { TariffComponent } from './SubscriptionWarningScreen';
 
 const BookingScreen = ({
 	navigation,
 	route,
 }: RootStackScreenProps<'BookingScreen'>) => {
-	const { kayakId } = route.params;
-	const [modalVisible, setModalVisible] = useState(false);
+	const { kayakId, type } = route.params;
 	const {
 		selectedDate,
 		setSelectedDate,
@@ -49,11 +60,17 @@ const BookingScreen = ({
 		selectedTime,
 		user,
 		profile,
+		modal,
+		setModal,
 	} = useStore();
 
 	useEffect(() => {
 		return () => {
 			setSelectedDate(+new Date());
+			setModal({
+				type: 'none',
+				visible: false,
+			});
 		};
 	}, []);
 
@@ -65,7 +82,6 @@ const BookingScreen = ({
 					user?.email as string
 				}`
 			);
-			setModalVisible(true);
 		},
 		onError: (error: FirebaseError) => {
 			log.error(
@@ -86,12 +102,214 @@ const BookingScreen = ({
 
 	const reservationsQuery = useFirestoreQuery(['reservations'], queryRef);
 	const reservations = reservationsQuery.data?.docs?.map((doc) => doc.data());
+	const userHasReservation = !!reservations?.find(
+		(reservation) => reservation.userId === user?.uid
+	);
+
 	const groupedReservations = extractDatesFromReservations(
 		reservations as Reservation[]
 	);
 
 	const selectedDateReservedTimes =
 		groupedReservations[timestampToDate(selectedDate)];
+
+	const codeRef = doc(firestore, 'code', 'list');
+	const codeQuery = useFirestoreDocumentData(['code'], codeRef);
+	const codes = codeQuery.data?.codes as string[];
+	const code = codes && codes[calculateIndexByDate(selectedDate)];
+
+	const [loading, setLoading] = React.useState(false);
+	const [loadingUitpasTariffs, setLoadingUitpasTariffs] =
+		React.useState(false);
+	const [uitpasTariff, setUitpasTariff] = React.useState<Tariff | undefined>(
+		undefined
+	);
+	const [toggledTariff, setToggledTariff] = React.useState<
+		Tariff | undefined
+	>(undefined);
+	const [accessToken, setAccessToken] = React.useState<string | undefined>(
+		undefined
+	);
+	const [prices, setPrices] = React.useState<Price[] | undefined>(undefined);
+	const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+	const pricesRef = query(
+		collection(firestore, 'prices'),
+		where('for', '==', 'product')
+	);
+
+	useFirestoreQueryData(['prices'], pricesRef, undefined, {
+		onSuccess: (data) => {
+			setPrices(data as Price[]);
+		},
+		onError: (error) => {
+			console.log('error', error);
+		},
+	});
+
+	const [regularPrice, socialTariff] = React.useMemo(() => {
+		if (prices) {
+			const regularPrice = prices.find(
+				(price) => price.type === PriceType.regularPrice
+			);
+			const socialTariff = prices.find(
+				(price) => price.type === PriceType.socialTariff
+			);
+			return [regularPrice, socialTariff];
+		}
+		return [undefined, undefined];
+	}, [prices]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			setLoading(true);
+			try {
+				if (!socialTariff || !regularPrice) return;
+
+				const { paymentIntent, ephemeralKey } =
+					await fetchProductPaymentSheetParams(
+						toggledTariff ? socialTariff.value : regularPrice.value,
+						profile?.email as string,
+						user?.uid as string
+					);
+
+				if (!paymentIntent || !ephemeralKey) {
+					return console.log('No paymentIntent or ephemeralKey');
+				}
+
+				const { error } = await initPaymentSheet({
+					customerEphemeralKeySecret: ephemeralKey,
+					paymentIntentClientSecret: paymentIntent,
+					merchantDisplayName: 'Kajak Deelsysteem',
+					merchantCountryCode: 'BE',
+					testEnv: __DEV__,
+				});
+
+				if (error) {
+					console.log(error);
+				}
+				setLoading(false);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		if (socialTariff || regularPrice)
+			fetchData().catch((error) => console.log(error));
+	}, [toggledTariff, socialTariff, regularPrice]);
+
+	useEffect(() => {
+		if (!profile?.uitpasNumber) return;
+
+		const fetchTarrifs = async () => {
+			const accessToken = await fetchUitpasToken();
+			if (!accessToken) {
+				return console.log('No accessToken');
+			}
+
+			setAccessToken(accessToken);
+
+			if (!profile?.uitpasNumber) return console.log('No uitpasNumber');
+
+			setLoadingUitpasTariffs(true);
+			try {
+				const response = await fetchUitpasTarrifs(
+					accessToken,
+					15,
+					profile.uitpasNumber
+				);
+
+				if (!response) {
+					setUitpasTariff(undefined);
+					setLoadingUitpasTariffs(false);
+					return console.log('No response');
+				}
+
+				setUitpasTariff(response);
+				setLoadingUitpasTariffs(false);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchTarrifs().catch((error) => console.log(error));
+	}, []);
+
+	const registerTicketSale = async () => {
+		if (
+			!profile?.uitpasNumber ||
+			!toggledTariff ||
+			!regularPrice ||
+			!accessToken
+		)
+			return;
+
+		const result = await registerUitpasTicketSale(
+			accessToken,
+			profile.uitpasNumber,
+			toggledTariff?.id,
+			regularPrice?.value
+		);
+
+		if (!result) {
+			return console.log('No result');
+		}
+
+		return result[0].id;
+	};
+
+	const cancelTicketSale = async (ticketSaleId: string) => {
+		if (!accessToken) return;
+
+		const result = await cancelUitpasTicketSale(accessToken, ticketSaleId);
+
+		if (!result) {
+			return console.log('No result');
+		}
+	};
+
+	const openPaymentSheet = async () => {
+		try {
+			const ticketSaleId = await registerTicketSale();
+			const { error } = await presentPaymentSheet();
+
+			if (error?.code === 'Canceled') {
+				await cancelTicketSale(ticketSaleId as string);
+				return console.log('Canceled');
+			}
+
+			if (error) {
+				await cancelTicketSale(ticketSaleId as string);
+				throw error as unknown as Error;
+			}
+
+			console.log('Success');
+
+			setModal({
+				visible: false,
+			});
+
+			mutation.mutate({
+				id: generateUUID(),
+				kayakId,
+				date: selectedDate,
+				time: selectedTime,
+				userId: user?.uid,
+				code,
+			});
+
+			console.log('showing reservation modal');
+
+			// Wait 1000ms to show the reservation modal
+			setTimeout(() => {
+				setModal({
+					visible: true,
+					type: ModalType.RESERVATION_MODAL,
+				});
+			}, 3000);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<>
@@ -134,7 +352,11 @@ const BookingScreen = ({
 					</Section>
 					<Card.Wrapper>
 						<Card.Image
-							source={kajakImage as ImageSourcePropType}
+							source={
+								type === FilterOptions.Eenpersoons
+									? (kajak1pImage as ImageSourcePropType)
+									: (kajak2pImage as ImageSourcePropType)
+							}
 						/>
 						<Card.BookingContent>
 							<DatePickerComponent
@@ -144,7 +366,20 @@ const BookingScreen = ({
 							/>
 							<Card.ButtonWrapper horizontal>
 								<Button
-									tertiary
+									disabled={selectedDateReservedTimes?.time.some(
+										(time) =>
+											time[
+												CheckoutTimeOptions.Voormiddag
+											] === true
+									)}
+									tertiary={
+										selectedTime ===
+										CheckoutTimeOptions.Voormiddag
+									}
+									secondary={
+										selectedTime !==
+										CheckoutTimeOptions.Voormiddag
+									}
 									flexGrow={1}
 									onPress={() =>
 										setSelectedTime(
@@ -153,7 +388,12 @@ const BookingScreen = ({
 									}
 								>
 									<Text
-										color={theme.colors.primary}
+										color={
+											selectedTime ===
+											CheckoutTimeOptions.Voormiddag
+												? theme.colors.primary
+												: theme.colors.light
+										}
 										fontSize={theme.font.sizes.base}
 										fontWeight={'bold'}
 									>
@@ -167,7 +407,14 @@ const BookingScreen = ({
 												CheckoutTimeOptions.Namiddag
 											] === true
 									)}
-									tertiary
+									tertiary={
+										selectedTime ===
+										CheckoutTimeOptions.Namiddag
+									}
+									secondary={
+										selectedTime !==
+										CheckoutTimeOptions.Namiddag
+									}
 									flexGrow={1}
 									onPress={() =>
 										setSelectedTime(
@@ -178,7 +425,12 @@ const BookingScreen = ({
 									<Text
 										fontSize={theme.font.sizes.base}
 										fontWeight={'bold'}
-										color={theme.colors.primary}
+										color={
+											selectedTime ===
+											CheckoutTimeOptions.Namiddag
+												? theme.colors.primary
+												: theme.colors.light
+										}
 									>
 										Namiddag
 									</Text>
@@ -189,17 +441,22 @@ const BookingScreen = ({
 									tertiary
 									flexGrow={1}
 									onPress={() => {
-										if (!profile?.subscription.active)
+										if (profile?.subscription.active)
 											return navigation.navigate(
 												'SubscriptionWarning'
 											);
 
-										mutation.mutate({
-											id: generateUUID(),
-											kayakId,
-											date: selectedDate,
-											time: selectedTime,
-											userId: user?.uid,
+										// if (userHasReservation)
+										// 	return Toast.show({
+										// 		text1: 'Je hebt al een reservering',
+										// 		text2: 'Je kan maar 1 kajak gereserveerd tegelijkertijd hebben',
+										// 		type: 'error',
+										// 		position: 'top',
+										// 	});
+
+										setModal({
+											visible: true,
+											type: ModalType.PURCHASE_MODAL,
 										});
 									}}
 								>
@@ -216,20 +473,46 @@ const BookingScreen = ({
 					</Card.Wrapper>
 				</Section>
 			</View>
-			<ModalComponent visible={modalVisible}>
-				<Text
-					fontWeight={'bold'}
-					fontSize={theme.font.sizes['3xl']}
-					color={theme.colors.primary}
-				>
-					Je kajak is gereserveerd!
-				</Text>
-				<Card.ButtonWrapper>
+			<ModalComponent
+				visible={modal.visible}
+				type={ModalType.RESERVATION_MODAL}
+			>
+				<>
+					<Text
+						fontWeight={'bold'}
+						fontSize={theme.font.sizes['3xl']}
+						color={theme.colors.primary}
+					>
+						Je kajak is gereserveerd!
+					</Text>
+					<Text
+						fontSize={theme.font.sizes.base}
+						color={theme.colors.secondary}
+						my={theme.space.medium}
+						textAlign={'center'}
+					>
+						Toegangscode sleutelkluisje aan de ingang van Buurthuis
+						Gentbrugge naast de grote poort. Gebruik deze code om
+						binnen te gaan. Je kan je kajak met dezelfde code
+						losmaken van het rek
+					</Text>
+					<Text
+						fontSize={theme.font.sizes['6xl']}
+						color={theme.colors.primary}
+						fontWeight={'bold'}
+						my={theme.space.small}
+					>
+						{code}
+					</Text>
+				</>
+				<Card.ButtonWrapper horizontal>
 					<Button
 						onPress={() => {
-							setModalVisible(false);
+							setModal({ visible: false });
 							navigation.navigate('Reservations');
 						}}
+						flexGrow={1}
+						mr={theme.space.small}
 					>
 						<Text
 							fontWeight={'bold'}
@@ -241,8 +524,10 @@ const BookingScreen = ({
 					</Button>
 					<Button
 						onPress={() => {
-							setModalVisible(false);
+							setModal({ visible: false });
 						}}
+						flexGrow={1}
+						ml={theme.space.small}
 					>
 						<Text
 							fontWeight={'bold'}
@@ -253,6 +538,68 @@ const BookingScreen = ({
 						</Text>
 					</Button>
 				</Card.ButtonWrapper>
+			</ModalComponent>
+			<ModalComponent
+				visible={modal.visible}
+				type={ModalType.PURCHASE_MODAL}
+			>
+				<>
+					<Text
+						fontWeight={'bold'}
+						fontSize={theme.font.sizes['3xl']}
+						color={theme.colors.primary}
+						mb={theme.space.large}
+					>
+						Betaal je kajak met Stripe
+					</Text>
+					{uitpasTariff && (
+						<TariffComponent
+							uitpasTariff={uitpasTariff}
+							loadingUitpasTariffs={loadingUitpasTariffs}
+							setToggledTariff={setToggledTariff}
+							toggledTariff={toggledTariff}
+							secondary
+						/>
+					)}
+					{loading ? (
+						<ActivityIndicator
+							style={{
+								marginVertical: theme.space.medium,
+							}}
+						/>
+					) : (
+						<Card.ButtonWrapper horizontal>
+							<Button
+								// eslint-disable-next-line @typescript-eslint/no-misused-promises
+								onPress={openPaymentSheet}
+								marginTop={theme.space.medium}
+							>
+								<Text
+									fontWeight={'bold'}
+									fontSize={theme.font.sizes.base}
+									color={theme.colors.light}
+								>
+									Betaal met Stripe
+								</Text>
+							</Button>
+							<Button
+								onPress={navigation.goBack}
+								marginTop={theme.space.medium}
+								ml={theme.space.medium}
+								flexGrow={1}
+								secondary
+							>
+								<Text
+									fontWeight={'bold'}
+									fontSize={theme.font.sizes.base}
+									color={theme.colors.primary}
+								>
+									Terug
+								</Text>
+							</Button>
+						</Card.ButtonWrapper>
+					)}
+				</>
 			</ModalComponent>
 		</>
 	);

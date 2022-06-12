@@ -34,7 +34,7 @@ export default function Navigation({
 			linking={LinkingConfiguration}
 			theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
 		>
-			<DrawerNavigator />
+			<RootNavigator />
 		</NavigationContainer>
 	);
 }
@@ -118,43 +118,13 @@ function RootNavigator() {
 						component={CTAScreen}
 						options={{ headerShown: false }}
 					/>
-					<Stack.Screen
-						name={'MoreInfo'}
-						component={MoreInfoScreen}
-						options={{ headerShown: false }}
-					/>
 				</>
 			)}
+			<Stack.Screen
+				name={'MoreInfo'}
+				component={MoreInfoScreen}
+				options={{ headerShown: false }}
+			/>
 		</Stack.Navigator>
 	);
 }
-
-const Drawer = createDrawerNavigator<RootDrawerParamList>();
-
-const DrawerNavigator = () => {
-	return (
-		<Drawer.Navigator initialRouteName="Home">
-			<Drawer.Screen
-				name={'Home'}
-				component={RootNavigator}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Drawer.Screen
-				name={'Profile'}
-				component={ProfileScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Drawer.Screen
-				name={'Reservations'}
-				component={ReservationsScreen}
-				options={{
-					headerShown: false,
-				}}
-			/>
-		</Drawer.Navigator>
-	);
-};

@@ -314,7 +314,7 @@ const fetchPaymentSheetParams = async (
 ): Promise<StripeResult> => {
 	try {
 		const response = await request<StripeResponse>(
-			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/fetchPaymentSheet',
+			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/fetchSubscriptionPaymentSheet',
 			{
 				method: 'POST',
 				headers: {
@@ -327,12 +327,50 @@ const fetchPaymentSheetParams = async (
 				}),
 			}
 		);
+		console.log(response);
+		return response.result;
+	} catch (error) {
+		console.log(error);
+		throw new Error('Kon betalingsschema niet ophalen');
+	}
+};
+
+const fetchProductPaymentSheetParams = async (
+	price: number,
+	email: string,
+	userId: string
+): Promise<StripeResult> => {
+	try {
+		const response = await request<StripeResponse>(
+			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/fetchProductPaymentSheet',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					data: {
+						price: price * 100,
+						email,
+						userId,
+					},
+				}),
+			}
+		);
 
 		return response.result;
 	} catch (error) {
 		console.log(error);
 		throw new Error('Kon betalingsschema niet ophalen');
 	}
+};
+
+// Calculate array index by selected date corresponding to weeks of a month
+const calculateIndexByDate = (timestamp: number): number => {
+	const date = new Date(timestamp);
+	const day = date.getDate();
+
+	return Math.floor((day - 1) / 7);
 };
 
 export {
@@ -347,4 +385,6 @@ export {
 	fetchUitpasTarrifs,
 	registerUitpasTicketSale,
 	cancelUitpasTicketSale,
+	calculateIndexByDate,
+	fetchProductPaymentSheetParams,
 };

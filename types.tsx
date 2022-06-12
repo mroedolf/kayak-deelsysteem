@@ -31,7 +31,7 @@ export type RootStackParamList = {
 	Onboarding: undefined;
 	Homescreen: undefined;
 	CTAScreen: undefined;
-	BookingScreen: { kayakId: string };
+	BookingScreen: { kayakId: string; type: string };
 	Reservations: undefined;
 	SubscriptionWarning: undefined;
 	PurchaseSubscriptionScreen: undefined;
@@ -90,6 +90,7 @@ export type Reservation = {
 	time: CheckoutTimeOptions;
 	userId: string;
 	id: string;
+	code: string;
 };
 
 export type Kayak = {
