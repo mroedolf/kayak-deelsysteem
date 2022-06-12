@@ -31,9 +31,13 @@ type ModalSlice = {
 	modal: {
 		visible: boolean;
 		type?: string;
-		data?: any;
+		data?: unknown;
 	};
-	setModal: (modal: { visible: boolean; type?: string; data?: any }) => void;
+	setModal: (modal: {
+		visible: boolean;
+		type?: string;
+		data?: unknown;
+	}) => void;
 	children: React.ReactNode;
 };
 
@@ -67,14 +71,14 @@ const createHomeSlice: StoreSlice<HomeSlice> = (set, get) => ({
 	},
 });
 
-const createCheckoutSlice: StoreSlice<CheckoutSlice> = (set, get) => ({
+const createCheckoutSlice: StoreSlice<CheckoutSlice> = (set) => ({
 	selectedDate: +new Date(),
 	setSelectedDate: (timestamp) => set({ selectedDate: timestamp }),
 	selectedTime: CheckoutTimeOptions.Voormiddag,
 	setSelectedTime: (time) => set({ selectedTime: time }),
 });
 
-const createModalSlice: StoreSlice<ModalSlice> = (set, get) => ({
+const createModalSlice: StoreSlice<ModalSlice> = (set) => ({
 	modal: {
 		visible: false,
 		type: 'default',

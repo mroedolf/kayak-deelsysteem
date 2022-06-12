@@ -93,7 +93,7 @@ const PurchaseSubscriptionScreen = ({
 
 		if (socialTariff || regularPrice)
 			fetchData().catch((error) => console.log(error));
-	}, [toggledTarif, socialTariff, regularPrice]);
+	}, [toggledTarif, socialTariff, regularPrice, prices, initPaymentSheet]);
 
 	useEffect(() => {
 		if (!profile?.uitpasNumber) return;

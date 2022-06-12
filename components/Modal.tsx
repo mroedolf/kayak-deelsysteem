@@ -1,4 +1,4 @@
-import { Modal, Text, View, StyleSheet } from 'react-native';
+import { Modal, View, StyleSheet } from 'react-native';
 import React from 'react';
 import theme from './styles/theme';
 import { useStore } from '../stores/useStore';
@@ -16,7 +16,7 @@ type Props = {
 	type?: ModalType;
 };
 
-const ModalComponent = ({ visible, onClose, children, type }: Props) => {
+const ModalComponent = ({ visible, children, type }: Props) => {
 	const { modal } = useStore();
 
 	if (modal.type !== type) return null;

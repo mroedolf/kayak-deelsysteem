@@ -4,7 +4,6 @@ import {
 	useWindowDimensions,
 	View,
 	Image,
-	ImageSourcePropType,
 } from 'react-native';
 import React from 'react';
 import { OnboardingDataType } from '../../types';

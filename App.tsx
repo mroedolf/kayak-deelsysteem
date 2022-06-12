@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useColorScheme from './hooks/useColorScheme';
@@ -15,16 +15,11 @@ import {
 	Poppins_700Bold,
 	Poppins_800ExtraBold,
 } from '@expo-google-fonts/poppins';
-import {
-	SourceCodePro_700Bold,
-	useFonts as c,
-} from '@expo-google-fonts/source-code-pro';
 import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components/native';
 import theme from './components/styles/theme';
 import { StripeProvider as _StripeProvider } from '@stripe/stripe-react-native';
 import type { Props as StripeProviderProps } from '@stripe/stripe-react-native/lib/typescript/src/components/StripeProvider';
-import StoreSync from './stores/StoreSync';
 import { LogBox } from 'react-native';
 import { LocaleConfig } from 'react-native-calendars';
 

@@ -5,7 +5,6 @@ import RoundedButton from '../components/Onboarding/RoundedButton';
 import { Heading } from '../components/styles/elements/Heading';
 import { Section } from '../components/styles/elements/Section';
 import theme from '../components/styles/theme';
-import navigation from '../navigation';
 import kayakImage from '../assets/images/app/kajak-water.png';
 import { RootStackScreenProps } from '../types';
 import { Image } from '../components/styles/blocks/KayakCard';

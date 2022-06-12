@@ -203,7 +203,14 @@ const BookingScreen = ({
 
 		if (socialTariff || regularPrice)
 			fetchData().catch((error) => console.log(error));
-	}, [toggledTariff, socialTariff, regularPrice]);
+	}, [
+		toggledTariff,
+		socialTariff,
+		regularPrice,
+		profile?.email,
+		user?.uid,
+		initPaymentSheet,
+	]);
 
 	useEffect(() => {
 		if (!profile?.uitpasNumber) return;
@@ -302,15 +309,12 @@ const BookingScreen = ({
 				code,
 			});
 
-			console.log('showing reservation modal');
-
-			// Wait 1000ms to show the reservation modal
 			setTimeout(() => {
 				setModal({
 					visible: true,
 					type: ModalType.RESERVATION_MODAL,
 				});
-			}, 3000);
+			}, 2000);
 		} catch (error) {
 			console.log(error);
 		}
@@ -451,13 +455,13 @@ const BookingScreen = ({
 												'SubscriptionWarning'
 											);
 
-										// if (userHasReservation)
-										// 	return Toast.show({
-										// 		text1: 'Je hebt al een reservering',
-										// 		text2: 'Je kan maar 1 kajak gereserveerd tegelijkertijd hebben',
-										// 		type: 'error',
-										// 		position: 'top',
-										// 	});
+										if (userHasReservation)
+											return Toast.show({
+												text1: 'Je hebt al een reservering',
+												text2: 'Je kan maar 1 kajak gereserveerd tegelijkertijd hebben',
+												type: 'error',
+												position: 'top',
+											});
 
 										setModal({
 											visible: true,

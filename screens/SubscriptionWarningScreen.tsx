@@ -144,7 +144,7 @@ const SubscriptionWarningScreen = ({
 
 		if (socialTariff || regularPrice)
 			fetchData().catch((error) => console.log(error));
-	}, [toggledTariff, socialTariff, regularPrice]);
+	}, [toggledTariff, socialTariff, regularPrice, initPaymentSheet]);
 
 	useEffect(() => {
 		if (!profile?.uitpasNumber) return;
@@ -180,7 +180,7 @@ const SubscriptionWarningScreen = ({
 			}
 		};
 		fetchTarrifs().catch((error) => console.log(error));
-	}, []);
+	}, [profile]);
 
 	const registerTicketSale = async () => {
 		if (
