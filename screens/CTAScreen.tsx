@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { Image } from 'react-native';
 import React from 'react';
-import { RootStackScreenProps } from '../types';
-import { Section } from '../components/styles/elements/Section';
-import { Button } from '../components/styles/elements/Button';
-import theme from '../components/styles/theme';
-import { Text } from '../components/styles/elements/Text';
+import { Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Button } from '../components/styles/elements/Button';
+import { Section } from '../components/styles/elements/Section';
+import { Text } from '../components/styles/elements/Text';
+import theme from '../components/styles/theme';
+import { RootStackScreenProps } from '../types';
 
 const CTAScreen = ({ navigation }: RootStackScreenProps<'CTAScreen'>) => {
 	return (

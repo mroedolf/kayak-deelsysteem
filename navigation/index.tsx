@@ -7,22 +7,22 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
 
-import { RootStackParamList } from '../types';
-import LinkingConfiguration from './LinkingConfiguration';
-import ProfileScreen from '../screens/ProfileScreen';
-import SignInScreen from '../screens/SignInScreen';
-import SignUpScreen from '../screens/SignUpScreen';
-import Onboarding from '../screens/Onboarding';
-import { useStore } from '../stores/useStore';
-import Homescreen from '../screens/Homescreen';
-import CTAScreen from '../screens/CTAScreen';
 import theme from '../components/styles/theme';
 import BookingScreen from '../screens/BookingScreen';
-import ReservationsScreen from '../screens/ReservationsScreen';
-import SubscriptionWarningScreen from '../screens/SubscriptionWarningScreen';
-import PurchaseSubscriptionScreen from '../screens/PurchaseSubscriptionScreen';
-import MoreInfoScreen from '../screens/MoreInfoScreen';
 import ContactScreen from '../screens/ContactScreen';
+import CTAScreen from '../screens/CTAScreen';
+import Homescreen from '../screens/Homescreen';
+import MoreInfoScreen from '../screens/MoreInfoScreen';
+import Onboarding from '../screens/Onboarding';
+import ProfileScreen from '../screens/ProfileScreen';
+import PurchaseSubscriptionScreen from '../screens/PurchaseSubscriptionScreen';
+import ReservationsScreen from '../screens/ReservationsScreen';
+import SignInScreen from '../screens/SignInScreen';
+import SignUpScreen from '../screens/SignUpScreen';
+import SubscriptionWarningScreen from '../screens/SubscriptionWarningScreen';
+import { useStore } from '../stores/useStore';
+import { RootStackParamList } from '../types';
+import LinkingConfiguration from './LinkingConfiguration';
 
 export default function Navigation({
 	colorScheme,

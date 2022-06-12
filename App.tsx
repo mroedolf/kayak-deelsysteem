@@ -1,27 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import 'react-native-gesture-handler';
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import Toast from 'react-native-toast-message';
 import {
-	useFonts,
 	Poppins_400Regular,
 	Poppins_500Medium,
 	Poppins_600SemiBold,
 	Poppins_700Bold,
 	Poppins_800ExtraBold,
+	useFonts,
 } from '@expo-google-fonts/poppins';
-import AppLoading from 'expo-app-loading';
-import { ThemeProvider } from 'styled-components/native';
-import theme from './components/styles/theme';
 import { StripeProvider as _StripeProvider } from '@stripe/stripe-react-native';
 import type { Props as StripeProviderProps } from '@stripe/stripe-react-native/lib/typescript/src/components/StripeProvider';
+import AppLoading from 'expo-app-loading';
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { LogBox } from 'react-native';
 import { LocaleConfig } from 'react-native-calendars';
+import 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ThemeProvider } from 'styled-components/native';
+import theme from './components/styles/theme';
+import useColorScheme from './hooks/useColorScheme';
+import Navigation from './navigation';
 
 const StripeProvider = _StripeProvider as React.FC<StripeProviderProps>;
 

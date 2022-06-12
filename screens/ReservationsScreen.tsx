@@ -1,26 +1,25 @@
-import React, { useMemo } from 'react';
-import { RootDrawerScreenProps } from '../types';
-import { Heading } from '../components/styles/elements/Heading';
-import theme from '../components/styles/theme';
-import { useStore } from '../stores/useStore';
-import { query as q, where, collection, orderBy } from 'firebase/firestore';
-import { firestore } from '../config/firebase';
-import { useFirestoreQuery } from '@react-query-firebase/firestore';
-import { Reservation } from '../types';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import ReservationCard from '../components/Reservations/ReservationCard';
 import { Ionicons } from '@expo/vector-icons';
-import RoundedButton from '../components/Onboarding/RoundedButton';
-import { Section } from '../components/styles/elements/Section';
+import { useFirestoreQuery } from '@react-query-firebase/firestore';
+import { FirebaseError } from 'firebase/app';
+import { collection, orderBy, query as q, where } from 'firebase/firestore';
+import React, { useMemo } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { FirebaseError } from 'firebase/app';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-import { handleFirebaseError } from '../utils';
-import { Text } from '../components/styles/elements/Text';
 import ModalComponent, { ModalType } from '../components/Modal';
-import { Button } from '../components/styles/elements/Button';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import ReservationCard from '../components/Reservations/ReservationCard';
 import * as Card from '../components/styles/blocks/BookingCard';
+import { Button } from '../components/styles/elements/Button';
+import { Heading } from '../components/styles/elements/Heading';
+import { Section } from '../components/styles/elements/Section';
+import { Text } from '../components/styles/elements/Text';
+import theme from '../components/styles/theme';
+import { firestore } from '../config/firebase';
+import { useStore } from '../stores/useStore';
+import { Reservation, RootDrawerScreenProps } from '../types';
+import { handleFirebaseError } from '../utils';
 
 // FIXME: Account for the timeslot of the reservation, currently it will show any reservation of the current day as past even though the timeslot is in the future
 

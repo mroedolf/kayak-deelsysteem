@@ -1,35 +1,35 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthCreateUserWithEmailAndPassword } from '@react-query-firebase/auth';
+import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
+import Checkbox from 'expo-checkbox';
 import { FirebaseError } from 'firebase/app';
+import { collection } from 'firebase/firestore';
 import { Field, Formik } from 'formik';
 import React from 'react';
 import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
+import * as Yup from 'yup';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import { Button } from '../components/styles/elements/Button';
+import { ErrorText } from '../components/styles/elements/ErrorText';
+import { Heading } from '../components/styles/elements/Heading';
+import { Input } from '../components/styles/elements/Input';
+import { KeyboardAvoidingView } from '../components/styles/elements/KeyboardAvoidingView';
+import { Section } from '../components/styles/elements/Section';
+import { Text } from '../components/styles/elements/Text';
+import theme from '../components/styles/theme';
 import { auth, firestore } from '../config/firebase';
 import { log } from '../config/logger';
+import { useStore } from '../stores/useStore';
 import { RootStackScreenProps } from '../types';
 import {
 	generateRandomEmail,
 	handleFirebaseError,
 	isAllowedStreetName,
 } from '../utils';
-import * as Yup from 'yup';
-import { KeyboardAvoidingView } from '../components/styles/elements/KeyboardAvoidingView';
-import { Heading } from '../components/styles/elements/Heading';
-import { Input } from '../components/styles/elements/Input';
-import { ErrorText } from '../components/styles/elements/ErrorText';
-import { Section } from '../components/styles/elements/Section';
-import { Button } from '../components/styles/elements/Button';
-import { Text } from '../components/styles/elements/Text';
-import RoundedButton from '../components/Onboarding/RoundedButton';
-import theme from '../components/styles/theme';
-import Checkbox from 'expo-checkbox';
-import { collection } from 'firebase/firestore';
-import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
-import { Ionicons } from '@expo/vector-icons';
-import { useStore } from '../stores/useStore';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),

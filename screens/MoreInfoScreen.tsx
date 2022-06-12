@@ -1,15 +1,15 @@
-import { View, Image, ImageSourcePropType } from 'react-native';
-import React from 'react';
-import { RootStackScreenProps } from '../types';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Image, ImageSourcePropType, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import kayakImage from '../assets/images/app/kajak-water.png';
+import locationPicture from '../assets/images/app/location.png';
 import RoundedButton from '../components/Onboarding/RoundedButton';
 import { Heading } from '../components/styles/elements/Heading';
 import { Section } from '../components/styles/elements/Section';
-import theme from '../components/styles/theme';
-import kayakImage from '../assets/images/app/kajak-water.png';
 import { Text } from '../components/styles/elements/Text';
-import { ScrollView } from 'react-native-gesture-handler';
-import locationPicture from '../assets/images/app/location.png';
+import theme from '../components/styles/theme';
+import { RootStackScreenProps } from '../types';
 
 const MoreInfoScreen = ({ navigation }: RootStackScreenProps<'MoreInfo'>) => {
 	return (

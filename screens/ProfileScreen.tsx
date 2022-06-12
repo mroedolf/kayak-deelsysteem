@@ -1,15 +1,15 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import React from 'react';
-import { RootTabScreenProps } from '../types';
-import theme from '../components/styles/theme';
-import { Heading } from '../components/styles/elements/Heading';
 import { Ionicons } from '@expo/vector-icons';
-import RoundedButton from '../components/Onboarding/RoundedButton';
-import { Section } from '../components/styles/elements/Section';
-import { accountLinks } from '../data/accountLinks';
-import TextLink from '../components/TextLink';
-import kayakImage from '../assets/images/app/kajak-water.png';
+import React from 'react';
 import { Image, ImageSourcePropType, View } from 'react-native';
+import kayakImage from '../assets/images/app/kajak-water.png';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import { Heading } from '../components/styles/elements/Heading';
+import { Section } from '../components/styles/elements/Section';
+import theme from '../components/styles/theme';
+import TextLink from '../components/TextLink';
+import { accountLinks } from '../data/accountLinks';
+import { RootTabScreenProps } from '../types';
 
 export default function ProfileScreen({
 	navigation,

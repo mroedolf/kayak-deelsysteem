@@ -1,20 +1,19 @@
-import React from 'react';
-import { FilterOptions, Kayak, RootStackScreenProps } from '../types';
-import { Heading } from '../components/styles/elements/Heading';
-import FilterPill from '../components/Home/FilterPill';
-import { useStore } from '../stores/useStore';
-import { ScrollView } from 'react-native-gesture-handler';
-import theme from '../components/styles/theme';
-import KayakCard from '../components/Home/KayakCard';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Section } from '../components/styles/elements/Section';
-import RoundedButton from '../components/Onboarding/RoundedButton';
 import { Ionicons } from '@expo/vector-icons';
-import { collection, query as q } from 'firebase/firestore';
-import { firestore } from '../config/firebase';
 import { useFirestoreQuery } from '@react-query-firebase/firestore';
-import { FlatList } from 'react-native-gesture-handler';
+import { collection, query as q } from 'firebase/firestore';
+import React from 'react';
 import { ActivityIndicator } from 'react-native';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import FilterPill from '../components/Home/FilterPill';
+import KayakCard from '../components/Home/KayakCard';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import { Heading } from '../components/styles/elements/Heading';
+import { Section } from '../components/styles/elements/Section';
+import theme from '../components/styles/theme';
+import { firestore } from '../config/firebase';
+import { useStore } from '../stores/useStore';
+import { FilterOptions, Kayak, RootStackScreenProps } from '../types';
 
 const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 	const selectedFilter = useStore().selectedFilter;

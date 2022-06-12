@@ -1,14 +1,14 @@
-import { View, ImageSourcePropType } from 'react-native';
-import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { ImageSourcePropType, View } from 'react-native';
+import kayakImage from '../assets/images/app/kajak-water.png';
 import RoundedButton from '../components/Onboarding/RoundedButton';
+import { Image } from '../components/styles/blocks/KayakCard';
 import { Heading } from '../components/styles/elements/Heading';
 import { Section } from '../components/styles/elements/Section';
-import theme from '../components/styles/theme';
-import kayakImage from '../assets/images/app/kajak-water.png';
-import { RootStackScreenProps } from '../types';
-import { Image } from '../components/styles/blocks/KayakCard';
 import { Text } from '../components/styles/elements/Text';
+import theme from '../components/styles/theme';
+import { RootStackScreenProps } from '../types';
 
 const ContactScreen = ({ navigation }: RootStackScreenProps<'Contact'>) => {
 	return (

@@ -1,27 +1,27 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useAuthSignInWithEmailAndPassword } from '@react-query-firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
+import * as Yup from 'yup';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import PasswordButton from '../components/PasswordButton';
+import { Button } from '../components/styles/elements/Button';
+import { ErrorText } from '../components/styles/elements/ErrorText';
+import { Heading } from '../components/styles/elements/Heading';
+import { Input } from '../components/styles/elements/Input';
+import { KeyboardAvoidingView } from '../components/styles/elements/KeyboardAvoidingView';
+import { Section } from '../components/styles/elements/Section';
+import { Text } from '../components/styles/elements/Text';
+import theme from '../components/styles/theme';
+import TextLink from '../components/TextLink';
 import { auth } from '../config/firebase';
 import { log } from '../config/logger';
 import { useStore } from '../stores/useStore';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError } from '../utils';
-import * as Yup from 'yup';
-import { Input } from '../components/styles/elements/Input';
-import { KeyboardAvoidingView } from '../components/styles/elements/KeyboardAvoidingView';
-import { Heading } from '../components/styles/elements/Heading';
-import { Button } from '../components/styles/elements/Button';
-import { Text } from '../components/styles/elements/Text';
-import { Section } from '../components/styles/elements/Section';
-import { ErrorText } from '../components/styles/elements/ErrorText';
-import PasswordButton from '../components/PasswordButton';
-import theme from '../components/styles/theme';
-import TextLink from '../components/TextLink';
-import RoundedButton from '../components/Onboarding/RoundedButton';
-import { Ionicons } from '@expo/vector-icons';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Ongeldig e-mail').required('Required'),

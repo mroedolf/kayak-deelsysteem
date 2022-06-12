@@ -1,16 +1,34 @@
+import { Ionicons } from '@expo/vector-icons';
+import {
+	useFirestoreCollectionMutation,
+	useFirestoreDocumentData,
+	useFirestoreQuery,
+	useFirestoreQueryData,
+} from '@react-query-firebase/firestore';
+import { useStripe } from '@stripe/stripe-react-native';
+import { FirebaseError } from 'firebase/app';
+import { collection, doc, query, where } from 'firebase/firestore';
+import React, { useEffect } from 'react';
 import {
 	ActivityIndicator,
 	ImageSourcePropType,
 	useWindowDimensions,
 	View,
 } from 'react-native';
-import React, { useEffect } from 'react';
-import { Section } from '../components/styles/elements/Section';
-import * as Card from '../components/styles/blocks/BookingCard';
+import Toast from 'react-native-toast-message';
+import kajak1pImage from '../assets/images/app/kajak-1p.png';
+import kajak2pImage from '../assets/images/app/kajak-2p.png';
+import kajakVertImage from '../assets/images/app/kajak-vert.png';
 import DatePickerComponent from '../components/Home/DatePicker';
+import ModalComponent, { ModalType } from '../components/Modal';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import * as Card from '../components/styles/blocks/BookingCard';
 import { Button } from '../components/styles/elements/Button';
+import { Section } from '../components/styles/elements/Section';
 import { Text } from '../components/styles/elements/Text';
 import theme from '../components/styles/theme';
+import { firestore } from '../config/firebase';
+import { log } from '../config/logger';
 import { useStore } from '../stores/useStore';
 import {
 	CheckoutTimeOptions,
@@ -21,18 +39,6 @@ import {
 	RootStackScreenProps,
 	Tariff,
 } from '../types';
-import { Ionicons } from '@expo/vector-icons';
-import RoundedButton from '../components/Onboarding/RoundedButton';
-import { collection, doc, query, where } from 'firebase/firestore';
-import { firestore } from '../config/firebase';
-import {
-	useFirestoreCollectionMutation,
-	useFirestoreDocumentData,
-	useFirestoreQuery,
-	useFirestoreQueryData,
-} from '@react-query-firebase/firestore';
-import ModalComponent, { ModalType } from '../components/Modal';
-import Toast from 'react-native-toast-message';
 import {
 	calculateIndexByDate,
 	cancelUitpasTicketSale,
@@ -45,12 +51,6 @@ import {
 	registerUitpasTicketSale,
 	timestampToDate,
 } from '../utils';
-import { FirebaseError } from 'firebase/app';
-import { log } from '../config/logger';
-import kajak1pImage from '../assets/images/app/kajak-1p.png';
-import kajak2pImage from '../assets/images/app/kajak-2p.png';
-import kajakVertImage from '../assets/images/app/kajak-vert.png';
-import { useStripe } from '@stripe/stripe-react-native';
 import { TariffComponent } from './SubscriptionWarningScreen';
 
 const BookingScreen = ({

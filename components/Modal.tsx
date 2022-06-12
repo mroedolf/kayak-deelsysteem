@@ -1,7 +1,7 @@
-import { Modal, View, StyleSheet } from 'react-native';
 import React from 'react';
-import theme from './styles/theme';
+import { Modal, StyleSheet, View } from 'react-native';
 import { useStore } from '../stores/useStore';
+import theme from './styles/theme';
 
 export enum ModalType {
 	PURCHASE_MODAL = 'PURCHASE_MODAL',

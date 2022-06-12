@@ -1,13 +1,13 @@
+import React from 'react';
 import {
+	Image,
 	StyleSheet,
 	Text,
 	useWindowDimensions,
 	View,
-	Image,
 } from 'react-native';
-import React from 'react';
-import { OnboardingDataType } from '../../types';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { OnboardingDataType } from '../../types';
 import theme from '../styles/theme';
 
 type Props = {

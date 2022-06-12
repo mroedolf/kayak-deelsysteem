@@ -1,27 +1,27 @@
-import { ActivityIndicator, ImageSourcePropType, View } from 'react-native';
-import React, { useEffect } from 'react';
-import * as Card from '../components/styles/blocks/BookingCard';
-import { Section } from '../components/styles/elements/Section';
-import { Price, PriceType, RootStackScreenProps, Tariff } from '../types';
-import { Text } from '../components/styles/elements/Text';
-import theme from '../components/styles/theme';
-import { Button } from '../components/styles/elements/Button';
+import { Ionicons } from '@expo/vector-icons';
 import { useFirestoreQueryData } from '@react-query-firebase/firestore';
 import { useStripe } from '@stripe/stripe-react-native';
 import { collection } from 'firebase/firestore';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, ImageSourcePropType, View } from 'react-native';
+import kajakVertImage from '../assets/images/app/kajak-vert.png';
+import TariffCard from '../components/Checkout/TariffCard';
+import RoundedButton from '../components/Onboarding/RoundedButton';
+import * as Card from '../components/styles/blocks/BookingCard';
+import { Button } from '../components/styles/elements/Button';
+import { Section } from '../components/styles/elements/Section';
+import { Text } from '../components/styles/elements/Text';
+import theme from '../components/styles/theme';
 import { firestore } from '../config/firebase';
 import { useStore } from '../stores/useStore';
+import { Price, PriceType, RootStackScreenProps, Tariff } from '../types';
 import {
-	fetchPaymentSheetParams,
-	fetchUitpasToken,
-	fetchUitpasTarrifs,
-	registerUitpasTicketSale,
 	cancelUitpasTicketSale,
+	fetchPaymentSheetParams,
+	fetchUitpasTarrifs,
+	fetchUitpasToken,
+	registerUitpasTicketSale,
 } from '../utils';
-import TariffCard from '../components/Checkout/TariffCard';
-import { Ionicons } from '@expo/vector-icons';
-import RoundedButton from '../components/Onboarding/RoundedButton';
-import kajakVertImage from '../assets/images/app/kajak-vert.png';
 
 export const TariffComponent = ({
 	uitpasTariff,

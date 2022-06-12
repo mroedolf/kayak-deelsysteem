@@ -1,7 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User } from 'firebase/auth';
 import create, { GetState, SetState } from 'zustand';
 import { devtools, persist, StateStorage } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CheckoutTimeOptions, FilterOptions, Kayak, Profile } from '../types';
 
 type UserSlice = {
