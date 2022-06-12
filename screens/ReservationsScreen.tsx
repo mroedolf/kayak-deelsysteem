@@ -138,6 +138,16 @@ const ReservationsScreen = ({
 								}
 							/>
 						))}
+					{!upcomingReservations.length && (
+						<Text
+							fontSize={theme.font.sizes.lg}
+							fontWeight={theme.font.weights.bold}
+							color={theme.colors.primary}
+							marginBottom={theme.space.medium}
+						>
+							Je hebt geen aankomende reservaties
+						</Text>
+					)}
 					<Text
 						fontSize={theme.font.sizes['2xl']}
 						fontWeight={theme.font.weights.bold}
@@ -154,6 +164,16 @@ const ReservationsScreen = ({
 								expired={true}
 							/>
 						))}
+					{pastReservations.length === 0 && (
+						<Text
+							fontSize={theme.font.sizes.lg}
+							fontWeight={theme.font.weights.bold}
+							color={theme.colors.primary}
+							marginBottom={theme.space.medium}
+						>
+							Je hebt nog geen reservaties gemaakt.
+						</Text>
+					)}
 				</ScrollView>
 			)}
 			<ModalComponent

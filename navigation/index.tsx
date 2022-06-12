@@ -23,6 +23,7 @@ import ReservationsScreen from '../screens/ReservationsScreen';
 import SubscriptionWarningScreen from '../screens/SubscriptionWarningScreen';
 import PurchaseSubscriptionScreen from '../screens/PurchaseSubscriptionScreen';
 import MoreInfoScreen from '../screens/MoreInfoScreen';
+import ContactScreen from '../screens/ContactScreen';
 
 export default function Navigation({
 	colorScheme,
@@ -89,6 +90,13 @@ function RootNavigator() {
 					<Stack.Screen
 						name={'PurchaseSubscriptionScreen'}
 						component={PurchaseSubscriptionScreen}
+						options={{
+							headerShown: false,
+						}}
+					/>
+					<Stack.Screen
+						name={'Contact'}
+						component={ContactScreen}
 						options={{
 							headerShown: false,
 						}}

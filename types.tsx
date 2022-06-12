@@ -36,6 +36,7 @@ export type RootStackParamList = {
 	SubscriptionWarning: undefined;
 	PurchaseSubscriptionScreen: undefined;
 	MoreInfo: undefined;
+	Contact: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

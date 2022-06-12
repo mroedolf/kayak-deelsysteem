@@ -24,6 +24,10 @@ const accountLinks: AccountLinks = [
 		screen: 'SubscriptionWarning',
 	},
 	{
+		label: 'Contact',
+		screen: 'Contact',
+	},
+	{
 		label: 'Log uit',
 		onPress: () => {
 			setState({
@@ -33,10 +37,6 @@ const accountLinks: AccountLinks = [
 			});
 		},
 	},
-	// {
-	// 	label: 'Contact',
-	// 	screen: 'Contact',
-	// },
 ];
 
 export { accountLinks };

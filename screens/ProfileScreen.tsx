@@ -23,7 +23,7 @@ export default function ProfileScreen({
 			<Section
 				display={'flex'}
 				justifyContent={'space-between'}
-				flexBasis={'35%'}
+				flexBasis={'40%'}
 				marginX={theme.space.medium}
 			>
 				<Section mt="40px">
@@ -60,7 +60,7 @@ export default function ProfileScreen({
 					))}
 				</Section>
 			</Section>
-			<Section flexBasis={'110%'}>
+			<Section flexBasis={'100%'}>
 				<Image
 					source={kayakImage as ImageSourcePropType}
 					style={{

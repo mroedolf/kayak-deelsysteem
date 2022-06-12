@@ -1,4 +1,9 @@
-import { ActivityIndicator, ImageSourcePropType, View } from 'react-native';
+import {
+	ActivityIndicator,
+	ImageSourcePropType,
+	useWindowDimensions,
+	View,
+} from 'react-native';
 import React, { useEffect } from 'react';
 import { Section } from '../components/styles/elements/Section';
 import * as Card from '../components/styles/blocks/BookingCard';
@@ -63,6 +68,8 @@ const BookingScreen = ({
 		modal,
 		setModal,
 	} = useStore();
+
+	const windowHeight = useWindowDimensions().height;
 
 	useEffect(() => {
 		return () => {
@@ -282,8 +289,6 @@ const BookingScreen = ({
 				throw error as unknown as Error;
 			}
 
-			console.log('Success');
-
 			setModal({
 				visible: false,
 			});
@@ -316,7 +321,7 @@ const BookingScreen = ({
 			<View>
 				<Section
 					position={'absolute'}
-					top={80}
+					top={windowHeight * 0.05}
 					left={0}
 					right={0}
 					bottom={0}
