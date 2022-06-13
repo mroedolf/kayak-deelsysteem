@@ -3,10 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthCreateUserWithEmailAndPassword } from '@react-query-firebase/auth';
-import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 import Checkbox from 'expo-checkbox';
 import { FirebaseError } from 'firebase/app';
-import { collection } from 'firebase/firestore';
 import { Field, Formik } from 'formik';
 import React from 'react';
 import Toast from 'react-native-toast-message';
@@ -20,7 +18,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Section } from '../components/styles/elements/Section';
 import { Text } from '../components/styles/elements/Text';
 import theme from '../components/styles/theme';
-import { auth, firestore } from '../config/firebase';
+import { auth } from '../config/firebase';
 import { log } from '../config/logger';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError, isAllowedStreetName } from '../utils';

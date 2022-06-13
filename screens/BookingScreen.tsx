@@ -35,7 +35,6 @@ import {
 	FilterOptions,
 	Price,
 	PriceType,
-	Profile,
 	Reservation,
 	RootStackScreenProps,
 	Tariff,
@@ -68,7 +67,6 @@ const BookingScreen = ({
 		profile,
 		modal,
 		setModal,
-		setProfile,
 	} = useStore();
 
 	const windowHeight = useWindowDimensions().height;
@@ -108,17 +106,6 @@ const BookingScreen = ({
 		collection(firestore, 'reservations'),
 		where('kayakId', '==', kayakId)
 	);
-
-	const profileRef = query(
-		collection(firestore, 'users'),
-		where('userId', '==', user?.uid)
-	);
-
-	// const profileQuery = useFirestoreQueryData(['profile'], profileRef);
-	// if (profileQuery.data && !profileQuery.isLoading) {
-	// 	console.log('profileQuery.data', profileQuery.data);
-	// 	setProfile(profileQuery.data[0] as Profile);
-	// }
 
 	const reservationsQuery = useFirestoreQuery(['reservations'], queryRef);
 	const reservations = reservationsQuery.data?.docs?.map((doc) => doc.data());
