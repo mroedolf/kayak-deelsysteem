@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFirestoreQueryData } from '@react-query-firebase/firestore';
 import { useStripe } from '@stripe/stripe-react-native';
-import { collection } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, ImageSourcePropType, View } from 'react-native';
 import kajakVertImage from '../assets/images/app/kajak-vert.png';
@@ -87,7 +87,10 @@ const SubscriptionWarningScreen = ({
 	const { initPaymentSheet, presentPaymentSheet } = useStripe();
 	const { profile } = useStore();
 
-	const pricesRef = collection(firestore, 'prices');
+	const pricesRef = query(
+		collection(firestore, 'prices'),
+		where('for', '==', 'subscription')
+	);
 	useFirestoreQueryData(['prices'], pricesRef, undefined, {
 		onSuccess: (data) => {
 			setPrices(data as Price[]);

@@ -534,6 +534,7 @@ const BookingScreen = ({
 					<Button
 						onPress={() => {
 							setModal({ visible: false });
+							navigation.navigate('Profile');
 						}}
 						flexGrow={1}
 						ml={theme.space.small}

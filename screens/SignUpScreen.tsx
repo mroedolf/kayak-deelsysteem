@@ -9,7 +9,6 @@ import { FirebaseError } from 'firebase/app';
 import { collection } from 'firebase/firestore';
 import { Field, Formik } from 'formik';
 import React from 'react';
-import { Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import * as Yup from 'yup';
 import RoundedButton from '../components/Onboarding/RoundedButton';
@@ -17,7 +16,7 @@ import { Button } from '../components/styles/elements/Button';
 import { ErrorText } from '../components/styles/elements/ErrorText';
 import { Heading } from '../components/styles/elements/Heading';
 import { Input } from '../components/styles/elements/Input';
-import { KeyboardAvoidingView } from '../components/styles/elements/KeyboardAvoidingView';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Section } from '../components/styles/elements/Section';
 import { Text } from '../components/styles/elements/Text';
 import theme from '../components/styles/theme';
@@ -25,11 +24,9 @@ import { auth, firestore } from '../config/firebase';
 import { log } from '../config/logger';
 import { useStore } from '../stores/useStore';
 import { RootStackScreenProps } from '../types';
-import {
-	generateRandomEmail,
-	handleFirebaseError,
-	isAllowedStreetName,
-} from '../utils';
+import { handleFirebaseError, isAllowedStreetName } from '../utils';
+import { Popover, usePopover } from 'react-native-modal-popover';
+import { TouchableOpacity } from 'react-native';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),
@@ -46,6 +43,14 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
+	const [popoverText, setPopoverText] = React.useState('');
+	const {
+		openPopover,
+		closePopover,
+		popoverVisible,
+		touchableRef,
+		popoverAnchorRect,
+	} = usePopover();
 	const { setProfile } = useStore();
 	const signUpMutation = useAuthCreateUserWithEmailAndPassword(auth, {
 		onMutate: (values) => {
@@ -79,19 +84,19 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 			});
 		},
 		onSuccess: () => {
-			navigation.navigate('Profile');
+			navigation.navigate('SignIn');
 		},
 	});
 
 	return (
 		<Formik
 			initialValues={{
-				email: generateRandomEmail(),
-				password: 'testing123',
-				confirmPassword: 'testing123',
-				streetName: 'Kreeftstraat',
-				uitpas: true,
-				uitpasNumber: '123',
+				email: '',
+				password: '',
+				confirmPassword: '',
+				streetName: '',
+				uitpas: false,
+				uitpasNumber: '',
 			}}
 			onSubmit={(values) => {
 				if (values.password !== values.confirmPassword) {
@@ -150,11 +155,12 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 				touched,
 				setFieldValue,
 			}) => (
-				<KeyboardAvoidingView
-					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-					minHeight={'100%'}
+				<KeyboardAwareScrollView
+					style={{
+						margin: theme.space.medium,
+					}}
 				>
-					<Section flex="0 0 5%" mt="30px">
+					<Section flex="0 0 10%" mt={theme.space.large}>
 						<RoundedButton
 							onPress={() => navigation.goBack()}
 							label="Terug"
@@ -169,7 +175,11 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 							)}
 						/>
 					</Section>
-					<Section flex="1 1 auto" justifyContent={'center'}>
+					<Section
+						flex="1 1 auto"
+						justifyContent={'center'}
+						mt={theme.space.large}
+					>
 						<Heading
 							fontSize={theme.font.sizes['5xl']}
 							marginBottom={30}
@@ -226,17 +236,47 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 								{errors.confirmPassword}
 							</ErrorText>
 						)}
-						<Input
-							value={values.streetName}
-							onChangeText={handleChange('streetName')}
-							onBlur={handleBlur('streetName')}
-							autoCapitalize="none"
-							autoCompleteType="street-address"
-							placeholder="Straatnaam"
-							hasError={
-								!!(errors.streetName && touched.streetName)
-							}
-						/>
+						<Section flexDirection={'row'}>
+							<Input
+								value={values.streetName}
+								onChangeText={handleChange('streetName')}
+								onBlur={handleBlur('streetName')}
+								autoCapitalize="none"
+								autoCompleteType="street-address"
+								placeholder="Straatnaam"
+								hasError={
+									!!(errors.streetName && touched.streetName)
+								}
+								flex={1}
+								hasButton
+							/>
+							<TouchableOpacity
+								onPress={() => {
+									setPopoverText(
+										'Omdat ons project gesubsidieerd is vanuit Wijkbudget Gent, is het enkel mogelijk om een boot te reserveren indien je in de Macharius Heirnis/Gentbrugge wijk woont.'
+									);
+									openPopover();
+								}}
+								ref={touchableRef}
+								style={{
+									flex: 1,
+									alignItems: 'center',
+									justifyContent: 'center',
+									backgroundColor: theme.colors.input,
+									marginTop: theme.space.medium,
+									paddingHorizontal: theme.space.small,
+									borderTopRightRadius: theme.space.small,
+									borderBottomRightRadius: theme.space.small,
+									maxWidth: 50,
+								}}
+							>
+								<Ionicons
+									name="ios-information-circle-outline"
+									color={theme.colors.primary}
+									size={24}
+								/>
+							</TouchableOpacity>
+						</Section>
 						{errors.streetName && touched.streetName && (
 							<ErrorText mb={'20px'} mt={'5px'}>
 								{errors.streetName}
@@ -263,14 +303,20 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 										}}
 										color={theme.colors.primary}
 									/>
-									<Text
-										fontSize={theme.font.sizes.lg}
-										fontWeight={theme.font.weights.bold}
-										color={theme.colors.primary}
-										marginLeft={theme.space.small}
+									<Section
+										flexDirection={'row'}
+										justifyContent="center"
+										alignItems={'center'}
 									>
-										UIT-Pas
-									</Text>
+										<Text
+											fontSize={theme.font.sizes.lg}
+											fontWeight={theme.font.weights.bold}
+											color={theme.colors.primary}
+											marginLeft={theme.space.small}
+										>
+											UIT-Pas
+										</Text>
+									</Section>
 								</Section>
 							)}
 						</Field>
@@ -290,7 +336,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 							/>
 						)}
 					</Section>
-					<Section flex="0 0 auto" height="80px">
+					<Section flex="1 1 auto" mt={theme.space.medium}>
 						<Button
 							onPress={handleSubmit as () => void}
 							disabled={signUpMutation.isLoading}
@@ -304,7 +350,36 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 							</Text>
 						</Button>
 					</Section>
-				</KeyboardAvoidingView>
+					<Popover
+						visible={popoverVisible}
+						onClose={closePopover}
+						fromRect={popoverAnchorRect}
+						backgroundStyle={{
+							backgroundColor: 'rgba(0, 0, 0, 0.5)',
+						}}
+						arrowStyle={{
+							borderTopColor: theme.colors.primary,
+						}}
+						contentStyle={{
+							padding: theme.space.small,
+							backgroundColor: theme.colors.primary,
+							borderRadius: theme.space.small,
+							flex: 1,
+							width: 300,
+							flexShrink: 1,
+						}}
+						supportedOrientations={['portrait', 'landscape']}
+						placement="bottom"
+						useNativeDriver
+					>
+						<Text
+							color={theme.colors.light}
+							fontSize={theme.font.sizes.base}
+						>
+							{popoverText}
+						</Text>
+					</Popover>
+				</KeyboardAwareScrollView>
 			)}
 		</Formik>
 	);
