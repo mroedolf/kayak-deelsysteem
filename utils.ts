@@ -310,7 +310,9 @@ const generateRandomEmail = (): string => {
 };
 
 const fetchPaymentSheetParams = async (
-	price: string
+	price: string,
+	email: string,
+	userId: string
 ): Promise<StripeResult> => {
 	try {
 		const response = await request<StripeResponse>(
@@ -323,6 +325,8 @@ const fetchPaymentSheetParams = async (
 				body: JSON.stringify({
 					data: {
 						price,
+						email,
+						userId,
 					},
 				}),
 			}

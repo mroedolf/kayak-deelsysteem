@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthSignInWithEmailAndPassword } from '@react-query-firebase/auth';
+import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 import { FirebaseError } from 'firebase/app';
+import { collection } from 'firebase/firestore';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { Platform } from 'react-native';
@@ -17,7 +19,7 @@ import { Section } from '../components/styles/elements/Section';
 import { Text } from '../components/styles/elements/Text';
 import theme from '../components/styles/theme';
 import TextLink from '../components/TextLink';
-import { auth } from '../config/firebase';
+import { auth, firestore } from '../config/firebase';
 import { log } from '../config/logger';
 import { useStore } from '../stores/useStore';
 import { RootStackScreenProps } from '../types';
@@ -29,10 +31,29 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
-	const setUser = useStore().setUser;
+	const { setUser, profile, setProfile } = useStore();
 	const [secureTextEntry, setSecureTextEntry] = useState(true);
 
 	const toggleSecureTextEntry = () => setSecureTextEntry(!secureTextEntry);
+	const usersRef = collection(firestore, 'users');
+	const usersMutation = useFirestoreCollectionMutation(usersRef, {
+		onMutate: (values) => {
+			log.info('[SignUpScreen.onMutate]', values);
+		},
+		onError: (error: FirebaseError) => {
+			log.error(
+				`[SignUpScreen.onError] sign up error | ${error.message}`
+			);
+			Toast.show({
+				type: 'error',
+				text1: 'Error',
+				text2: handleFirebaseError(error),
+			});
+		},
+		onSuccess: () => {
+			navigation.navigate('Homescreen');
+		},
+	});
 
 	const signInMutation = useAuthSignInWithEmailAndPassword(auth, {
 		onMutate: (values) => {
@@ -54,6 +75,23 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 			);
 
 			setUser(result.user);
+			setProfile({
+				...profile,
+				userId: result.user.uid,
+				email: result.user.email as string,
+				subscription: {
+					active: false,
+				},
+			});
+
+			usersMutation.mutate({
+				userId: result.user.uid,
+				email: result.user.email as string,
+				streetName: '',
+				subscription: {
+					active: false,
+				},
+			});
 		},
 	});
 

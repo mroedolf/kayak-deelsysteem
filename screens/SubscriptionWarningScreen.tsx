@@ -85,7 +85,7 @@ const SubscriptionWarningScreen = ({
 	);
 	const [prices, setPrices] = React.useState<Price[] | undefined>(undefined);
 	const { initPaymentSheet, presentPaymentSheet } = useStripe();
-	const { profile } = useStore();
+	const { profile, user } = useStore();
 
 	const pricesRef = query(
 		collection(firestore, 'prices'),
@@ -121,7 +121,9 @@ const SubscriptionWarningScreen = ({
 
 				const { paymentIntent, ephemeralKey } =
 					await fetchPaymentSheetParams(
-						toggledTariff ? socialTariff.id : regularPrice.id
+						toggledTariff ? socialTariff.id : regularPrice.id,
+						user?.email || '',
+						user?.uid || ''
 					);
 
 				if (!paymentIntent || !ephemeralKey) {

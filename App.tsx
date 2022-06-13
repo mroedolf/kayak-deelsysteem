@@ -22,6 +22,7 @@ import { ThemeProvider } from 'styled-components/native';
 import theme from './components/styles/theme';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
+import StoreSync from './stores/StoreSync';
 
 const StripeProvider = _StripeProvider as React.FC<StripeProviderProps>;
 
@@ -96,7 +97,7 @@ export default function App() {
 						<Navigation colorScheme={colorScheme} />
 						<StatusBar />
 						<Toast />
-						{/* <StoreSync /> */}
+						<StoreSync />
 					</SafeAreaProvider>
 				</QueryClientProvider>
 			</ThemeProvider>

@@ -22,11 +22,11 @@ import { Text } from '../components/styles/elements/Text';
 import theme from '../components/styles/theme';
 import { auth, firestore } from '../config/firebase';
 import { log } from '../config/logger';
-import { useStore } from '../stores/useStore';
 import { RootStackScreenProps } from '../types';
 import { handleFirebaseError, isAllowedStreetName } from '../utils';
 import { Popover, usePopover } from 'react-native-modal-popover';
 import { TouchableOpacity } from 'react-native';
+import { useStore } from '../stores/useStore';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Required'),
@@ -43,6 +43,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
+	const { setProfile } = useStore();
 	const [popoverText, setPopoverText] = React.useState('');
 	const {
 		openPopover,
@@ -51,7 +52,6 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 		touchableRef,
 		popoverAnchorRect,
 	} = usePopover();
-	const { setProfile } = useStore();
 	const signUpMutation = useAuthCreateUserWithEmailAndPassword(auth, {
 		onMutate: (values) => {
 			log.info('SignUpScreen.onMutate', values);
@@ -66,24 +66,8 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 				text2: handleFirebaseError(error),
 			});
 		},
-	});
-
-	const usersRef = collection(firestore, 'users');
-	const usersMutation = useFirestoreCollectionMutation(usersRef, {
-		onMutate: (values) => {
-			log.info('[SignUpScreen.onMutate]', values);
-		},
-		onError: (error: FirebaseError) => {
-			log.error(
-				`[SignUpScreen.onError] sign up error | ${error.message}`
-			);
-			Toast.show({
-				type: 'error',
-				text1: 'Error',
-				text2: handleFirebaseError(error),
-			});
-		},
-		onSuccess: () => {
+		onSuccess: (user) => {
+			log.info('SignUpScreen.onSuccess', user);
 			navigation.navigate('SignIn');
 		},
 	});
@@ -120,28 +104,11 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 					password: values.password,
 				});
 
-				usersMutation.mutate({
-					userId: auth.currentUser?.uid,
-					email: values.email,
-					streetName: values.streetName,
-					...(values.uitpas && {
-						uitpasNumber: values.uitpasNumber,
-					}),
-					subscription: {
-						active: false,
-					},
-				});
-
 				setProfile({
-					userId: auth.currentUser?.uid as string,
-					email: values.email,
 					streetName: values.streetName,
 					...(values.uitpas && {
 						uitpasNumber: values.uitpasNumber,
 					}),
-					subscription: {
-						active: false,
-					},
 				});
 			}}
 			validationSchema={validationSchema}

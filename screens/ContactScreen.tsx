@@ -43,7 +43,7 @@ const ContactScreen = ({ navigation }: RootStackScreenProps<'Contact'>) => {
 						fontSize={theme.font.sizes['4xl']}
 						mb={theme.space.medium}
 					>
-						Meer informatie
+						Contact
 					</Heading>
 					<Text
 						fontSize={theme.font.sizes.base}

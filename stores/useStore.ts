@@ -7,9 +7,9 @@ import { CheckoutTimeOptions, FilterOptions, Kayak, Profile } from '../types';
 type UserSlice = {
 	user: User | undefined;
 	setUser: (user: User | undefined) => void;
-	removeUser: () => void;
-	profile: Profile | undefined;
-	setProfile: (profile: Profile | undefined) => void;
+	profile: Partial<Profile> | undefined;
+	setProfile: (profile: Partial<Profile>) => void;
+	removeUserAndProfile: () => void;
 };
 
 type HomeSlice = {
@@ -51,9 +51,11 @@ type StoreSlice<T> = (
 const createUserSlice: StoreSlice<UserSlice> = (set) => ({
 	user: undefined,
 	setUser: (user) => set({ user }),
-	removeUser: () => set({ user: undefined }),
 	profile: undefined,
 	setProfile: (profile) => set({ profile }),
+	removeUserAndProfile: () => {
+		set({ user: undefined, profile: undefined });
+	},
 });
 
 const createHomeSlice: StoreSlice<HomeSlice> = (set, get) => ({

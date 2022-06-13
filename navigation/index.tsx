@@ -15,7 +15,6 @@ import Homescreen from '../screens/Homescreen';
 import MoreInfoScreen from '../screens/MoreInfoScreen';
 import Onboarding from '../screens/Onboarding';
 import ProfileScreen from '../screens/ProfileScreen';
-import PurchaseSubscriptionScreen from '../screens/PurchaseSubscriptionScreen';
 import ReservationsScreen from '../screens/ReservationsScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
@@ -82,13 +81,6 @@ function RootNavigator() {
 					<Stack.Screen
 						name={'SubscriptionWarning'}
 						component={SubscriptionWarningScreen}
-						options={{
-							headerShown: false,
-						}}
-					/>
-					<Stack.Screen
-						name={'PurchaseSubscriptionScreen'}
-						component={PurchaseSubscriptionScreen}
 						options={{
 							headerShown: false,
 						}}

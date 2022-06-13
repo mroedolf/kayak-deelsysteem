@@ -1,8 +1,8 @@
-import { useFirestoreQuery } from '@react-query-firebase/firestore';
-import { collection, query as q, where } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
 import { firestore } from '../config/firebase';
 import { Profile } from '../types';
 import { useStore } from './useStore';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 /**
  * FIXME: This looks and feels like an incredibely bad idea.
@@ -11,19 +11,22 @@ import { useStore } from './useStore';
  */
 const StoreSync = () => {
 	const { user, setProfile, profile } = useStore();
-	const ref = q(
-		collection(firestore, 'users'),
-		where('email', '==', user?.email)
-	);
-	const query = useFirestoreQuery(['users'], ref, {
-		subscribe: true,
+
+	const [value] = useCollection(collection(firestore, 'users'), {
+		snapshotListenOptions: {
+			includeMetadataChanges: true,
+		},
 	});
 
-	const foundUser = query.data?.docs?.map((doc) => doc.data())[0];
+	if (!user) return null;
+
+	const users = value?.docs?.map((doc) => doc.data()) as Profile[];
+
+	const foundUser = users?.find((u) => u.userId === user.uid) as Profile;
 
 	if (foundUser) {
 		if (JSON.stringify(profile) !== JSON.stringify(foundUser)) {
-			setProfile(foundUser as Profile);
+			setProfile(foundUser);
 		}
 	}
 
