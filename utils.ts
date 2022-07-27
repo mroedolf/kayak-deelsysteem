@@ -331,7 +331,6 @@ const fetchPaymentSheetParams = async (
 				}),
 			}
 		);
-		console.log(response);
 		return response.result;
 	} catch (error) {
 		console.log(error);

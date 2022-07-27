@@ -125,7 +125,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						margin: theme.space.medium,
 					}}
 				>
-					<Section flex="0 0 10%" mt={theme.space.large}>
+					<Section flex={0} mt={theme.space.large}>
 						<RoundedButton
 							onPress={() => navigation.goBack()}
 							label="Terug"
@@ -141,7 +141,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						/>
 					</Section>
 					<Section
-						flex="1 1 auto"
+						flex={1}
 						justifyContent={'center'}
 						mt={theme.space.large}
 					>
@@ -301,7 +301,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 							/>
 						)}
 					</Section>
-					<Section flex="1 1 auto" mt={theme.space.medium}>
+					<Section flex={1} mt={theme.space.medium}>
 						<Button
 							onPress={handleSubmit as () => void}
 							disabled={signUpMutation.isLoading}

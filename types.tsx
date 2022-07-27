@@ -78,6 +78,8 @@ export enum FilterOptions {
 	Alles = 'Alles',
 	Eenpersoons = 'Eenpersoons',
 	Tweepersoons = 'Tweepersoons',
+	Vuilruim = 'Vuilruim',
+	SUP = 'SUP',
 }
 
 export enum CheckoutTimeOptions {

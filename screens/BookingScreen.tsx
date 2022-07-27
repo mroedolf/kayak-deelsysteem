@@ -408,6 +408,18 @@ const BookingScreen = ({
 									>
 										Voormiddag
 									</Text>
+									<Text
+										color={
+											selectedTime ===
+											CheckoutTimeOptions.Voormiddag
+												? theme.colors.primary
+												: theme.colors.light
+										}
+										fontSize={theme.font.sizes.xs}
+										fontWeight={'bold'}
+									>
+										7u-13u3O
+									</Text>
 								</Button>
 								<Button
 									disabled={selectedDateReservedTimes?.time.some(
@@ -442,6 +454,18 @@ const BookingScreen = ({
 										}
 									>
 										Namiddag
+									</Text>
+									<Text
+										color={
+											selectedTime ===
+											CheckoutTimeOptions.Namiddag
+												? theme.colors.primary
+												: theme.colors.light
+										}
+										fontSize={theme.font.sizes.xs}
+										fontWeight={'bold'}
+									>
+										14u-22u
 									</Text>
 								</Button>
 							</Card.ButtonWrapper>

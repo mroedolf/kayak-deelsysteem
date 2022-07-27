@@ -117,7 +117,12 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 					justifyContent={'center'}
 					minHeight={'100%'}
 				>
-					<Section flex="0 0 5%" mt="30px">
+					<Section
+						flexGrow={0}
+						flexShrink={0}
+						flexBasis="5%"
+						mt="30px"
+					>
 						<RoundedButton
 							onPress={() => navigation.goBack()}
 							label="Terug"
@@ -132,7 +137,12 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 							)}
 						/>
 					</Section>
-					<Section flex="1 1 auto" justifyContent={'center'}>
+					<Section
+						flexGrow={1}
+						flexShrink={2}
+						flexBasis="auto"
+						justifyContent={'center'}
+					>
 						<Heading
 							fontSize={theme.font.sizes['5xl']}
 							marginBottom={theme.space.large}
@@ -164,14 +174,16 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 								hasError={
 									!!(errors.password && touched.password)
 								}
-								flex={'1'}
+								flex={1}
 								hasButton
 							/>
 							<PasswordButton
 								onPress={toggleSecureTextEntry}
 								isVisible={!secureTextEntry}
 								backgroundColor={theme.colors.input}
-								flex={'0 0 auto'}
+								flexGrow={0}
+								flexShrink={0}
+								flexBasis="auto"
 								alignItems={'center'}
 								justifyContent={'center'}
 								paddingX={theme.space.small}
@@ -190,7 +202,12 @@ const SignInScreen = ({ navigation }: RootStackScreenProps<'SignIn'>) => {
 						/>
 					</Section>
 					<Section></Section>
-					<Section flex="0 0 auto" height="80px">
+					<Section
+						flexGrow={0}
+						flexShrink={0}
+						flexBasis="auto"
+						height="80px"
+					>
 						<Button
 							disabled={signInMutation.isLoading || !isValid}
 							onPress={handleSubmit as () => void}

@@ -20,7 +20,9 @@ const CTAScreen = ({ navigation }: RootStackScreenProps<'CTAScreen'>) => {
 			<Section
 				justifyContent={'center'}
 				alignItems={'center'}
-				flex={'1 1 70%'}
+				flexGrow={1}
+				flexShrink={1}
+				flexBasis={'70%'}
 			>
 				<Image
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -32,7 +34,7 @@ const CTAScreen = ({ navigation }: RootStackScreenProps<'CTAScreen'>) => {
 					}}
 				/>
 			</Section>
-			<Section flex={'1 0 30%'}>
+			<Section flexGrow={1} flexShrink={0} flexBasis={'30%'}>
 				<Button onPress={() => navigation.navigate('SignIn')}>
 					<Text
 						color="white"

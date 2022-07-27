@@ -27,7 +27,7 @@ import StoreSync from './stores/StoreSync';
 const StripeProvider = _StripeProvider as React.FC<StripeProviderProps>;
 
 LogBox.ignoreAllLogs();
-
+LogBox.ignoreLogs(['Setting a timer']);
 LocaleConfig.locales['nl_NL'] = {
 	monthNames: [
 		'januari',
@@ -90,7 +90,7 @@ export default function App() {
 	if (!fontsLoaded) return <AppLoading />;
 
 	return (
-		<StripeProvider publishableKey="pk_test_51L8Op1Iyuahh3Vm7dfs6bvEyLHt72mn0KF3dRcru62xwYX1jKPipbGHPinersy8uENwkKtp3rgGzqwuTX8ZrYau600sbIx8I9K">
+		<StripeProvider publishableKey="pk_test_51LQAyICeY4kQfA13v9NMoY3edBz9ueOkqLoRmxFzo09ANcicl0RfQi6xnaSVfdkvCND6ldKmLlgAe2qp12szzHrq00taoBBKAw">
 			<ThemeProvider theme={theme}>
 				<QueryClientProvider client={client}>
 					<SafeAreaProvider>

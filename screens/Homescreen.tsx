@@ -18,8 +18,8 @@ import { FilterOptions, Kayak, RootStackScreenProps } from '../types';
 const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 	const selectedFilter = useStore().selectedFilter;
 	const setSelectedFilter = useStore().setSelectedFilter;
-	const ref = q(collection(firestore, 'kajaks'));
-	const query = useFirestoreQuery(['kajaks'], ref);
+	const ref = q(collection(firestore, 'kayaks'));
+	const query = useFirestoreQuery(['kayaks'], ref);
 	const filteredKayaks = useStore().filterKayaks(
 		(query.data?.docs.map((doc) => doc.data()) as Kayak[]) ?? []
 	);
@@ -77,8 +77,7 @@ const Homescreen = ({ navigation }: RootStackScreenProps<'BookingScreen'>) => {
 					data={filteredKayaks}
 					renderItem={({ item }: { item: Kayak }) => (
 						<KayakCard
-							title={item.name}
-							type={item.type}
+							kayak={item}
 							onPress={() =>
 								navigation.navigate('BookingScreen', {
 									kayakId: String(item.id),
