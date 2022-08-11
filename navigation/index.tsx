@@ -22,6 +22,7 @@ import SubscriptionWarningScreen from '../screens/SubscriptionWarningScreen';
 import { useStore } from '../stores/useStore';
 import { RootStackParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import TermsAndConditionsScreen from '../screens/TermsAndConditionsScreen';
 
 export default function Navigation({
 	colorScheme,
@@ -92,6 +93,12 @@ function RootNavigator() {
 							headerShown: false,
 						}}
 					/>
+					<Stack.Screen
+					name={'TermsAndConditions'}
+					component={TermsAndConditionsScreen}
+					options={{
+						headerShown: false,
+					}}/>
 				</>
 			) : (
 				<>

@@ -21,28 +21,44 @@ import theme from '../components/styles/theme';
 import { auth } from '../config/firebase';
 import { log } from '../config/logger';
 import { RootStackScreenProps } from '../types';
-import { handleFirebaseError, isAllowedStreetName } from '../utils';
+import {handleFirebaseError, isAllowedStreetName, timestampToDateEU} from '../utils';
 import { Popover, usePopover } from 'react-native-modal-popover';
-import { TouchableOpacity } from 'react-native';
+import {Pressable, TouchableOpacity} from 'react-native';
 import { useStore } from '../stores/useStore';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const validationSchema = Yup.object().shape({
-	email: Yup.string().email('Incorrect email').required('Required'),
+	email: Yup.string().email('Incorrect email').required('Verplicht'),
 	password: Yup.string()
 		.min(6, 'Wachtwoord moet minstens 6 karakters lang zijn')
-		.required('Required'),
+		.required('Verplicht'),
 	confirmPassword: Yup.string()
 		.oneOf([Yup.ref('password'), null], 'Wachtwoorden komen niet overeen')
-		.required('Required'),
+		.required('Verplicht'),
 	streetName: Yup.string()
 		.min(3, 'Straatnaam moet minstens 3 karakters lang zijn')
 		.max(50, 'Straatnaam mag maximaal 50 karakters lang zijn')
-		.required('Required'),
+		.required('Verplicht'),
+	dateOfBirth: Yup.string()
+		.test( 'is-mature', 'Je moet 18+ zijn om van ons systeem gebruik te kunnen maken',
+			(value?: Date) => {
+				if (value) {
+					const date = new Date(value);
+					console.log(date);
+					const birthYear = date.getFullYear();
+					const now = new Date();
+					const age = now.getUTCFullYear() - birthYear;
+					return age >= 18;
+				}
+			},
+		)
+		.required('Verplicht')
 });
 
 const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 	const { setProfile } = useStore();
 	const [popoverText, setPopoverText] = React.useState('');
+	const [datePickerOpen, setDatePickerOpen] = React.useState(false);
 	const {
 		openPopover,
 		closePopover,
@@ -77,6 +93,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 				password: '',
 				confirmPassword: '',
 				streetName: '',
+				dateOfBirth: undefined,
 				uitpas: false,
 				uitpasNumber: '',
 			}}
@@ -104,6 +121,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 
 				setProfile({
 					streetName: values.streetName,
+					dateOfBirth: values.dateOfBirth,
 					...(values.uitpas && {
 						uitpasNumber: values.uitpasNumber,
 					}),
@@ -146,11 +164,10 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 						mt={theme.space.large}
 					>
 						<Heading
-							fontSize={theme.font.sizes['5xl']}
-							marginBottom={30}
+							fontSize={theme.font.sizes['3xl']}
 							fontWeight={500}
 						>
-							Maak een account
+							Registreren
 						</Heading>
 						<Input
 							value={values.email}
@@ -162,44 +179,7 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 							hasError={!!(errors.email && touched.email)}
 						/>
 						{errors.email && touched.email && (
-							<ErrorText mb={'20px'} mt={'5px'}>
-								{errors.email}
-							</ErrorText>
-						)}
-						<Input
-							value={values.password}
-							onChangeText={handleChange('password')}
-							onBlur={handleBlur('password')}
-							autoCapitalize="none"
-							secureTextEntry
-							autoCompleteType="password"
-							placeholder="Wachtwoord"
-							hasError={!!(errors.password && touched.password)}
-						/>
-						{errors.password && touched.password && (
-							<ErrorText mb={'20px'} mt={'5px'}>
-								{errors.password}
-							</ErrorText>
-						)}
-						<Input
-							value={values.confirmPassword}
-							onChangeText={handleChange('confirmPassword')}
-							onBlur={handleBlur('confirmPassword')}
-							autoCapitalize="none"
-							secureTextEntry
-							autoCompleteType="password"
-							placeholder="Bevestig wachtwoord"
-							hasError={
-								!!(
-									errors.confirmPassword &&
-									touched.confirmPassword
-								)
-							}
-						/>
-						{errors.confirmPassword && touched.confirmPassword && (
-							<ErrorText mb={'20px'} mt={'5px'}>
-								{errors.confirmPassword}
-							</ErrorText>
+							<ErrorText mt={'5px'}>{errors.email}</ErrorText>
 						)}
 						<Section flexDirection={'row'}>
 							<Input
@@ -243,8 +223,80 @@ const SignUpScreen = ({ navigation }: RootStackScreenProps<'SignUp'>) => {
 							</TouchableOpacity>
 						</Section>
 						{errors.streetName && touched.streetName && (
-							<ErrorText mb={'20px'} mt={'5px'}>
+							<ErrorText mt={'5px'}>
 								{errors.streetName}
+							</ErrorText>
+						)}
+						<Section>
+							<Input
+								value={values.dateOfBirth ? timestampToDateEU(values.dateOfBirth.getTime()) : ''}
+								onChangeText={handleChange('dateOfBirth')}
+								onBlur={handleBlur('dateOfBirth')}
+								autoCapitalize="none"
+								placeholder="Geboortedatum"
+								onPressOut={() => {
+									setDatePickerOpen(true);
+								}}
+								hasError={
+									!!(
+										errors.dateOfBirth &&
+										touched.dateOfBirth
+									)
+								}
+								flex={1}
+							/>
+						</Section>
+						{errors.dateOfBirth && touched.dateOfBirth && (
+							<ErrorText mt={'5px'}>
+								{errors.dateOfBirth}
+							</ErrorText>
+						)}
+						{datePickerOpen && (
+							<DateTimePicker
+								testID="dateTimePicker"
+								value={(values.dateOfBirth) || (new Date())}
+								mode={'date'}
+								onChange={(event: Event, val? : Date) => {
+									setDatePickerOpen(false);
+									if (val) {
+										setFieldValue('dateOfBirth', val);
+										handleChange('dateOfBirth');
+									}
+								}}
+							/>
+						)}
+
+						<Input
+							value={values.password}
+							onChangeText={handleChange('password')}
+							onBlur={handleBlur('password')}
+							autoCapitalize="none"
+							secureTextEntry
+							autoCompleteType="password"
+							placeholder="Wachtwoord"
+							hasError={!!(errors.password && touched.password)}
+						/>
+						{errors.password && touched.password && (
+							<ErrorText mt={'5px'}>{errors.password}</ErrorText>
+						)}
+						<Input
+							value={values.confirmPassword}
+							onChangeText={handleChange('confirmPassword')}
+							onBlur={handleBlur('confirmPassword')}
+							autoCapitalize="none"
+							secureTextEntry
+							autoCompleteType="password"
+							placeholder="Bevestig wachtwoord"
+							hasError={
+								!!(
+									errors.confirmPassword &&
+									touched.confirmPassword
+								)
+							}
+						/>
+						{errors.confirmPassword && touched.confirmPassword && (
+							<ErrorText mt={'5px'}>
+								{errors.confirmPassword}
 							</ErrorText>
 						)}
 						<Field name="uitpas">

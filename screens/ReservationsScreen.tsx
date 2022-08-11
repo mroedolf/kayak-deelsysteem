@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFirestoreQuery } from '@react-query-firebase/firestore';
 import { FirebaseError } from 'firebase/app';
 import { collection, orderBy, query as q, where } from 'firebase/firestore';
-import React, { useMemo } from 'react';
+import React, {useEffect, useMemo} from 'react';
 import { ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,7 +18,7 @@ import { Text } from '../components/styles/elements/Text';
 import theme from '../components/styles/theme';
 import { firestore } from '../config/firebase';
 import { useStore } from '../stores/useStore';
-import { Reservation, RootDrawerScreenProps } from '../types';
+import {Kayak, Reservation, RootDrawerScreenProps} from '../types';
 import { handleFirebaseError } from '../utils';
 
 // FIXME: Account for the timeslot of the reservation, currently it will show any reservation of the current day as past even though the timeslot is in the future
@@ -27,6 +27,9 @@ const ReservationsScreen = ({
 	navigation,
 }: RootDrawerScreenProps<'Reservations'>) => {
 	const { user, modal, setModal } = useStore();
+	const kayakRef = q(collection(firestore, 'kayaks'));
+	const kayakQuery = useFirestoreQuery(['kayaks'], kayakRef);
+	const kayaks = (kayakQuery.data?.docs.map((doc) => doc.data()) as Kayak[]) ?? [];
 	const ref = q(
 		collection(firestore, 'reservations'),
 		where('userId', '==', user?.uid),
@@ -55,17 +58,22 @@ const ReservationsScreen = ({
 
 		const now = new Date();
 		const upcoming = reservations.filter((reservation) => {
-			const date = new Date(reservation.date);
+			const date = new Date(reservation.date * 1000);
 			return date > now;
 		});
 
 		const past = reservations.filter((reservation) => {
-			const date = new Date(reservation.date);
+			const date = new Date(reservation.date * 1000);
 			return date < now;
 		});
 
 		return [upcoming, past];
 	}, [reservations]);
+
+	const findKayakById = (id: number) : Kayak => {
+		console.log(kayaks);
+		return kayaks.find(el => el.id == id);
+	}
 
 	return (
 		<SafeAreaView
@@ -127,6 +135,7 @@ const ReservationsScreen = ({
 						upcomingReservations.map((reservation) => (
 							<ReservationCard
 								key={reservation.id}
+								kayak={findKayakById(reservation.kayakId)}
 								reservation={reservation}
 								onPress={() =>
 									setModal({

@@ -5,9 +5,9 @@ export const Wrapper = styled.TouchableOpacity<{ expired?: boolean }>`
 		expired ? 'rgba(10, 120, 191, 0.99)' : theme.colors.primary};
 	border-radius: ${({ theme }) => theme.sizes.medium}px;
 	margin-bottom: ${({ theme }) => theme.space.large}px;
+	
 	display: flex;
-	flex-direction: row;
-	height: 250px;
+	flex-direction: column-reverse;
 `;
 
 export const Title = styled.Text`
@@ -28,15 +28,16 @@ export const TextWrapper = styled.View`
 	margin: ${({ theme }) => theme.space.small}px;
 	padding: ${({ theme }) => theme.space.medium}px
 		${({ theme }) => theme.space.medium}px;
-	flex-basis: 50%;
+	flex-basis: 60%;
 `;
 
 export const ImageWrapper = styled.View`
-	flex-basis: 50%;
-	overflow: hidden;
 	border-radius: ${({ theme }) => theme.sizes.small}px;
 `;
 
 export const Image = styled.Image`
-	transform: rotate(90deg);
+	width: 100%;
+	height: 100px;
+	resize-mode: contain;
+	margin: ${({ theme }) => theme.space.small}px 0;
 `;

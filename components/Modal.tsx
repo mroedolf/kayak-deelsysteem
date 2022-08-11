@@ -51,6 +51,8 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		borderRadius: theme.sizes.small,
 		padding: theme.space.medium,
+/*
 		alignItems: 'center',
+*/
 	},
 });

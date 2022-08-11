@@ -8,10 +8,10 @@ import {
 import { useStripe } from '@stripe/stripe-react-native';
 import { FirebaseError } from 'firebase/app';
 import { collection, doc, query, where } from 'firebase/firestore';
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
 	ActivityIndicator,
-	ImageSourcePropType,
+	ImageSourcePropType, Pressable,
 	useWindowDimensions,
 	View,
 } from 'react-native';
@@ -32,7 +32,7 @@ import { log } from '../config/logger';
 import { useStore } from '../stores/useStore';
 import {
 	CheckoutTimeOptions,
-	FilterOptions,
+	FilterOptions, Kayak,
 	Price,
 	PriceType,
 	Reservation,
@@ -49,9 +49,11 @@ import {
 	generateUUID,
 	handleFirebaseError,
 	registerUitpasTicketSale,
-	timestampToDate,
+	timestampToDate, timestampToDateEU,
 } from '../utils';
 import { TariffComponent } from './SubscriptionWarningScreen';
+import {query as q} from "@firebase/firestore";
+import Checkbox from "expo-checkbox";
 
 const BookingScreen = ({
 	navigation,
@@ -70,6 +72,10 @@ const BookingScreen = ({
 	} = useStore();
 
 	const windowHeight = useWindowDimensions().height;
+
+	useEffect(() => {
+		console.log(modal);
+	}, [modal]);
 
 	useEffect(() => {
 		return () => {
@@ -107,6 +113,14 @@ const BookingScreen = ({
 		where('kayakId', '==', kayakId)
 	);
 
+	const kayaksRef = q(collection(firestore, 'kayaks'));
+	const kayaksQuery = useFirestoreQuery(['kayaks'], kayaksRef);
+	const kayaks = useStore().filterKayaks(
+		(kayaksQuery.data?.docs.map((doc) => doc.data()) as Kayak[]) ?? []
+	);
+
+	const kayak = kayaks.find(el => `${el.id}` == kayakId);
+
 	const reservationsQuery = useFirestoreQuery(['reservations'], queryRef);
 	const reservations = reservationsQuery.data?.docs?.map((doc) => doc.data());
 	const userHasReservation = !!reservations?.find(
@@ -117,13 +131,14 @@ const BookingScreen = ({
 		reservations as Reservation[]
 	);
 
-	const selectedDateReservedTimes =
-		groupedReservations[timestampToDate(selectedDate)];
 
-	const codeRef = doc(firestore, 'code', 'list');
-	const codeQuery = useFirestoreDocumentData(['code'], codeRef);
-	const codes = codeQuery.data?.codes as string[];
-	const code = codes && codes[calculateIndexByDate(selectedDate)];
+	const selectedDateReservedTimes = groupedReservations[timestampToDate(selectedDate)];
+
+	const codeRef = doc(firestore, 'codes', 'list');
+	const codeQuery = useFirestoreDocumentData(['codes'], codeRef);
+	const codeObject = Object.assign({}, codeQuery.data);
+	const codeList = Object.values(codeObject);
+	const code = codeList && codeList[calculateIndexByDate(selectedDate)];
 
 	const [loading, setLoading] = React.useState(false);
 	const [loadingUitpasTariffs, setLoadingUitpasTariffs] =
@@ -139,6 +154,7 @@ const BookingScreen = ({
 	);
 	const [prices, setPrices] = React.useState<Price[] | undefined>(undefined);
 	const { initPaymentSheet, presentPaymentSheet } = useStripe();
+	const [acceptedTerms, setAcceptedTerms] = useState(false);
 
 	const pricesRef = query(
 		collection(firestore, 'prices'),
@@ -300,14 +316,15 @@ const BookingScreen = ({
 				visible: false,
 			});
 
-			mutation.mutate({
+			const reservationObject = {
 				id: generateUUID(),
 				kayakId,
 				date: selectedDate,
 				time: selectedTime,
 				userId: user?.uid,
 				code,
-			});
+			};
+			mutation.mutate(reservationObject);
 
 			setTimeout(() => {
 				setModal({
@@ -319,6 +336,8 @@ const BookingScreen = ({
 			console.log(error);
 		}
 	};
+
+	console.log(modal);
 
 	return (
 		<>
@@ -582,19 +601,46 @@ const BookingScreen = ({
 						fontWeight={'bold'}
 						fontSize={theme.font.sizes['3xl']}
 						color={theme.colors.primary}
-						mb={theme.space.large}
+						mb={theme.space.medium}
 					>
-						Betaal je kajak met Stripe
+						Overzicht van reservatie
 					</Text>
-					{uitpasTariff && (
-						<TariffComponent
+					<Section>
+						<Text mt={5} color={theme.colors.primary} fontSize={theme.font.sizes['base']} fontWeight={theme.font.weights.bold}>{kayak?.name}</Text>
+						<Text mt={5} color={theme.colors.primary} fontSize={theme.font.sizes['base']} fontWeight={theme.font.weights.bold}>Type: {kayak?.type}</Text>
+						<Text mt={5} color={theme.colors.primary} fontSize={theme.font.sizes['base']} fontWeight={theme.font.weights.bold}>Datum: {timestampToDateEU(selectedDate)}</Text>
+						<Text mt={5} color={theme.colors.primary} fontSize={theme.font.sizes['base']} fontWeight={theme.font.weights.bold}>Tijdstip: {selectedTime == 0 ? 'Voormiddag' : 'Namiddag'}</Text>
+						<Text mt={5} color={theme.colors.primary} fontSize={theme.font.sizes['base']} fontWeight={theme.font.weights.bold}>Prijs: €{toggledTariff ? socialTariff?.value : regularPrice?.value}</Text>
+					</Section>
+					{toggledTariff &&
+						(<TariffComponent
 							uitpasTariff={uitpasTariff}
 							loadingUitpasTariffs={loadingUitpasTariffs}
 							setToggledTariff={setToggledTariff}
 							toggledTariff={toggledTariff}
 							secondary
+						/>)
+					}
+					<Section mt={10} display={'flex'} flexDirection={'row'} alignItems={'center'}>
+						<Checkbox
+							value={acceptedTerms}
+							onValueChange={setAcceptedTerms}
+							style={{
+								borderRadius: theme.space.small,
+							}}
+							color={theme.colors.primary}
 						/>
-					)}
+						<Text
+							flex={1}
+							color={theme.colors.primary}
+							marginLeft={theme.space.small}
+						>
+							Ik ga akkoord met de <Text fontWeight={theme.font.weights.bold} fontStyle='italic' onPress={() => {
+								setModal({visible: false});
+								navigation.navigate('TermsAndConditions');
+						}}>algemene gebruiksvoorwaarden</Text>
+						</Text>
+					</Section>
 					{loading ? (
 						<ActivityIndicator
 							style={{
@@ -607,6 +653,7 @@ const BookingScreen = ({
 								// eslint-disable-next-line @typescript-eslint/no-misused-promises
 								onPress={openPaymentSheet}
 								marginTop={theme.space.medium}
+								disabled={!acceptedTerms}
 							>
 								<Text
 									fontWeight={'bold'}

@@ -74,6 +74,8 @@ LocaleConfig.locales['nl_NL'] = {
 	weekend: [0, 6],
 };
 
+const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || '';
+console.log(stripePublishableKey);
 LocaleConfig.defaultLocale = 'nl_NL';
 
 export default function App() {
@@ -90,7 +92,7 @@ export default function App() {
 	if (!fontsLoaded) return <AppLoading />;
 
 	return (
-		<StripeProvider publishableKey="pk_test_51LQAyICeY4kQfA13v9NMoY3edBz9ueOkqLoRmxFzo09ANcicl0RfQi6xnaSVfdkvCND6ldKmLlgAe2qp12szzHrq00taoBBKAw">
+		<StripeProvider publishableKey='pk_test_51LQEyXFuEXrAY8lh5APMd04f646oA7xbxbTgDEdmq152SDAA3CzSQjSdWmaqWCTioAFkClHKK8lhtJZYTtxY5VbF00B8WknyAv'>
 			<ThemeProvider theme={theme}>
 				<QueryClientProvider client={client}>
 					<SafeAreaProvider>

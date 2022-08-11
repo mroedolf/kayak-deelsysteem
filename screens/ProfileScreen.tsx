@@ -1,15 +1,15 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Image, ImageSourcePropType, View } from 'react-native';
+import { FlatList, Image, ImageSourcePropType, View } from 'react-native';
 import kayakImage from '../assets/images/app/kajak-water.png';
 import RoundedButton from '../components/Onboarding/RoundedButton';
 import { Heading } from '../components/styles/elements/Heading';
 import { Section } from '../components/styles/elements/Section';
 import theme from '../components/styles/theme';
 import TextLink from '../components/TextLink';
-import { accountLinks } from '../data/accountLinks';
-import { RootTabScreenProps } from '../types';
+import { accountLinks, AccountLink } from '../data/accountLinks';
+import { Kayak, RootTabScreenProps } from '../types';
 
 export default function ProfileScreen({
 	navigation,
@@ -23,7 +23,7 @@ export default function ProfileScreen({
 			<Section
 				display={'flex'}
 				justifyContent={'space-between'}
-				flexBasis={'40%'}
+				flexBasis={'50%'}
 				marginX={theme.space.medium}
 			>
 				<Section mt="40px">
@@ -41,23 +41,26 @@ export default function ProfileScreen({
 						)}
 					/>
 				</Section>
-				<Section>
+				<Section flexBasis={'100%'}>
 					<Heading fontSize={theme.font.sizes['4xl']}>
-						Mijn Account
+						Mijn Accounts
 					</Heading>
-					{accountLinks.map((link) => (
-						<TextLink
-							key={link.label}
-							onPress={() =>
-								link.onPress
-									? link.onPress()
-									: // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									  // @ts-ignore
-									  navigation.navigate(link.screen)
-							}
-							label={link.label}
-						/>
-					))}
+					<FlatList
+						data={accountLinks}
+						renderItem={({ item }: { item: AccountLink }) => (
+							<TextLink
+								key={item.label}
+								onPress={() =>
+									item.onPress
+										? item.onPress()
+										: // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+										  // @ts-ignore
+										  navigation.navigate(item.screen)
+								}
+								label={item.label}
+							/>
+						)}
+					></FlatList>
 				</Section>
 			</Section>
 			<Section flexBasis={'100%'}>

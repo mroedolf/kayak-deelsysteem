@@ -14,6 +14,8 @@ import {
 	PositionProps,
 	space,
 	SpaceProps,
+	margin,
+	MarginProps,
 } from 'styled-system';
 
 type SectionProps =
@@ -23,7 +25,8 @@ type SectionProps =
 	| LayoutProps
 	| PositionProps
 	| BorderProps
-	| BackgroundProps;
+	| BackgroundProps
+	| MarginProps;
 
 export const Section = styled.View<SectionProps>`
 	${space}
@@ -33,5 +36,6 @@ export const Section = styled.View<SectionProps>`
     ${flexbox}
 	${border}
 	${background}
+	${margin}
 	overflow: scroll;
 `;

@@ -37,6 +37,7 @@ export type RootStackParamList = {
 	PurchaseSubscriptionScreen: undefined;
 	MoreInfo: undefined;
 	Contact: undefined;
+	TermsAndConditions: undefined,
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
@@ -115,6 +116,7 @@ export type Profile = {
 	userId: string;
 	email: string;
 	streetName: string;
+	dateOfBirth: number;
 	subscription: Subscription;
 	uitpasNumber?: string;
 };

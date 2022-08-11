@@ -1,6 +1,7 @@
 import { FirebaseError } from 'firebase/app';
 import allowedStreets from './data/streetnames';
 import {
+	Kayak,
 	Reservation,
 	StripeResponse,
 	StripeResult,
@@ -9,6 +10,7 @@ import {
 	TicketResponse,
 	TicketResult,
 } from './types';
+import {useStore} from "./stores/useStore";
 
 /**
  * Handle the translation of the given Firebase error
@@ -113,7 +115,7 @@ async function request<T>(url: string, config: RequestInit): Promise<T> {
 const fetchUitpasToken = async (): Promise<string> => {
 	try {
 		const response = await request<{ result: { access_token: string } }>(
-			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/authenticate',
+			'https://europe-west1-kayak-deelsysteem-ab8f0.cloudfunctions.net/authenticate',
 			{
 				method: 'POST',
 				headers: {
@@ -141,7 +143,7 @@ const fetchUitpasTarrifs = async (
 ): Promise<Tariff | undefined> => {
 	try {
 		const response = await request<TarrifResponse>(
-			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/fetchUitpasTarrifs',
+			'https://europe-west1-kayak-deelsysteem-ab8f0.cloudfunctions.net/fetchUitpasTarrifs',
 			{
 				method: 'POST',
 				headers: {
@@ -188,7 +190,7 @@ const registerUitpasTicketSale = async (
 			regularPrice
 		);
 		const response = await request<TicketResponse>(
-			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/registerTicketSale',
+			'https://europe-west1-kayak-deelsysteem-ab8f0.cloudfunctions.net/registerTicketSale',
 			{
 				method: 'POST',
 				headers: {
@@ -220,7 +222,7 @@ const cancelUitpasTicketSale = async (
 ): Promise<boolean> => {
 	try {
 		const response = await request<TicketResponse>(
-			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/cancelTicketSale',
+			'https://europe-west1-kayak-deelsysteem-ab8f0.cloudfunctions.net/cancelTicketSale',
 			{
 				method: 'POST',
 				headers: {
@@ -256,6 +258,17 @@ const timestampToDate = (timestamp: number): string => {
 	return `${year}-${month < 10 ? `0${month}` : month}-${
 		day < 10 ? `0${day}` : day
 	}`;
+};
+
+const timestampToDateEU = (timestamp: number): string => {
+	const date = new Date(timestamp);
+	const year = date.getFullYear();
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+
+	return `${
+		day < 10 ? `0${day}` : day
+	}/${month < 10 ? `0${month}` : month}/${year}` ;
 };
 
 export type GroupedReservations = Record<
@@ -316,7 +329,7 @@ const fetchPaymentSheetParams = async (
 ): Promise<StripeResult> => {
 	try {
 		const response = await request<StripeResponse>(
-			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/fetchSubscriptionPaymentSheet',
+			'https://europe-west1-kayak-deelsysteem-ab8f0.cloudfunctions.net/fetchSubscriptionPaymentSheet',
 			{
 				method: 'POST',
 				headers: {
@@ -345,7 +358,7 @@ const fetchProductPaymentSheetParams = async (
 ): Promise<StripeResult> => {
 	try {
 		const response = await request<StripeResponse>(
-			'https://europe-west1-kajak-deelsysteem.cloudfunctions.net/fetchProductPaymentSheet',
+			'https://europe-west1-kayak-deelsysteem-ab8f0.cloudfunctions.net/fetchProductPaymentSheet',
 			{
 				method: 'POST',
 				headers: {
@@ -380,6 +393,7 @@ export {
 	handleFirebaseError,
 	isAllowedStreetName,
 	timestampToDate,
+	timestampToDateEU,
 	extractDatesFromReservations,
 	generateUUID,
 	fetchUitpasToken,

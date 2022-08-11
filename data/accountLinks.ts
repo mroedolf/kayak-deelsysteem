@@ -8,6 +8,12 @@ type AccountLinks = {
 	onPress?: () => void;
 }[];
 
+type AccountLink = {
+	label: string;
+	screen?: keyof RootTabParamList | keyof RootStackParamList;
+	onPress?: () => void;
+};
+
 const { setState } = useStore;
 
 const accountLinks: AccountLinks = [
@@ -20,7 +26,7 @@ const accountLinks: AccountLinks = [
 		screen: 'Reservations',
 	},
 	{
-		label: 'Lidmaatschap beginnen',
+		label: 'Lidmaatschap',
 		screen: 'SubscriptionWarning',
 	},
 	{
@@ -40,4 +46,4 @@ const accountLinks: AccountLinks = [
 	},
 ];
 
-export { accountLinks };
+export { accountLinks, AccountLink };

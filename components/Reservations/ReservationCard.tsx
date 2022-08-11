@@ -1,27 +1,32 @@
 import React from 'react';
-import { CheckoutTimeOptions, Reservation } from '../../types';
+import {CheckoutTimeOptions, Kayak, Reservation} from '../../types';
 import * as Card from '../styles/blocks/ReservationCard';
-import { timestampToDate } from '../../utils';
+import { timestampToDateEU } from '../../utils';
+import kajakOnePerson from '../../assets/images/app/kajak-1p.png';
+import kajakTwoPersons from '../../assets/images/app/kajak-2p.png';
 import kajakImage from '../../assets/images/app/kajak-2p.png';
 import { ImageSourcePropType } from 'react-native';
 
 type Props = {
 	reservation: Reservation;
+	kayak: Kayak,
 	expired?: boolean;
 	onPress?: () => void;
 };
 
-const ReservationCard = ({ reservation, expired, onPress }: Props) => {
+
+const ReservationCard = ({ reservation, kayak, expired, onPress }: Props) => {
 	return (
 		<Card.Wrapper expired={expired} onPress={onPress}>
 			<Card.TextWrapper>
-				<Card.Title>Kayak 1</Card.Title>
-				<Card.Text>{`${timestampToDate(reservation.date)}\n${
+				<Card.Title>{kayak.name}</Card.Title>
+				<Card.Text>{`${timestampToDateEU(reservation.date)}\n${
 					reservation.time === CheckoutTimeOptions.Voormiddag
-						? 'Voormiddag'
-						: 'Namiddag'
+						? '7u-13u30'
+						: '14u-22u'
 				}`}</Card.Text>
 			</Card.TextWrapper>
+
 			<Card.ImageWrapper>
 				<Card.Image source={kajakImage as ImageSourcePropType} />
 			</Card.ImageWrapper>

@@ -4,7 +4,7 @@ export default {
 	expo: {
 		name: 'kajak-deelsysteem',
 		slug: 'kajak-deelsysteem',
-		version: '1.0.0',
+		version: '1.0.3',
 		orientation: 'portrait',
 		icon: './assets/images/icon.png',
 		scheme: 'myapp',
@@ -28,6 +28,7 @@ export default {
 				backgroundColor: '#ffffff',
 			},
 			package: 'com.kajak.deelsysteem',
+			versionCode: 4
 		},
 		web: {
 			favicon: './assets/images/favicon.png',
