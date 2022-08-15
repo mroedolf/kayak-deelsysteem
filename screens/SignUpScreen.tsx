@@ -25,7 +25,7 @@ import {handleFirebaseError, isAllowedStreetName, timestampToDateEU} from '../ut
 import { Popover, usePopover } from 'react-native-modal-popover';
 import {Pressable, TouchableOpacity} from 'react-native';
 import { useStore } from '../stores/useStore';
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
 
 const validationSchema = Yup.object().shape({
 	email: Yup.string().email('Incorrect email').required('Verplicht'),
